@@ -3,7 +3,7 @@ package com.reliableplugins.printer.listeners;
 import io.netty.channel.ChannelDuplexHandler;
 import org.bukkit.entity.Player;
 
-public abstract class AChannelListener extends ChannelDuplexHandler implements Cloneable
+public abstract class ASocketChannelListener extends ChannelDuplexHandler implements Cloneable
 {
     protected Player player;
 

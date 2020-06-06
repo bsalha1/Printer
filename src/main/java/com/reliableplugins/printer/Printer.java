@@ -1,25 +1,19 @@
 package com.reliableplugins.printer;
 
-import com.reliableplugins.printer.commands.Command;
 import com.reliableplugins.printer.commands.CommandHandler;
 import com.reliableplugins.printer.commands.CommandOff;
 import com.reliableplugins.printer.commands.CommandOn;
-import com.reliableplugins.printer.config.FileManager;
-import com.reliableplugins.printer.config.MainConfig;
-import com.reliableplugins.printer.config.Message;
-import com.reliableplugins.printer.config.MessageConfig;
+import com.reliableplugins.printer.config.*;
 import com.reliableplugins.printer.exception.VaultException;
-import com.reliableplugins.printer.listeners.ChannelListener;
+import com.reliableplugins.printer.listeners.SocketChannelListener;
 import com.reliableplugins.printer.listeners.ListenPrinterBlockPlace;
 import com.reliableplugins.printer.listeners.ListenPrinterExploit;
 import com.reliableplugins.printer.nms.*;
 import com.reliableplugins.printer.type.PrinterPlayer;
-import com.reliableplugins.printer.utils.MinecraftUtil;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -34,11 +28,12 @@ public class Printer extends JavaPlugin implements Listener
     private INMSHandler nmsHandler;
     private CommandHandler commandHandler;
     private Economy economy;
-    private ChannelManager channelManager;
+    private SocketChannelManager socketChannelManager;
 
     private FileManager fileManager;
     private MainConfig mainConfig;
     private MessageConfig messageConfig;
+    private PricesConfig pricesConfig;
 
     // Database
     public HashMap<Player, PrinterPlayer> printerPlayers = new HashMap<>();
@@ -95,7 +90,11 @@ public class Printer extends JavaPlugin implements Listener
                 player.printerOff();
             }
         }
-        channelManager.unloadChannelListener();
+
+        if(socketChannelManager != null)
+        {
+            socketChannelManager.unloadChannelListener();
+        }
         getLogger().log(Level.INFO, this.getDescription().getName() + " v" + this.getDescription().getVersion() + " has been unloaded");
     }
 
@@ -104,6 +103,7 @@ public class Printer extends JavaPlugin implements Listener
         FileManager fileManager = new FileManager();
         fileManager.addFile(mainConfig = new MainConfig());
         fileManager.addFile(messageConfig = new MessageConfig());
+        fileManager.addFile(pricesConfig = new PricesConfig());
         return fileManager;
     }
 
@@ -129,11 +129,11 @@ public class Printer extends JavaPlugin implements Listener
 
     private void setupListeners()
     {
-        Bukkit.getPluginManager().registerEvents(channelManager = new ChannelManager(), this);
+        Bukkit.getPluginManager().registerEvents(socketChannelManager = new SocketChannelManager(), this);
         Bukkit.getPluginManager().registerEvents(new ListenPrinterBlockPlace(), this);
         Bukkit.getPluginManager().registerEvents(new ListenPrinterExploit(), this);
 
-        channelManager.loadChannelListener(new ChannelListener());
+        socketChannelManager.loadChannelListener(new SocketChannelListener());
     }
 
     private INMSHandler setupNMSHandler()
@@ -200,7 +200,12 @@ public class Printer extends JavaPlugin implements Listener
         return mainConfig;
     }
 
-    public INMSHandler getNMS()
+    public PricesConfig getPricesConfig()
+    {
+        return pricesConfig;
+    }
+
+    public INMSHandler getNMSHandler()
     {
         return nmsHandler;
     }

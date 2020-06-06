@@ -33,11 +33,8 @@ public abstract class BukkitTask implements Runnable
 
     public void cancel()
     {
-        onCancel();
         Bukkit.getScheduler().cancelTask(this.id);
     }
-
-    public abstract void onCancel();
 
     public int getId()
     {

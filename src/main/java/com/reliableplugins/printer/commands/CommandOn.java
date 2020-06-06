@@ -3,8 +3,10 @@ package com.reliableplugins.printer.commands;
 import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.annotation.CommandBuilder;
 import com.reliableplugins.printer.config.Message;
+import com.reliableplugins.printer.hook.FactionsHook;
 import com.reliableplugins.printer.type.PrinterPlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 @CommandBuilder(label = "on", description = "Turns on printer", permission = "printer.on", playerRequired = true)
@@ -23,6 +25,15 @@ public class CommandOn extends Command
         {
             player.sendMessage(Message.ERROR_PRINTER_ALREADY_ON.getMessage());
             return;
+        }
+
+        for(Entity entity : player.getNearbyEntities(48, 256, 48))
+        {
+            if(entity instanceof Player && FactionsHook.areNeutralOrEnemies((Player) entity, player))
+            {
+                player.sendMessage(Message.ERROR_ENEMY_NEARBY.getMessage());
+                return;
+            }
         }
 
         printerPlayer.printerOn();

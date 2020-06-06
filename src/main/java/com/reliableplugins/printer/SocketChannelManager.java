@@ -1,9 +1,7 @@
 package com.reliableplugins.printer;
 
-import com.reliableplugins.printer.listeners.AChannelListener;
-import com.reliableplugins.printer.listeners.ChannelListener;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
+import com.reliableplugins.printer.listeners.ASocketChannelListener;
+import com.reliableplugins.printer.listeners.SocketChannelListener;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,18 +9,14 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.Executors;
 
-public class ChannelManager implements Listener
+public class SocketChannelManager implements Listener
 {
     public void unloadChannelListener(Player player)
     {
-        if(Printer.INSTANCE.getNMS().getSocketChannel(player).pipeline().get(Printer.class.getName()) != null)
+        if(Printer.INSTANCE.getNMSHandler().getSocketChannel(player).pipeline().get(Printer.class.getName()) != null)
         {
-            Printer.INSTANCE.getNMS().getSocketChannel(player).pipeline().remove(Printer.class.getName());
+            Printer.INSTANCE.getNMSHandler().getSocketChannel(player).pipeline().remove(Printer.class.getName());
         }
     }
 
@@ -35,13 +29,13 @@ public class ChannelManager implements Listener
         }
     }
 
-    public void loadChannelListener(AChannelListener listener, Player player)
+    public void loadChannelListener(ASocketChannelListener listener, Player player)
     {
         try
         {
-            AChannelListener listenerCopy = (AChannelListener) listener.clone();
+            ASocketChannelListener listenerCopy = (ASocketChannelListener) listener.clone();
             listenerCopy.setPlayer(player);
-            Printer.INSTANCE.getNMS().getSocketChannel(player).pipeline().addBefore("packet_handler", Printer.class.getName(), listenerCopy);
+            Printer.INSTANCE.getNMSHandler().getSocketChannel(player).pipeline().addBefore("packet_handler", Printer.class.getName(), listenerCopy);
         }
         catch(Exception e)
         {
@@ -49,7 +43,7 @@ public class ChannelManager implements Listener
         }
     }
 
-    public void loadChannelListener(AChannelListener listener)
+    public void loadChannelListener(ASocketChannelListener listener)
     {
         Collection<? extends Player> onlinePlayers = Printer.INSTANCE.getServer().getOnlinePlayers();
         for(Player player : onlinePlayers)
@@ -61,7 +55,7 @@ public class ChannelManager implements Listener
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event)
     {
-        loadChannelListener(new ChannelListener(), event.getPlayer());
+        loadChannelListener(new SocketChannelListener(), event.getPlayer());
     }
 
     @EventHandler

@@ -16,9 +16,13 @@ public enum Message
     ERROR_ARMOR_STAND_EXPLOIT("err-armor-stand-exploit", "&cUsing armor stands is not allowed while printer is on"),
     ERROR_ITEM_EXPLOIT("err-item-exploit", "&cUsing items is not allowed while printer is on"),
     ERROR_DAMAGE_EXPLOIT("err-damage-exploit", "&cDamaging entities is not allowed while printer is on"),
+    ERROR_ENEMY_NEARBY_EXPLOIT("err-enemy-nearby-exploit", "&cEnemy or neutral player nearby - printer disabled"),
 
+    ERROR_BLOCK_NOT_ALLOWED("err-block-not-allowed", "&cThis block is not allowed to be placed during printer"),
+    ERROR_ENEMY_NEARBY("err-enemy-nearby", "&cEnemy or neutral player nearby"),
     ERROR_PRINTER_ALREADY_ON("err-printer-already-on", "&cPrinter is already activated"),
     ERROR_PRINTER_NOT_ON("err-printer-not-on", "&cPrinter is not activated"),
+
     ERROR_NO_PERMS("err-no-perms", "&cYou do not have access to this command!"),
     ERROR_NOT_PLAYER("err-not-player", "&cOnly players may execute this command.");
 

@@ -25,6 +25,11 @@ public class PrinterPlayer
         {
             initialInventory = player.getInventory().getContents();
             initialGamemode = player.getGameMode();
+
+            if(player.getOpenInventory() != null)
+            {
+                player.getOpenInventory().close();
+            }
             player.getInventory().clear();
             player.setGameMode(GameMode.CREATIVE);
             printing = true;
