@@ -29,13 +29,21 @@ public class PricesConfig extends Config
 
         getDouble("NETHERRACK", 1.0);
         getDouble("DIRT", 1.0);
-        getDouble("STEP-0", 0.5);
         getDouble("SIGN", 1.0);
         getDouble("COBBLESTONE", 1.0);
 
+        getDouble("STEP-0", 0.5);
+        getDouble("STEP-1", 0.5);
+        getDouble("STEP-3", 0.5);
+        getDouble("STEP-4", 0.5);
+        getDouble("STEP-5", 0.5);
+        getDouble("STEP-6", 0.5);
+        getDouble("STEP-7", 2);
+        getDouble("WOOD_STEP", 1.0);
         getDouble("STONE", 1.0);
         getDouble("SAND-0", 1.0);
         getDouble("SAND-1", 1.0);
+        getDouble("GLOWSTONE", 5.0);
         getDouble("DISPENSER", 5.0);
         getDouble("WATER_BUCKET", 5.0);
         getDouble("LAVA_BUCKET", 5.0);
@@ -44,7 +52,7 @@ public class PricesConfig extends Config
         getDouble("REDSTONE_COMPARATOR", 5.0);
         getDouble("REDSTONE_WIRE", 1.0);
         getDouble("REDSTONE_BLOCK", 9.0);
-        getDouble("REDSTONE_TORCH", 1.0);
+        getDouble("REDSTONE_TORCH_ON", 1.0);
         getDouble("REDSTONE_LAMP_OFF", 5.0);
         getDouble("STONE_BUTTON", 1.0);
         getDouble("WOOD_BUTTON", 1.0);

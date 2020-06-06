@@ -1,6 +1,7 @@
 package com.reliableplugins.printer.type;
 
 import com.reliableplugins.printer.Printer;
+import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -39,7 +40,7 @@ public class PrinterPlayer
                 board = Bukkit.getScoreboardManager().getNewScoreboard();
                 objective = board.registerNewObjective("test", "dummy");
                 objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-                objective.setDisplayName(ChatColor.LIGHT_PURPLE + "Printer");
+                objective.setDisplayName(BukkitUtil.color("&d&lPrinter"));
                 score = objective.getScore(ChatColor.WHITE + "Cost:");
                 score.setScore(0);
                 player.setScoreboard(board);
