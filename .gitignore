@@ -1,0 +1,4 @@
+# Don't track content of IntelliJ config or the compilation
+.idea/
+out
+lib/
