@@ -19,7 +19,8 @@ public enum Message
     ERROR_DAMAGE_EXPLOIT("err-damage-exploit", "&cDamaging entities is not allowed while printer is on"),
     ERROR_ENEMY_NEARBY_EXPLOIT("err-enemy-nearby-exploit", "&cEnemy or neutral player nearby - printer disabled"),
 
-    ERROR_BLOCK_NOT_ALLOWED("err-block-not-allowed", "&cThis block is not allowed to be placed during printer"),
+    ERROR_NOT_IN_TERRITORY("err-not-in-territory", "&cYou may only use printer if you're in your own territory"),
+    ERROR_BLOCK_NOT_ALLOWED("err-block-not-allowed", "&cThis block is not allowed to be placed while printer is on"),
     ERROR_ENEMY_NEARBY("err-enemy-nearby", "&cEnemy or neutral player nearby"),
     ERROR_PRINTER_ALREADY_ON("err-printer-already-on", "&cPrinter is already activated"),
     ERROR_PRINTER_NOT_ON("err-printer-not-on", "&cPrinter is not activated"),

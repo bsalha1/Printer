@@ -5,14 +5,10 @@ import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.hook.FactionsHook;
 import com.reliableplugins.printer.task.BukkitTask;
 import com.reliableplugins.printer.type.packet.PacketServerNamedEntitySpawn;
-import com.reliableplugins.printer.utils.ReflectUtil;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
-import net.minecraft.server.v1_8_R3.PacketPlayOutNamedEntitySpawn;
 import org.bukkit.Bukkit;
-
-import java.util.UUID;
 
 @ChannelHandler.Sharable
 public class SocketChannelListener extends ASocketChannelListener

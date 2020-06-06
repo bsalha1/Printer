@@ -9,6 +9,7 @@ package com.reliableplugins.printer.config;
 public class MainConfig extends Config
 {
     private boolean scoreboard;
+    private boolean onlyInOwnTerritory;
 
     public MainConfig()
     {
@@ -19,11 +20,17 @@ public class MainConfig extends Config
     public void load()
     {
         scoreboard = getBoolean("scoreboard", true);
+        onlyInOwnTerritory = getBoolean("only-in-own-territory", true);
         save();
     }
 
     public boolean isScoreboard()
     {
         return scoreboard;
+    }
+
+    public boolean isOnlyInOwnTerritory()
+    {
+        return onlyInOwnTerritory;
     }
 }

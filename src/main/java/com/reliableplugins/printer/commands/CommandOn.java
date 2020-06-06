@@ -6,7 +6,6 @@ import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.hook.FactionsHook;
 import com.reliableplugins.printer.type.PrinterPlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 @CommandBuilder(label = "on", description = "Turns on printer", permission = "printer.on", playerRequired = true)
@@ -27,16 +26,21 @@ public class CommandOn extends Command
             return;
         }
 
-        // For Factions, make sure no neutral or enemy players are nearby
+        // Factions checks
         if(Printer.INSTANCE.isFactions())
         {
-            for(Entity entity : player.getNearbyEntities(48, 256, 48))
+            // If you must be in your own territory and you aren't, no printer
+            if(Printer.INSTANCE.getMainConfig().isOnlyInOwnTerritory() && !FactionsHook.inOwnTerritory(player))
             {
-                if(entity instanceof Player && FactionsHook.areNeutralOrEnemies((Player) entity, player))
-                {
-                    player.sendMessage(Message.ERROR_ENEMY_NEARBY.getMessage());
-                    return;
-                }
+                player.sendMessage(Message.ERROR_NOT_IN_TERRITORY.getMessage());
+                return;
+            }
+
+            // If enemies or neutrals nearby, no printer
+            if(printerPlayer.areEnemiesOrNeutralsNearby())
+            {
+                player.sendMessage(Message.ERROR_ENEMY_NEARBY.getMessage());
+                return;
             }
         }
 

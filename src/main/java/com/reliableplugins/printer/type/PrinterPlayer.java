@@ -1,10 +1,13 @@
 package com.reliableplugins.printer.type;
 
 import com.reliableplugins.printer.Printer;
+import com.reliableplugins.printer.config.Message;
+import com.reliableplugins.printer.hook.FactionsHook;
 import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.*;
@@ -80,6 +83,21 @@ public class PrinterPlayer
             player.getInventory().setArmorContents(initialArmor);
             printing = false;
         }
+    }
+
+    public boolean areEnemiesOrNeutralsNearby()
+    {
+        if(Printer.INSTANCE.isFactions())
+        {
+            for(Entity entity : player.getNearbyEntities(48, 256, 48))
+            {
+                if(entity instanceof Player && FactionsHook.areNeutralOrEnemies((Player) entity, player))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public void incrementCost(double cost)

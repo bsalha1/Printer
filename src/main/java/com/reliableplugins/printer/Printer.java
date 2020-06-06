@@ -6,10 +6,7 @@ import com.reliableplugins.printer.commands.CommandOn;
 import com.reliableplugins.printer.commands.CommandReload;
 import com.reliableplugins.printer.config.*;
 import com.reliableplugins.printer.exception.VaultException;
-import com.reliableplugins.printer.listeners.ListenPlayerQuit;
-import com.reliableplugins.printer.listeners.ListenPrinterBlockPlace;
-import com.reliableplugins.printer.listeners.ListenPrinterExploit;
-import com.reliableplugins.printer.listeners.SocketChannelListener;
+import com.reliableplugins.printer.listeners.*;
 import com.reliableplugins.printer.nms.*;
 import com.reliableplugins.printer.type.PrinterPlayer;
 import net.milkbowl.vault.economy.Economy;
@@ -102,6 +99,7 @@ public class Printer extends JavaPlugin implements Listener
             socketChannelManager.loadChannelListener(new SocketChannelListener());
 
             Bukkit.getPluginManager().registerEvents(socketChannelManager, this);
+            Bukkit.getPluginManager().registerEvents(new ListenFactionEvent(), this);
             getLogger().log(Level.INFO, "Successfully hooked into Factions");
         }
     }
