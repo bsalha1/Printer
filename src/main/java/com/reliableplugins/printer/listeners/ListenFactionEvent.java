@@ -1,13 +1,15 @@
 package com.reliableplugins.printer.listeners;
 
 import com.massivecraft.factions.FLocation;
-import com.massivecraft.factions.event.FPlayerEnteredFactionEvent;
-import com.massivecraft.factions.event.FPlayerLeaveEvent;
-import com.massivecraft.factions.event.LandUnclaimAllEvent;
-import com.massivecraft.factions.event.LandUnclaimEvent;
+import com.massivecraft.factions.FPlayer;
+import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.event.*;
+import com.massivecraft.factions.struct.Relation;
 import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.config.Message;
+import com.reliableplugins.printer.hook.FactionsHook;
 import com.reliableplugins.printer.type.PrinterPlayer;
+import com.reliableplugins.printer.utils.MinecraftUtil;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -20,6 +22,29 @@ public class ListenFactionEvent implements Listener
     public void onFPlayerLeave(FPlayerLeaveEvent event)
     {
         disableNearbyPrinters(event.getfPlayer().getPlayer());
+    }
+
+    @EventHandler
+    public void onLandClaim(LandClaimEvent event)
+    {
+        // On land claim, if this isn't the person's faction, kick them out of printer
+        Chunk chunk = event.getLocation().getChunk();
+        for(Entity entity : chunk.getEntities())
+        {
+            if(entity instanceof Player)
+            {
+                Player player = (Player) entity;
+                if(!FactionsHook.getFPlayer(player).getFaction().equals(event.getFaction()) && Printer.INSTANCE.printerPlayers.containsKey(player))
+                {
+                    PrinterPlayer printer = Printer.INSTANCE.printerPlayers.get(player);
+                    if(printer.isPrinting())
+                    {
+                        printer.printerOff();
+                        player.sendMessage(Message.ERROR_NOT_IN_TERRITORY.getMessage());
+                    }
+                }
+            }
+        }
     }
 
     @EventHandler
@@ -44,12 +69,12 @@ public class ListenFactionEvent implements Listener
     }
 
     @EventHandler
-    public void FPlayerEnteredFaction(FPlayerEnteredFactionEvent event)
+    public void onFPlayerEnteredFaction(FPlayerEnteredFactionEvent event)
     {
         if(Printer.INSTANCE.getMainConfig().isOnlyInOwnTerritory() && !event.getFactionTo().equals(event.getfPlayer().getFaction()))
         {
             PrinterPlayer player = Printer.INSTANCE.printerPlayers.get(event.getfPlayer().getPlayer());
-            if(player.isPrinting())
+            if(player != null && player.isPrinting())
             {
                 player.printerOff();
                 player.getPlayer().sendMessage(Message.ERROR_NOT_IN_TERRITORY.getMessage());
@@ -57,9 +82,25 @@ public class ListenFactionEvent implements Listener
         }
     }
 
+    @EventHandler
+    public void onFactionRelation(FactionRelationEvent event)
+    {
+        if(event.getRelation().equals(Relation.ENEMY) || event.getRelation().equals(Relation.NEUTRAL))
+        {
+            for(FPlayer player : event.getFaction().getFPlayers())
+            {
+                disableNearbyPrinters(player.getPlayer());
+            }
+            for(FPlayer player : event.getTargetFaction().getFPlayers())
+            {
+                disableNearbyPrinters(player.getPlayer());
+            }
+        }
+    }
+
     public static void disableNearbyPrinters(Player player)
     {
-        for(Entity entity : player.getNearbyEntities(48, 256, 48))
+        for(Entity entity : player.getNearbyEntities(MinecraftUtil.getPlayerLoadDistance(player.getWorld()), 256, MinecraftUtil.getPlayerLoadDistance(player.getWorld())))
         {
             if(entity instanceof Player)
             {
