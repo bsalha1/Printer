@@ -2,6 +2,7 @@ name: Printer
 main: com.reliableplugins.printer.Printer
 version: 1.0
 depend: [Vault]
+softdepend: [Factions]
 author: [Reachy]
 commands:
   printer:

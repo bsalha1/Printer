@@ -5,6 +5,7 @@ import com.reliableplugins.printer.annotation.CommandBuilder;
 import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.hook.FactionsHook;
 import com.reliableplugins.printer.type.PrinterPlayer;
+import com.reliableplugins.printer.utils.MinecraftUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -37,7 +38,7 @@ public class CommandOn extends Command
             }
 
             // If enemies or neutrals nearby, no printer
-            if(printerPlayer.areEnemiesOrNeutralsNearby())
+            if(printerPlayer.areEnemiesOrNeutralsNearby(MinecraftUtil.getPlayerLoadDistance(player.getWorld()), 256, MinecraftUtil.getPlayerLoadDistance(player.getWorld())))
             {
                 player.sendMessage(Message.ERROR_ENEMY_NEARBY.getMessage());
                 return;

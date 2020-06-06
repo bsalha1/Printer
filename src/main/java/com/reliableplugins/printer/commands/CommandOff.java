@@ -4,7 +4,6 @@ import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.annotation.CommandBuilder;
 import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.type.PrinterPlayer;
-import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

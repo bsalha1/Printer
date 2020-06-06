@@ -1,7 +1,6 @@
 package com.reliableplugins.printer.type;
 
 import com.reliableplugins.printer.Printer;
-import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.hook.FactionsHook;
 import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.Bukkit;
@@ -10,7 +9,10 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scoreboard.*;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
 
 public class PrinterPlayer
 {
@@ -21,8 +23,6 @@ public class PrinterPlayer
     private boolean printing = false;
     private double totalCost;
 
-    private Scoreboard board;
-    private Objective objective;
     private Score score;
 
     public PrinterPlayer(Player player)
@@ -40,8 +40,8 @@ public class PrinterPlayer
             // Initialize scoreboard
             if(Printer.INSTANCE.getMainConfig().isScoreboard())
             {
-                board = Bukkit.getScoreboardManager().getNewScoreboard();
-                objective = board.registerNewObjective("test", "dummy");
+                Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
+                Objective objective = board.registerNewObjective("test", "dummy");
                 objective.setDisplaySlot(DisplaySlot.SIDEBAR);
                 objective.setDisplayName(BukkitUtil.color("&d&lPrinter"));
                 score = objective.getScore(ChatColor.WHITE + "Cost:");
@@ -85,11 +85,11 @@ public class PrinterPlayer
         }
     }
 
-    public boolean areEnemiesOrNeutralsNearby()
+    public boolean areEnemiesOrNeutralsNearby(int xRange, int yRange, int zRange)
     {
         if(Printer.INSTANCE.isFactions())
         {
-            for(Entity entity : player.getNearbyEntities(48, 256, 48))
+            for(Entity entity : player.getNearbyEntities(xRange, yRange, zRange))
             {
                 if(entity instanceof Player && FactionsHook.areNeutralOrEnemies((Player) entity, player))
                 {

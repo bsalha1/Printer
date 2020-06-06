@@ -6,9 +6,8 @@
 
 package com.reliableplugins.printer.commands;
 
-import com.reliableplugins.printer.annotation.CommandBuilder;
-
 import com.google.common.collect.Sets;
+import com.reliableplugins.printer.annotation.CommandBuilder;
 import org.bukkit.command.CommandSender;
 
 import java.util.Set;

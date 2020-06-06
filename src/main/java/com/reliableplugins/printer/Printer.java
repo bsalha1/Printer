@@ -34,6 +34,7 @@ public class Printer extends JavaPlugin implements Listener
     private PricesConfig pricesConfig;
 
     private boolean factions;
+    private boolean spigot;
 
     // Database
     public HashMap<Player, PrinterPlayer> printerPlayers = new HashMap<>();
@@ -42,6 +43,15 @@ public class Printer extends JavaPlugin implements Listener
     public void onEnable()
     {
         Printer.INSTANCE = this;
+        spigot = true;
+        try
+        {
+            Bukkit.class.getMethod("spigot");
+        }
+        catch (NoSuchMethodException e)
+        {
+            spigot = false;
+        }
 
         try
         {
@@ -224,5 +234,10 @@ public class Printer extends JavaPlugin implements Listener
     public boolean isFactions()
     {
         return factions;
+    }
+
+    public boolean isSpigot()
+    {
+        return spigot;
     }
 }
