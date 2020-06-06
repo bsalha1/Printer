@@ -74,7 +74,7 @@ public class PricesConfig extends Config
         // Load Regular Blocks
         for(String blockName : config.getKeys(true))
         {
-            double price = config.getDouble(blockName, -1);
+            double price = config.getDouble(blockName);
             if(price < 0)
             {
                 Printer.INSTANCE.getLogger().log(Level.WARNING, blockName + " has an invalid price: " + price);
