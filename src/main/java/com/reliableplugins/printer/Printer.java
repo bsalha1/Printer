@@ -5,20 +5,20 @@ import com.reliableplugins.printer.commands.CommandOff;
 import com.reliableplugins.printer.commands.CommandOn;
 import com.reliableplugins.printer.config.*;
 import com.reliableplugins.printer.exception.VaultException;
-import com.reliableplugins.printer.listeners.SocketChannelListener;
+import com.reliableplugins.printer.listeners.ListenPlayerQuit;
 import com.reliableplugins.printer.listeners.ListenPrinterBlockPlace;
 import com.reliableplugins.printer.listeners.ListenPrinterExploit;
+import com.reliableplugins.printer.listeners.SocketChannelListener;
 import com.reliableplugins.printer.nms.*;
 import com.reliableplugins.printer.type.PrinterPlayer;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.logging.Level;
 
 public class Printer extends JavaPlugin implements Listener
@@ -37,23 +37,6 @@ public class Printer extends JavaPlugin implements Listener
 
     // Database
     public HashMap<Player, PrinterPlayer> printerPlayers = new HashMap<>();
-
-    public static final HashSet<Material> prohibitedItems = new HashSet<>();
-
-    static
-    {
-//        prohibitedItems.add(Material.MINECART.is);
-//        prohibitedItems.add(Material.COMMAND_MINECART);
-//        prohibitedItems.add(Material.EXPLOSIVE_MINECART);
-//        prohibitedItems.add(Material.HOPPER_MINECART);
-//        prohibitedItems.add(Material.POWERED_MINECART);
-//        prohibitedItems.add(Material.STORAGE_MINECART);
-//        prohibitedItems.add(Material.JUKEBOX);
-//        prohibitedItems.add(Material.ITEM_FRAME);
-//        prohibitedItems.add(Material.PAINTING);
-//        prohibitedItems.add(Material.EXP_BOTTLE);
-//        prohibitedItems.add(Material.GLASS_BOTTLE);
-    }
 
     @Override
     public void onEnable()
@@ -132,6 +115,7 @@ public class Printer extends JavaPlugin implements Listener
         Bukkit.getPluginManager().registerEvents(socketChannelManager = new SocketChannelManager(), this);
         Bukkit.getPluginManager().registerEvents(new ListenPrinterBlockPlace(), this);
         Bukkit.getPluginManager().registerEvents(new ListenPrinterExploit(), this);
+        Bukkit.getPluginManager().registerEvents(new ListenPlayerQuit(), this);
 
         socketChannelManager.loadChannelListener(new SocketChannelListener());
     }
