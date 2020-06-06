@@ -1,9 +1,0 @@
-name: Printer
-main: com.reliableplugins.printer.Printer
-version: 1.0
-depend: [Vault]
-author: [Reachy]
-commands:
-  printer:
-    description: Help command for Printer
-    usage: "/printer help"
