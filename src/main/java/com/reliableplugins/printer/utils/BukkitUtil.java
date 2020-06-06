@@ -4,24 +4,29 @@ import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 
-import java.util.HashMap;
 import java.util.HashSet;
 
 public class BukkitUtil
 {
-    public static boolean isMinecart(Material material)
+    private static HashSet<Material> itemMaterials = new HashSet<>();
+
+    static
     {
-        return material.equals(Material.MINECART) ||
-                material.equals(Material.COMMAND_MINECART) ||
-                material.equals(Material.EXPLOSIVE_MINECART) ||
-                material.equals(Material.HOPPER_MINECART) ||
-                material.equals(Material.STORAGE_MINECART) ||
-                material.equals(Material.POWERED_MINECART);
+        itemMaterials.add(Material.WATER_BUCKET);
+        itemMaterials.add(Material.LAVA_BUCKET);
+        itemMaterials.add(Material.REDSTONE);
+        itemMaterials.add(Material.DIODE);
+        itemMaterials.add(Material.REDSTONE_COMPARATOR);
+        itemMaterials.add(Material.STRING);
+        itemMaterials.add(Material.SEEDS);
+        itemMaterials.add(Material.MELON_SEEDS);
+        itemMaterials.add(Material.PUMPKIN_SEEDS);
+        itemMaterials.add(Material.NETHER_STALK);
     }
 
     public static boolean isItemMaterial(Material material)
     {
-        return material.equals(Material.WATER_BUCKET) || material.equals(Material.LAVA_BUCKET);
+        return itemMaterials.contains(material);
     }
 
     public static void reloadChunk(Chunk chunk)

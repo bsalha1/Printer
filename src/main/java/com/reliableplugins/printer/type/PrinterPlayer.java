@@ -1,50 +1,98 @@
 package com.reliableplugins.printer.type;
 
+import com.reliableplugins.printer.Printer;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scoreboard.*;
 
 public class PrinterPlayer
 {
     private GameMode initialGamemode;
     private ItemStack[] initialInventory;
+    private ItemStack[] initialArmor;
     private final Player player;
     private boolean printing = false;
+    private double totalCost;
+
+    private Scoreboard board;
+    private Objective objective;
+    private Score score;
 
     public PrinterPlayer(Player player)
     {
         this.player = player;
         this.initialGamemode = player.getGameMode();
         this.initialInventory = player.getInventory().getContents();
+        this.initialArmor = player.getInventory().getArmorContents();
     }
 
-    // Cache initial gamemode and inventory to give back on printer off
     public void printerOn()
     {
         if(!printing)
         {
-            initialInventory = player.getInventory().getContents();
+            // Initialize scoreboard
+            if(Printer.INSTANCE.getMainConfig().isScoreboard())
+            {
+                board = Bukkit.getScoreboardManager().getNewScoreboard();
+                objective = board.registerNewObjective("test", "dummy");
+                objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+                objective.setDisplayName(ChatColor.LIGHT_PURPLE + "Printer");
+                score = objective.getScore(ChatColor.WHITE + "Cost:");
+                score.setScore(0);
+                player.setScoreboard(board);
+            }
+
+            totalCost = 0;
+
+            // Cache initial values
             initialGamemode = player.getGameMode();
+            initialInventory = player.getInventory().getContents();
+            initialArmor = player.getInventory().getArmorContents();
 
             if(player.getOpenInventory() != null)
             {
                 player.getOpenInventory().close();
             }
+
             player.getInventory().clear();
+            player.getInventory().setArmorContents(new ItemStack[player.getInventory().getArmorContents().length]);
             player.setGameMode(GameMode.CREATIVE);
             printing = true;
         }
     }
 
-    // Set gamemode and inventory back to initials
     public void printerOff()
     {
         if(printing)
         {
+            if(Printer.INSTANCE.getMainConfig().isScoreboard())
+            {
+                player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
+            }
+
+            // Set gamemode and inventory back to initials
             player.setGameMode(initialGamemode);
             player.getInventory().setContents(initialInventory);
+            player.getInventory().setArmorContents(initialArmor);
             printing = false;
         }
+    }
+
+    public void incrementCost(double cost)
+    {
+        this.totalCost += cost;
+        if(Printer.INSTANCE.getMainConfig().isScoreboard())
+        {
+            this.score.setScore((int)Math.ceil(this.totalCost));
+        }
+    }
+
+    public double getTotalCost()
+    {
+        return totalCost;
     }
 
     public Player getPlayer()

@@ -1,9 +1,8 @@
 package com.reliableplugins.printer.config;
 
 import com.reliableplugins.printer.Printer;
-import com.reliableplugins.printer.type.Colored;
+import com.reliableplugins.printer.type.ColoredMaterial;
 import com.reliableplugins.printer.utils.BukkitUtil;
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
 
 import java.util.HashMap;
@@ -13,7 +12,7 @@ public class PricesConfig extends Config
 {
     private HashMap<Material, Double> blockPrices = new HashMap<>();
     private HashMap<Material, Double> itemPrices = new HashMap<>();
-    private HashMap<Colored, Double> coloredPrices = new HashMap<>();
+    private HashMap<ColoredMaterial, Double> coloredPrices = new HashMap<>();
 
     public PricesConfig()
     {
@@ -25,85 +24,86 @@ public class PricesConfig extends Config
     {
         blockPrices = new HashMap<>();
         getConfig().options().header("For a complete list of material names go to: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html\n"
-                + "For colored blocks, navigate to the \"colored\" section and add the name of the material followed by a dash '-' and then the color.\n"
-                + "For complete list of color names go to: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/DyeColor.html");
+                + "For colored blocks or typed blocks such as oak, birch, spruce and jungle logs, add the name of \n"
+                + "the material followed by a dash '-' and then the id");
 
-        getDouble("blocks.STONE", 1.0);
-        getDouble("blocks.NETHERRACK", 1.0);
-        getDouble("blocks.DIRT", 1.0);
-        getDouble("blocks.STEP", 0.5);
-        getDouble("blocks.SIGN", 1.0);
-        getDouble("blocks.COBBLESTONE", 1.0);
-        getDouble("blocks.WATER_BUCKET", 5.0);
-        getDouble("blocks.LAVA_BUCKET", 5.0);
-        getDouble("blocks.OBSIDIAN", 20.0);
+        getDouble("NETHERRACK", 1.0);
+        getDouble("DIRT", 1.0);
+        getDouble("STEP-0", 0.5);
+        getDouble("SIGN", 1.0);
+        getDouble("COBBLESTONE", 1.0);
 
+        getDouble("STONE", 1.0);
+        getDouble("SAND-0", 1.0);
+        getDouble("SAND-1", 1.0);
+        getDouble("DISPENSER", 5.0);
+        getDouble("WATER_BUCKET", 5.0);
+        getDouble("LAVA_BUCKET", 5.0);
+        getDouble("OBSIDIAN", 20.0);
+        getDouble("DIODE", 5.0);
+        getDouble("REDSTONE_COMPARATOR", 5.0);
+        getDouble("REDSTONE_WIRE", 1.0);
+        getDouble("REDSTONE_BLOCK", 9.0);
+        getDouble("REDSTONE_TORCH", 1.0);
+        getDouble("REDSTONE_LAMP_OFF", 5.0);
+        getDouble("STONE_BUTTON", 1.0);
+        getDouble("WOOD_BUTTON", 1.0);
+        getDouble("PISTON_BASE", 5.0);
+        getDouble("PISTON_STICKY_BASE", 5.0);
+        getDouble("LADDER", 5.0);
+        getDouble("TRAP_DOOR", 5.0);
+        getDouble("IRON_TRAPDOOR", 5.0);
+        getDouble("GLASS", 2.0);
+        getDouble("LEVER", 2.0);
 
-        getDouble("colored.WOOL-RED", 5.0);
-        getDouble("colored.WOOL-LIME", 5.0);
-        getDouble("colored.GLASS-BLACK", 5.0);
+        getDouble("SOUL_SAND", 2.0);
+        getDouble("NETHER_STALK", 2.0);
+
+        getDouble("WOOL-0", 5.0);
+        getDouble("WOOL-13", 5.0);
+        getDouble("STAINED_GLASS-12", 5.0);
 
         // Load Regular Blocks
-        for(String blockName : config.getConfigurationSection("blocks").getKeys(true))
+        for(String blockName : config.getKeys(true))
         {
-            double price = config.getDouble("blocks." + blockName, -1);
+            double price = config.getDouble(blockName, -1);
             if(price < 0)
             {
                 Printer.INSTANCE.getLogger().log(Level.WARNING, blockName + " has an invalid price: " + price);
             }
             else
             {
-                // If material is an itemmaterial, put it in the item price list
-                Material material = Material.valueOf(blockName);
-                if(BukkitUtil.isItemMaterial(material))
+                if(blockName.contains("-"))
                 {
-                    itemPrices.put(material, price);
+                    coloredPrices.put(getColored(blockName), price);
                 }
                 else
                 {
-                    blockPrices.put(material, price);
-                }
-            }
-        }
-
-        // Load Colored Blocks
-        for(String coloredName : config.getConfigurationSection("colored").getKeys(true))
-        {
-            double price = config.getDouble("colored." + coloredName, -1);
-            if(price < 0)
-            {
-                Printer.INSTANCE.getLogger().log(Level.WARNING, coloredName + " has an invalid price: " + price);
-            }
-            else
-            {
-                String materialName = coloredName.substring(0, coloredName.indexOf('-'));
-                String dyeName = coloredName.substring(coloredName.indexOf('-') + 1);
-                Material material = Material.valueOf(materialName);
-                DyeColor dyeColor;
-
-                // Backwards Compatibility: In earlier versions LIGHT_GRAY is called SILVER - pick whichever one doesn't throw an exception
-                if(dyeName.equals("SILVER") || dyeName.equals("LIGHT_GRAY"))
-                {
-                    try
+                    Material material = Material.valueOf(blockName);
+                    if(BukkitUtil.isItemMaterial(material))
                     {
-                        dyeColor = DyeColor.valueOf("SILVER");
+                        itemPrices.put(material, price);
                     }
-                    catch (IllegalArgumentException e)
+                    else
                     {
-                        dyeColor = DyeColor.valueOf("LIGHT_GRAY");
+                        blockPrices.put(material, price);
                     }
                 }
-                else
-                {
-                    dyeColor = DyeColor.valueOf(dyeName);
-                }
-                coloredPrices.put(new Colored(material, dyeColor), price);
             }
         }
         save();
     }
 
-    public HashMap<Colored, Double> getColoredPrices()
+    private ColoredMaterial getColored(String blockName)
+    {
+        String materialName = blockName.substring(0, blockName.indexOf('-'));
+        byte data = (byte) Short.parseShort(blockName.substring(blockName.indexOf('-') + 1));
+        Material material = Material.valueOf(materialName);
+
+        return ColoredMaterial.fromMaterialAndData(material, data);
+    }
+
+    public HashMap<ColoredMaterial, Double> getColoredPrices()
     {
         return coloredPrices;
     }

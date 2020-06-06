@@ -27,12 +27,16 @@ public class CommandOn extends Command
             return;
         }
 
-        for(Entity entity : player.getNearbyEntities(48, 256, 48))
+        // For Factions, make sure no neutral or enemy players are nearby
+        if(Printer.INSTANCE.isFactions())
         {
-            if(entity instanceof Player && FactionsHook.areNeutralOrEnemies((Player) entity, player))
+            for(Entity entity : player.getNearbyEntities(48, 256, 48))
             {
-                player.sendMessage(Message.ERROR_ENEMY_NEARBY.getMessage());
-                return;
+                if(entity instanceof Player && FactionsHook.areNeutralOrEnemies((Player) entity, player))
+                {
+                    player.sendMessage(Message.ERROR_ENEMY_NEARBY.getMessage());
+                    return;
+                }
             }
         }
 

@@ -8,6 +8,8 @@ package com.reliableplugins.printer.config;
 
 public class MainConfig extends Config
 {
+    private boolean scoreboard;
+
     public MainConfig()
     {
         super("config.yml");
@@ -16,6 +18,12 @@ public class MainConfig extends Config
     @Override
     public void load()
     {
+        scoreboard = getBoolean("scoreboard", true);
         save();
+    }
+
+    public boolean isScoreboard()
+    {
+        return scoreboard;
     }
 }

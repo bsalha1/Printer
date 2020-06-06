@@ -8,6 +8,7 @@ public enum Message
     PRINTER_ON("printer-on", "&7Printer has been activated"),
     PRINTER_OFF("printer-off", "&7Printer has been deactivated"),
     WITHDRAW_MONEY("withdraw-money", "&7${NUM} withdrawn"),
+    RELOAD("reload", "&7Printer reloaded"),
 
     ERROR_NO_MONEY("err-not-enough-money", "&cNot enough money"),
     ERROR_INVENTORY_OPEN_EXPLOIT("err-inventory-open-exploit", "&cOpening an inventory is not allowed while printer is on"),

@@ -10,11 +10,18 @@ import java.lang.reflect.Field;
 
 public class ReflectUtil
 {
-
-    public static <T> T getPrivateField(String fieldName, Object instance) throws NoSuchFieldException, IllegalAccessException
+    public static <T> T getPrivateField(String fieldName, Object instance)
     {
-        Field field = instance.getClass().getDeclaredField(fieldName);
-        field.setAccessible(true);
-        return (T) field.get(instance);
+        try
+        {
+            Field field = instance.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            return (T) field.get(instance);
+        }
+        catch (IllegalAccessException | NoSuchFieldException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

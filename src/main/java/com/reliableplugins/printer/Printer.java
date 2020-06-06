@@ -3,6 +3,7 @@ package com.reliableplugins.printer;
 import com.reliableplugins.printer.commands.CommandHandler;
 import com.reliableplugins.printer.commands.CommandOff;
 import com.reliableplugins.printer.commands.CommandOn;
+import com.reliableplugins.printer.commands.CommandReload;
 import com.reliableplugins.printer.config.*;
 import com.reliableplugins.printer.exception.VaultException;
 import com.reliableplugins.printer.listeners.ListenPlayerQuit;
@@ -28,12 +29,14 @@ public class Printer extends JavaPlugin implements Listener
     private INMSHandler nmsHandler;
     private CommandHandler commandHandler;
     private Economy economy;
-    private SocketChannelManager socketChannelManager;
+    private SocketChannelManager socketChannelManager = null;
 
     private FileManager fileManager;
     private MainConfig mainConfig;
     private MessageConfig messageConfig;
     private PricesConfig pricesConfig;
+
+    private boolean factions;
 
     // Database
     public HashMap<Player, PrinterPlayer> printerPlayers = new HashMap<>();
@@ -48,6 +51,7 @@ public class Printer extends JavaPlugin implements Listener
             fileManager = setupConfigs();
             nmsHandler = setupNMSHandler();
             economy = setupEconomy();
+            setupFactionHook();
             setupListeners();
             commandHandler = setupCommands();
         }
@@ -57,7 +61,6 @@ public class Printer extends JavaPlugin implements Listener
             this.getPluginLoader().disablePlugin(this);
             return;
         }
-
 
         getLogger().log(Level.INFO, this.getDescription().getName() + " v" + this.getDescription().getVersion() + " has been loaded");
     }
@@ -81,13 +84,26 @@ public class Printer extends JavaPlugin implements Listener
         getLogger().log(Level.INFO, this.getDescription().getName() + " v" + this.getDescription().getVersion() + " has been unloaded");
     }
 
-    public FileManager setupConfigs()
+    private FileManager setupConfigs()
     {
         FileManager fileManager = new FileManager();
         fileManager.addFile(mainConfig = new MainConfig());
         fileManager.addFile(messageConfig = new MessageConfig());
         fileManager.addFile(pricesConfig = new PricesConfig());
         return fileManager;
+    }
+
+    private void setupFactionHook()
+    {
+        factions = this.getServer().getPluginManager().isPluginEnabled("Factions");
+        if(factions)
+        {
+            socketChannelManager = new SocketChannelManager();
+            socketChannelManager.loadChannelListener(new SocketChannelListener());
+
+            Bukkit.getPluginManager().registerEvents(socketChannelManager, this);
+            getLogger().log(Level.INFO, "Successfully hooked into Factions");
+        }
     }
 
     private Economy setupEconomy() throws VaultException
@@ -112,12 +128,9 @@ public class Printer extends JavaPlugin implements Listener
 
     private void setupListeners()
     {
-        Bukkit.getPluginManager().registerEvents(socketChannelManager = new SocketChannelManager(), this);
         Bukkit.getPluginManager().registerEvents(new ListenPrinterBlockPlace(), this);
         Bukkit.getPluginManager().registerEvents(new ListenPrinterExploit(), this);
         Bukkit.getPluginManager().registerEvents(new ListenPlayerQuit(), this);
-
-        socketChannelManager.loadChannelListener(new SocketChannelListener());
     }
 
     private INMSHandler setupNMSHandler()
@@ -151,6 +164,15 @@ public class Printer extends JavaPlugin implements Listener
         }
     }
 
+    private CommandHandler setupCommands()
+    {
+        CommandHandler commandHandler = new CommandHandler("printer");
+        commandHandler.addCommand(new CommandOn());
+        commandHandler.addCommand(new CommandOff());
+        commandHandler.addCommand(new CommandReload());
+        return commandHandler;
+    }
+
     public boolean withdrawMoney(Player player, double amount)
     {
         if(economy.getBalance(player) - amount >= 0)
@@ -166,12 +188,9 @@ public class Printer extends JavaPlugin implements Listener
         }
     }
 
-    private CommandHandler setupCommands()
+    public void reloadConfigs()
     {
-        CommandHandler commandHandler = new CommandHandler("printer");
-        commandHandler.addCommand(new CommandOn());
-        commandHandler.addCommand(new CommandOff());
-        return commandHandler;
+        fileManager = setupConfigs();
     }
 
     public FileManager getFileManager()
@@ -202,5 +221,10 @@ public class Printer extends JavaPlugin implements Listener
     public MessageConfig getMessageConfig()
     {
         return messageConfig;
+    }
+
+    public boolean isFactions()
+    {
+        return factions;
     }
 }
