@@ -4,9 +4,12 @@ import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.type.ColoredMaterial;
 import com.reliableplugins.printer.type.PrinterPlayer;
+import org.bukkit.block.Container;
+import org.bukkit.block.ContainerBlock;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.InventoryHolder;
 
 public class ListenPrinterBlockPlace implements Listener
 {
@@ -36,6 +39,12 @@ public class ListenPrinterBlockPlace implements Listener
                     price = Printer.INSTANCE.getPricesConfig().getBlockPrices().get(event.getBlockPlaced().getType());
                 }
 
+                // Don't allow placing of blocks with inventories
+                if(event.getBlock().getState() instanceof InventoryHolder)
+                {
+                    ((InventoryHolder) event.getBlock().getState()).getInventory().clear();
+                }
+
                 if(price == null)
                 {
                     event.setCancelled(true);
@@ -47,7 +56,6 @@ public class ListenPrinterBlockPlace implements Listener
                     event.setCancelled(true);
                     return;
                 }
-
                 player.incrementCost(price);
             }
         }
