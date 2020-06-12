@@ -31,12 +31,12 @@
 <!--            <version>2.8.6</version>-->
 <!--        </dependency>-->
 
-        <!-- Vault -->
+        <!-- Vault 1.7.2 -->
         <dependency>
             <groupId>net.milkbowl</groupId>
             <artifactId>Vault</artifactId>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/Vault.jar</systemPath>
+            <systemPath>${project.basedir}/lib/Vault1.7.2.jar</systemPath>
         </dependency>
 
         <!-- Factions -->

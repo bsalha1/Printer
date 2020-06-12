@@ -25,55 +25,14 @@ public class PricesConfig extends Config
         blockPrices = new HashMap<>();
         getConfig().options().header("For a complete list of material names go to: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html\n"
                 + "For colored blocks or typed blocks such as oak, birch, spruce and jungle logs, add the name of \n"
-                + "the material followed by a dash '-' and then the id");
+                + "the material followed by a dash '-' and then the id. For example: black wool = WOOL-15\n"
+                + "For an example config, go to example-prices.yml");
 
-        getDouble("NETHERRACK", 1.0);
-        getDouble("DIRT", 1.0);
-        getDouble("SIGN", 1.0);
-        getDouble("COBBLESTONE", 1.0);
-
-        getDouble("STEP-0", 0.5);
-        getDouble("STEP-1", 0.5);
-        getDouble("STEP-3", 0.5);
-        getDouble("STEP-4", 0.5);
-        getDouble("STEP-5", 0.5);
-        getDouble("STEP-6", 0.5);
-        getDouble("STEP-7", 2);
-        getDouble("WOOD_STEP", 1.0);
-        getDouble("STONE", 1.0);
-        getDouble("SAND-0", 1.0);
-        getDouble("SAND-1", 1.0);
-        getDouble("GLOWSTONE", 5.0);
-        getDouble("DISPENSER", 5.0);
-        getDouble("WATER_BUCKET", 5.0);
-        getDouble("LAVA_BUCKET", 5.0);
-        getDouble("OBSIDIAN", 20.0);
-        getDouble("DIODE", 5.0);
-        getDouble("REDSTONE_COMPARATOR", 5.0);
-        getDouble("REDSTONE_WIRE", 1.0);
-        getDouble("REDSTONE_BLOCK", 9.0);
-        getDouble("REDSTONE_TORCH_ON", 1.0);
-        getDouble("REDSTONE_LAMP_OFF", 5.0);
-        getDouble("STONE_BUTTON", 1.0);
-        getDouble("WOOD_BUTTON", 1.0);
-        getDouble("PISTON_BASE", 5.0);
-        getDouble("PISTON_STICKY_BASE", 5.0);
-        getDouble("LADDER", 5.0);
-        getDouble("TRAP_DOOR", 5.0);
-        getDouble("IRON_TRAPDOOR", 5.0);
-        getDouble("GLASS", 2.0);
-        getDouble("LEVER", 2.0);
-
-        getDouble("SOUL_SAND", 2.0);
-        getDouble("NETHER_STALK", 2.0);
-
-        getDouble("WOOL-0", 5.0);
-        getDouble("WOOL-13", 5.0);
-        getDouble("STAINED_GLASS-12", 5.0);
-
-        // Load Regular Blocks
+        // Load Prices
         for(String blockName : config.getKeys(true))
         {
+            blockName = blockName.toUpperCase(); // Make uppercase for support in the Material enumeration
+
             double price = config.getDouble(blockName);
             if(price < 0)
             {
@@ -87,14 +46,47 @@ public class PricesConfig extends Config
                 }
                 else
                 {
-                    Material material = Material.valueOf(blockName);
+                    Material material;
+                    try
+                    {
+                        material = Material.valueOf(blockName);
+                    }
+                    catch (IllegalArgumentException e)
+                    {
+                        Printer.INSTANCE.getLogger().log(Level.WARNING, blockName + " is not a valid Material!");
+                        continue;
+                    }
+
                     if(BukkitUtil.isItemMaterial(material))
                     {
                         itemPrices.put(material, price);
+                        Printer.LOGGER.logDebug("Adding itemPrice from itemMaterial: " + material.name());
+
+                        // If item has a corresponding block, add it
+                        Material itemMaterialBlock = BukkitUtil.getItemMaterialBlock(material);
+                        if(itemMaterialBlock != null)
+                        {
+                            blockPrices.put(itemMaterialBlock, price);
+                            Printer.LOGGER.logDebug("Adding blockPrice from itemMaterial: " + itemMaterialBlock.name());
+                        }
+                    }
+                    else if(BukkitUtil.isItemMaterialBlock(material))
+                    {
+                        blockPrices.put(material, price);
+                        Printer.LOGGER.logDebug("Adding blockPrice from itemMaterialBlock: " + material.name());
+
+                        // If block has a corresponding item, add it
+                        Material itemMaterial = BukkitUtil.getItemMaterial(material);
+                        if(itemMaterial != null)
+                        {
+                            itemPrices.put(itemMaterial, price);
+                            Printer.LOGGER.logDebug("Adding itemPrice from itemMaterialBlock: " + itemMaterial.name());
+                        }
                     }
                     else
                     {
                         blockPrices.put(material, price);
+                        Printer.LOGGER.logDebug("Adding blockPrice: " + material.name());
                     }
                 }
             }

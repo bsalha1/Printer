@@ -1,0 +1,47 @@
+# This is an example config
+# Configuration here can be a pain because theres so many ambiguities, for example:
+# REDSTONE and REDSTONE_WIRE are the same thing
+# STRING and TRIPWIRE are the same thing and so on...
+# Don't worry! The config handles it - it knows that these synonyms are all representing the same actual block
+NETHERRACK: 1.0
+DIRT: 1.0
+SIGN: 1.0
+COBBLESTONE: 1.0
+CACTUS: 1.0
+STRING: 1.0
+STEP-0: 0.5
+STEP-1: 0.5
+STEP-3: 0.5
+STEP-4: 0.5
+STEP-5: 0.5
+STEP-6: 0.5
+STEP-7: 2.0
+WOOD_STEP: 1.0
+STONE: 1.0
+SAND-0: 1.0
+SAND-1: 1.0
+GLOWSTONE: 5.0
+DISPENSER: 5.0
+WATER_BUCKET: 5.0
+LAVA_BUCKET: 5.0
+OBSIDIAN: 20.0
+DIODE_BLOCK_OFF: 5.0
+REDSTONE_COMPARATOR_OFF: 5.0
+REDSTONE_WIRE: 1.0
+REDSTONE_BLOCK: 9.0
+REDSTONE_TORCH_ON: 1.0
+REDSTONE_LAMP_OFF: 5.0
+STONE_BUTTON: 1.0
+WOOD_BUTTON: 1.0
+PISTON_BASE: 5.0
+PISTON_STICKY_BASE: 5.0
+LADDER: 5.0
+TRAP_DOOR: 5.0
+IRON_TRAPDOOR: 5.0
+GLASS: 2.0
+LEVER: 2.0
+SOUL_SAND: 2.0
+NETHER_STALK: 2.0
+WOOL-0: 5.0
+WOOL-13: 5.0
+STAINED_GLASS-12: 5.0

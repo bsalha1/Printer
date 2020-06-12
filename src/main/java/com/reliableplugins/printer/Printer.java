@@ -1,5 +1,6 @@
 package com.reliableplugins.printer;
 
+import com.avaje.ebean.LogLevel;
 import com.reliableplugins.printer.commands.CommandHandler;
 import com.reliableplugins.printer.commands.CommandOff;
 import com.reliableplugins.printer.commands.CommandOn;
@@ -16,6 +17,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.*;
 import java.util.HashMap;
 import java.util.logging.Level;
 
@@ -35,6 +37,8 @@ public class Printer extends JavaPlugin implements Listener
 
     private boolean factions;
     private boolean spigot;
+
+    public static Logger LOGGER = new Logger(LogType.NONE);
 
     // Database
     public HashMap<Player, PrinterPlayer> printerPlayers = new HashMap<>();
@@ -91,12 +95,42 @@ public class Printer extends JavaPlugin implements Listener
         getLogger().log(Level.INFO, this.getDescription().getName() + " v" + this.getDescription().getVersion() + " has been unloaded");
     }
 
+    private void downloadResources()
+    {
+        try
+        {
+            InputStream initialStream = getResource("example-prices.yml");
+            byte[] buffer = new byte[initialStream.available()];
+            initialStream.read(buffer);
+
+            File targetFile = new File(getDataFolder(), "example-prices.yml");
+            OutputStream outStream = new FileOutputStream(targetFile);
+            outStream.write(buffer);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     private FileManager setupConfigs()
     {
         FileManager fileManager = new FileManager();
         fileManager.addFile(mainConfig = new MainConfig());
         fileManager.addFile(messageConfig = new MessageConfig());
         fileManager.addFile(pricesConfig = new PricesConfig());
+
+        if(mainConfig.isDebug())
+        {
+            LOGGER = new Logger(LogType.DEBUG);
+        }
+        else
+        {
+            LOGGER = new Logger(LogType.NONE);
+        }
+
+        downloadResources();
+
         return fileManager;
     }
 

@@ -25,7 +25,7 @@
     <orderEntry type="module-library">
       <library name="Maven: net.milkbowl:Vault:unknown">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/Vault.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/Vault1.7.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

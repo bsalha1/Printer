@@ -8,6 +8,7 @@ package com.reliableplugins.printer.config;
 
 public class MainConfig extends Config
 {
+    private boolean debug;
     private boolean scoreboard;
     private boolean onlyInOwnTerritory;
 
@@ -19,6 +20,7 @@ public class MainConfig extends Config
     @Override
     public void load()
     {
+        debug = getBoolean("debug", false);
         scoreboard = getBoolean("scoreboard", true);
         onlyInOwnTerritory = getBoolean("only-in-own-territory", true);
         save();
@@ -32,5 +34,10 @@ public class MainConfig extends Config
     public boolean isOnlyInOwnTerritory()
     {
         return onlyInOwnTerritory;
+    }
+
+    public boolean isDebug()
+    {
+        return debug;
     }
 }

@@ -4,6 +4,8 @@ import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.type.ColoredMaterial;
 import com.reliableplugins.printer.type.PrinterPlayer;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -19,6 +21,7 @@ public class ListenPrinterBlockPlace implements Listener
             PrinterPlayer player = Printer.INSTANCE.printerPlayers.get(event.getPlayer());
             if(player.isPrinting())
             {
+                Printer.LOGGER.logDebug("onBlockPlace: " + event.getBlock().getType());
                 Double price;
 
                 // Prioritize the price of its colored material:
@@ -36,6 +39,7 @@ public class ListenPrinterBlockPlace implements Listener
                 {
                     price = Printer.INSTANCE.getPricesConfig().getBlockPrices().get(event.getBlockPlaced().getType());
                 }
+
 
                 // Don't allow placing of blocks with inventories
                 if(event.getBlock().getState() instanceof InventoryHolder)
