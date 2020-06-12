@@ -71,7 +71,8 @@ public class ListenFactionEvent implements Listener
     @EventHandler
     public void onFPlayerEnteredFaction(FPlayerEnteredFactionEvent event)
     {
-        if(event.getFactionTo().getRelationTo(event.getfPlayer().getFaction()) == Relation.ENEMY)
+        // If player cannot build in this territory, don't allow them
+        if(!FactionsHook.canBuild(event.getfPlayer().getPlayer(), event.getFactionTo()))
         {
             PrinterPlayer player = Printer.INSTANCE.printerPlayers.get(event.getfPlayer().getPlayer());
             if(player != null && player.isPrinting())
@@ -109,8 +110,10 @@ public class ListenFactionEvent implements Listener
 
     public static void disableNearbyPrinters(Player player)
     {
-        System.out.println("Player name: " + player);
-        System.out.println("Render: " + MinecraftUtil.getPlayerLoadDistance(player.getWorld()));
+        if(player == null)
+        {
+            return;
+        }
         for(Entity entity : player.getNearbyEntities(MinecraftUtil.getPlayerLoadDistance(player.getWorld()), 256, MinecraftUtil.getPlayerLoadDistance(player.getWorld())))
         {
             if(entity instanceof Player)

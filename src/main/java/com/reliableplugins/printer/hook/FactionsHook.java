@@ -22,6 +22,16 @@ public class FactionsHook
         return faction.equals(fPlayer.getFaction());
     }
 
+    public static boolean canBuild(Player player, Faction faction)
+    {
+        if(faction.isWilderness())
+        {
+            return true;
+        }
+        FPlayer fPlayer = getFPlayer(player);
+        return fPlayer.getFaction().equals(faction);
+    }
+
     public static FPlayer getFPlayer(Player player)
     {
         return FPlayers.getInstance().getByPlayer(player);
