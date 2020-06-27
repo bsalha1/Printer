@@ -23,6 +23,9 @@ public class PricesConfig extends Config
     public void load()
     {
         blockPrices = new HashMap<>();
+        itemPrices = new HashMap<>();
+        coloredPrices = new HashMap<>();
+
         getConfig().options().header("For a complete list of material names go to: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html\n"
                 + "For colored blocks or typed blocks such as oak, birch, spruce and jungle logs, add the name of \n"
                 + "the material followed by a dash '-' and then the id. For example: black wool = WOOL-15\n"

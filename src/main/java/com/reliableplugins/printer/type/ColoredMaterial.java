@@ -7,6 +7,7 @@ import java.util.HashSet;
 
 public enum ColoredMaterial
 {
+    // Wool
     WHITE_WOOL(Material.WOOL, 0),
     ORANGE_WOOL(Material.WOOL, 1),
     MAGENTA_WOOL(Material.WOOL, 2),
@@ -24,6 +25,7 @@ public enum ColoredMaterial
     RED_WOOL(Material.WOOL, 14),
     BLACK_WOOL(Material.WOOL, 15),
 
+    // Glass
     WHITE_STAINED_STAINED_GLASS(Material.STAINED_GLASS, 0),
     ORANGE_STAINED_GLASS(Material.STAINED_GLASS, 1),
     MAGENTA_STAINED_GLASS(Material.STAINED_GLASS, 2),
@@ -41,6 +43,7 @@ public enum ColoredMaterial
     RED_STAINED_GLASS(Material.STAINED_GLASS, 14),
     BLACK_STAINED_GLASS(Material.STAINED_GLASS, 15),
 
+    // Glass Pane
     WHITE_STAINED_GLASS_PANE(Material.STAINED_GLASS_PANE, 0),
     ORANGE_STAINED_GLASS_PANE(Material.STAINED_GLASS_PANE, 1),
     MAGENTA_STAINED_GLASS_PANE(Material.STAINED_GLASS_PANE, 2),
@@ -57,7 +60,44 @@ public enum ColoredMaterial
     GREEN_STAINED_GLASS_PANE(Material.STAINED_GLASS_PANE, 13),
     RED_STAINED_GLASS_PANE(Material.STAINED_GLASS_PANE, 14),
     BLACK_STAINED_GLASS_PANE(Material.STAINED_GLASS_PANE, 15),
-    
+
+    // Clay
+    WHITE_STAINED_STAINED_CLAY(Material.STAINED_CLAY, 0),
+    ORANGE_STAINED_CLAY(Material.STAINED_CLAY, 1),
+    MAGENTA_STAINED_CLAY(Material.STAINED_CLAY, 2),
+    LIGHT_BLUE_STAINED_CLAY(Material.STAINED_CLAY, 3),
+    YELLOW_STAINED_CLAY(Material.STAINED_CLAY, 4),
+    LIME_STAINED_CLAY(Material.STAINED_CLAY, 5),
+    PINK_STAINED_CLAY(Material.STAINED_CLAY, 6),
+    GRAY_STAINED_CLAY(Material.STAINED_CLAY, 7),
+    LIGHT_GRAY_STAINED_CLAY(Material.STAINED_CLAY, 8),
+    CYAN_STAINED_CLAY(Material.STAINED_CLAY, 9),
+    PURPLE_STAINED_CLAY(Material.STAINED_CLAY, 10),
+    BLUE_STAINED_CLAY(Material.STAINED_CLAY, 11),
+    BROWN_STAINED_CLAY(Material.STAINED_CLAY, 12),
+    GREEN_STAINED_CLAY(Material.STAINED_CLAY, 13),
+    RED_STAINED_CLAY(Material.STAINED_CLAY, 14),
+    BLACK_STAINED_CLAY(Material.STAINED_CLAY, 15),
+
+    // Carpet
+    WHITE_STAINED_CARPET(Material.CARPET, 0),
+    ORANGE_CARPET(Material.CARPET, 1),
+    MAGENTA_CARPET(Material.CARPET, 2),
+    LIGHT_BLUE_CARPET(Material.CARPET, 3),
+    YELLOW_CARPET(Material.CARPET, 4),
+    LIME_CARPET(Material.CARPET, 5),
+    PINK_CARPET(Material.CARPET, 6),
+    GRAY_CARPET(Material.CARPET, 7),
+    LIGHT_GRAY_CARPET(Material.CARPET, 8),
+    CYAN_CARPET(Material.CARPET, 9),
+    PURPLE_CARPET(Material.CARPET, 10),
+    BLUE_CARPET(Material.CARPET, 11),
+    BROWN_CARPET(Material.CARPET, 12),
+    GREEN_CARPET(Material.CARPET, 13),
+    RED_CARPET(Material.CARPET, 14),
+    BLACK_CARPET(Material.CARPET, 15),
+
+    // Slab
     STONE_SLAB(Material.STEP, 0),
     SANDSTONE_SLAB(Material.STEP, 1),
     COBBLESTONE_SLAB(Material.STEP, 3),
@@ -65,21 +105,6 @@ public enum ColoredMaterial
     STONE_BRICK_SLAB(Material.STEP, 5),
     NETHER_BRICK_SLAB(Material.STEP, 6),
     QUARTZ_SLAB(Material.STEP, 7),
-    
-    OAK_PLANK(Material.WOOD, 0),
-    SPRUCE_PLANK(Material.WOOD, 1),
-    BIRCH_PLANK(Material.WOOD, 2),
-    JUNGLE_PLANK(Material.WOOD, 3),
-    ACACIA_PLANK(Material.WOOD, 4),
-    DARK_OAK_PLANK(Material.WOOD, 5),
-
-    OAK_WOOD(Material.LOG, 0),
-    SPRUCE_WOOD(Material.LOG, 1),
-    BIRCH_WOOD(Material.LOG, 2),
-    JUNGLE_WOOD(Material.LOG, 3),
-    ACACIA_WOOD(Material.LOG_2, 0),
-    DARK_OAK_WOOD(Material.LOG_2, 1),
-    
     OAK_SLAB(Material.WOOD_STEP, 0),
     SPRUCE_SLAB(Material.WOOD_STEP, 1),
     BIRCH_SLAB(Material.WOOD_STEP, 2),
@@ -87,9 +112,47 @@ public enum ColoredMaterial
     ACACIA_SLAB(Material.WOOD_STEP, 4),
     DARK_OAK_SLAB(Material.WOOD_STEP, 5),
 
+    // Sapling
+    OAK_SAPLING(Material.SAPLING, 0),
+    SPRUCE_SAPLING(Material.SAPLING, 1),
+    BIRCH_SAPLING(Material.SAPLING, 2),
+    JUNGLE_SAPLING(Material.SAPLING, 3),
+    ACACIA_SAPLING(Material.SAPLING, 4),
+    DARK_OAK_SAPLING(Material.SAPLING, 5),
+    
+    // Leaves
+    OAK_LEAVES(Material.LEAVES, 0),
+    SPRUCE_LEAVES(Material.LEAVES, 1),
+    BIRCH_LEAVES(Material.LEAVES, 2),
+    JUNGLE_LEAVES(Material.LEAVES, 3),
+    ACACIA_LEAVES(Material.LEAVES_2, 0),
+    DARK_OAK_LEAVES(Material.LEAVES_2, 1),
+
+    // Plank
+    OAK_PLANK(Material.WOOD, 0),
+    SPRUCE_PLANK(Material.WOOD, 1),
+    BIRCH_PLANK(Material.WOOD, 2),
+    JUNGLE_PLANK(Material.WOOD, 3),
+    ACACIA_PLANK(Material.WOOD, 4),
+    DARK_OAK_PLANK(Material.WOOD, 5),
+
+    // Log
+    OAK_LOG(Material.LOG, 0),
+    SPRUCE_LOG(Material.LOG, 1),
+    BIRCH_LOG(Material.LOG, 2),
+    JUNGLE_LOG(Material.LOG, 3),
+    ACACIA_LOG(Material.LOG_2, 0),
+    DARK_OAK_LOG(Material.LOG_2, 1),
+
+    // Sand
     SAND(Material.SAND, 0),
     RED_SAND(Material.SAND, 1),
 
+    // Sponge
+    DRY_SPONGE(Material.SPONGE, 0),
+    WET_SPONGE(Material.SPONGE, 1),
+
+    // Sandstone
     SANDSTONE(Material.SANDSTONE, 0),
     CHISELED_SANDSTONE(Material.SANDSTONE, 1),
     SMOOTH_SANDSTONE(Material.SANDSTONE, 2),
@@ -97,8 +160,36 @@ public enum ColoredMaterial
     CHISELED_RED_SANDSTONE(Material.RED_SANDSTONE, 1),
     SMOOTH_RED_SANDSTONE(Material.RED_SANDSTONE, 2),
 
+    // Stone
+    STONE(Material.STONE, 0),
+    GRANITE(Material.STONE, 1),
+    POLISHED_GRANITE(Material.STONE, 2),
+    DIORITE(Material.STONE, 3),
+    POLISHED_DIORITE(Material.STONE, 4),
+    ANDESITE(Material.STONE, 5),
+    POLISHED_ANDESITE(Material.STONE, 6),
+
+    // Stonebricks
+    STONE_BRICKS(Material.SMOOTH_BRICK, 0),
+    MOSSY_STONE_BRICKS(Material.SMOOTH_BRICK, 1),
+    CRACKED_STONE_BRICKS(Material.SMOOTH_BRICK, 2),
+    CHISELED_STONE_BRICKS(Material.SMOOTH_BRICK, 3),
+
+    DIRT(Material.DIRT, 0),
+    COARSE_DIRT(Material.DIRT, 1),
+    PODZOL(Material.DIRT, 2),
+
+    // Wall
     COBBLESTONE_WALL(Material.COBBLE_WALL, 0),
-    MOSSY_COBBLESTONE_WALL(Material.COBBLE_WALL, 1);
+    MOSSY_COBBLESTONE_WALL(Material.COBBLE_WALL, 1),
+
+    // SKULL
+    SKELETON_SKULL(Material.SKULL, 0),
+    WITHER_SKULL(Material.SKULL, 1),
+    ZOMBIE_SKULL(Material.SKULL, 2),
+    HEAD(Material.SKULL, 3),
+    CREEPER_SKULL(Material.SKULL, 4);
+
 
     private final Material material;
     private final int id;
@@ -145,7 +236,6 @@ public enum ColoredMaterial
 
         for(ColoredMaterial coloredMaterial : ColoredMaterial.values())
         {
-
             if(material.equals(coloredMaterial.getMaterial())
                     && dataVal == coloredMaterial.id)
             {
@@ -156,10 +246,6 @@ public enum ColoredMaterial
         return null;
     }
 
-    public static boolean isColorable(ItemStack itemStack)
-    {
-        return COLORABLE.contains(itemStack.getType());
-    }
     public static boolean isColorable(Material material)
     {
         return COLORABLE.contains(material);
