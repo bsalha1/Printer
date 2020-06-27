@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 
 public class Logger
 {
-    private LogType logType;
+    private final LogType logType;
 
     public Logger(LogType logType)
     {

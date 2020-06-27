@@ -2,7 +2,6 @@ package com.reliableplugins.printer.listeners;
 
 import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.FPlayer;
-import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.event.*;
 import com.massivecraft.factions.struct.Relation;
 import com.reliableplugins.printer.Printer;
@@ -50,7 +49,7 @@ public class ListenFactionEvent implements Listener
     @EventHandler
     public void onLandUnclaim(LandUnclaimEvent event)
     {
-        if(Printer.INSTANCE.getMainConfig().isOnlyInOwnTerritory())
+        if(!Printer.INSTANCE.getMainConfig().allowInWilderness())
         {
             disablePrinters(event.getLocation().getChunk());
         }
@@ -59,7 +58,7 @@ public class ListenFactionEvent implements Listener
     @EventHandler
     public void onLandUnclaimAll(LandUnclaimAllEvent event)
     {
-        if(Printer.INSTANCE.getMainConfig().isOnlyInOwnTerritory())
+        if(!Printer.INSTANCE.getMainConfig().allowInWilderness())
         {
             for(FLocation fLocation : event.getFaction().getAllClaims())
             {
@@ -82,7 +81,7 @@ public class ListenFactionEvent implements Listener
                 player.getPlayer().sendMessage(Message.ERROR_NOT_IN_TERRITORY.getMessage());
             }
         }
-        else if(Printer.INSTANCE.getMainConfig().isOnlyInOwnTerritory() && !event.getFactionTo().equals(event.getfPlayer().getFaction()))
+        else if(!Printer.INSTANCE.getMainConfig().allowInWilderness() && !event.getFactionTo().equals(event.getfPlayer().getFaction()))
         {
             PrinterPlayer player = Printer.INSTANCE.printerPlayers.get(event.getfPlayer().getPlayer());
             if(player != null && player.isPrinting())

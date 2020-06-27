@@ -43,36 +43,31 @@ public class BukkitUtil
         itemToBlockMap.put(Material.CAKE,                Material.CAKE_BLOCK);
     }
 
-    public static boolean isItemMaterial(Material material)
+    public static boolean isItem(Material material)
     {
         return itemToBlockMap.containsKey(material);
     }
 
-    public static boolean isItemMaterialBlock(Material material)
+    public static boolean isBlock(Material material)
     {
         return itemToBlockMap.containsValue(material);
     }
 
-    public static Material getItemMaterialBlock(Material itemMaterial)
+    public static Material getBlock(Material item)
     {
-        return itemToBlockMap.get(itemMaterial);
+        return itemToBlockMap.get(item);
     }
 
-    public static Material getItemMaterial(Material itemMaterialBlock)
+    public static Material getItem(Material block)
     {
         for (Map.Entry<Material, Material> entry : itemToBlockMap.entrySet())
         {
-            if (entry.getValue() != null && entry.getValue().equals(itemMaterialBlock))
+            if (entry.getValue() != null && entry.getValue().equals(block))
             {
                 return entry.getKey();
             }
         }
         return null;
-    }
-
-    public static void reloadChunk(Chunk chunk)
-    {
-        chunk.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
     }
 
     public static String color(String text)

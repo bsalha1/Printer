@@ -35,6 +35,7 @@ public class Printer extends JavaPlugin implements Listener
     private MessageConfig messageConfig;
     private PricesConfig pricesConfig;
 
+    private boolean shopGuiPlus;
     private boolean factions;
     private boolean spigot;
 
@@ -47,6 +48,9 @@ public class Printer extends JavaPlugin implements Listener
     public void onEnable()
     {
         Printer.INSTANCE = this;
+
+        shopGuiPlus = false;
+        factions = false;
         spigot = true;
         try
         {
@@ -62,7 +66,8 @@ public class Printer extends JavaPlugin implements Listener
             fileManager = setupConfigs();
             nmsHandler = setupNMSHandler();
             economy = setupEconomy();
-            setupFactionHook();
+            factions = setupFactionHook();
+            shopGuiPlus = setupShopGuiHook();
             setupListeners();
             commandHandler = setupCommands();
         }
@@ -134,18 +139,44 @@ public class Printer extends JavaPlugin implements Listener
         return fileManager;
     }
 
-    private void setupFactionHook()
+    private boolean setupShopGuiHook()
     {
-        factions = this.getServer().getPluginManager().isPluginEnabled("Factions");
-        if(factions)
+        if(mainConfig.useShopGuiPlus())
         {
-            socketChannelManager = new SocketChannelManager();
-            socketChannelManager.loadChannelListener(new SocketChannelListener());
-
-            Bukkit.getPluginManager().registerEvents(socketChannelManager, this);
-            Bukkit.getPluginManager().registerEvents(new ListenFactionEvent(), this);
-            getLogger().log(Level.INFO, "Successfully hooked into Factions");
+            if(getServer().getPluginManager().isPluginEnabled("ShopGuiPlus"))
+            {
+                getLogger().log(Level.INFO, "Successfully hooked into ShopGuiPlus");
+                return true;
+            }
+            else
+            {
+                getLogger().log(Level.WARNING, "ShopGuiPlus jar not found!");
+            }
         }
+
+        return false;
+    }
+
+    private boolean setupFactionHook()
+    {
+        if(mainConfig.useFactions())
+        {
+            if(getServer().getPluginManager().isPluginEnabled("Factions"))
+            {
+                socketChannelManager = new SocketChannelManager();
+                socketChannelManager.loadChannelListener(new SocketChannelListener());
+
+                Bukkit.getPluginManager().registerEvents(socketChannelManager, this);
+                Bukkit.getPluginManager().registerEvents(new ListenFactionEvent(), this);
+                getLogger().log(Level.INFO, "Successfully hooked into Factions");
+                return true;
+            }
+            else
+            {
+                getLogger().log(Level.WARNING, "Factions jar not found!");
+            }
+        }
+        return false;
     }
 
     private Economy setupEconomy() throws VaultException
@@ -263,6 +294,11 @@ public class Printer extends JavaPlugin implements Listener
     public MessageConfig getMessageConfig()
     {
         return messageConfig;
+    }
+
+    public boolean isShopGuiPlus()
+    {
+        return shopGuiPlus;
     }
 
     public boolean isFactions()

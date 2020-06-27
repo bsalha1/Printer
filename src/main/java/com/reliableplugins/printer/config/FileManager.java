@@ -8,7 +8,7 @@ import java.util.logging.Level;
 
 public class FileManager
 {
-    private List<Config> files = new ArrayList<>();
+    private final List<Config> files = new ArrayList<>();
 
     public FileManager()
     {

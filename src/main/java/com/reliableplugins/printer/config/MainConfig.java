@@ -10,7 +10,9 @@ public class MainConfig extends Config
 {
     private boolean debug;
     private boolean scoreboard;
-    private boolean onlyInOwnTerritory;
+    private boolean allowInWilderness;
+    private boolean useFactions;
+    private boolean useShopGuiPlus;
 
     public MainConfig()
     {
@@ -20,9 +22,14 @@ public class MainConfig extends Config
     @Override
     public void load()
     {
-        debug = getBoolean("debug", false);
-        scoreboard = getBoolean("scoreboard", true);
-        onlyInOwnTerritory = getBoolean("only-in-own-territory", true);
+        debug = getBoolean("debug-mode-enabled", false);
+        scoreboard = getBoolean("scoreboard-enabled", true);
+
+        useFactions = getBoolean("factions.support", true);
+        allowInWilderness = getBoolean("factions.allow-in-wilderness", false);
+
+        useShopGuiPlus = getBoolean("shopguiplus.support", true);
+
         save();
     }
 
@@ -31,13 +38,23 @@ public class MainConfig extends Config
         return scoreboard;
     }
 
-    public boolean isOnlyInOwnTerritory()
+    public boolean allowInWilderness()
     {
-        return onlyInOwnTerritory;
+        return allowInWilderness;
     }
 
     public boolean isDebug()
     {
         return debug;
+    }
+
+    public boolean useShopGuiPlus()
+    {
+        return useShopGuiPlus;
+    }
+
+    public boolean useFactions()
+    {
+        return useFactions;
     }
 }

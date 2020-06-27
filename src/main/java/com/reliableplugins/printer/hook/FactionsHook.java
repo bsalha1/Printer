@@ -22,6 +22,14 @@ public class FactionsHook
         return faction.equals(fPlayer.getFaction());
     }
 
+    public static boolean inWilderness(Player player)
+    {
+        FLocation fLocation = new FLocation(player.getWorld().getName(), player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ());
+        Faction faction = Board.getInstance().getFactionAt(fLocation);
+
+        return faction.isWilderness();
+    }
+
     public static boolean canBuild(Player player, Faction faction)
     {
         if(faction.isWilderness())

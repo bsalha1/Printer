@@ -31,7 +31,7 @@ public class CommandOn extends Command
         if(Printer.INSTANCE.isFactions())
         {
             // If you must be in your own territory and you aren't, no printer
-            if(Printer.INSTANCE.getMainConfig().isOnlyInOwnTerritory() && !FactionsHook.inOwnTerritory(player))
+            if(!Printer.INSTANCE.getMainConfig().allowInWilderness() && !FactionsHook.inOwnTerritory(player))
             {
                 player.sendMessage(Message.ERROR_NOT_IN_TERRITORY.getMessage());
                 return;

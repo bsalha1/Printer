@@ -32,6 +32,15 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
+      <library name="Maven: com.github.brcdev-minecraft:shopgui-api:latest">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/shopgui-api-1.3.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
       <library name="Maven: com.massivecraft:Factions:unknown">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/Factions.jar!/" />

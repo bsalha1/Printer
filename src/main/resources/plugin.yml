@@ -2,8 +2,10 @@ name: Printer
 main: com.reliableplugins.printer.Printer
 version: 1.2
 depend: [Vault]
-softdepend: [Factions]
-author: [Reachy]
+softdepend:
+  - Factions
+  - ShopGuiPlus
+author: Reachy
 commands:
   printer:
     description: Help command for Printer

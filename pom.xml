@@ -39,6 +39,15 @@
             <systemPath>${project.basedir}/lib/Vault1.7.2.jar</systemPath>
         </dependency>
 
+        <!-- ShopGui -->
+        <dependency>
+            <groupId>com.github.brcdev-minecraft</groupId>
+            <artifactId>shopgui-api</artifactId>
+            <version>latest</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/shopgui-api-1.3.0.jar</systemPath>
+        </dependency>
+
         <!-- Factions -->
         <dependency>
             <groupId>com.massivecraft</groupId>
