@@ -143,14 +143,14 @@ public class Printer extends JavaPlugin implements Listener
     {
         if(mainConfig.useShopGuiPlus())
         {
-            if(getServer().getPluginManager().isPluginEnabled("ShopGuiPlus"))
+            if(getServer().getPluginManager().isPluginEnabled("ShopGUIPlus"))
             {
-                getLogger().log(Level.INFO, "Successfully hooked into ShopGuiPlus");
+                getLogger().log(Level.INFO, "Successfully hooked into ShopGUIPlus");
                 return true;
             }
             else
             {
-                getLogger().log(Level.WARNING, "ShopGuiPlus jar not found!");
+                getLogger().log(Level.WARNING, "ShopGUIPlus jar not found!");
             }
         }
 
