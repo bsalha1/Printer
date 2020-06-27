@@ -70,7 +70,7 @@ public class ListenFactionEvent implements Listener
     @EventHandler
     public void onFPlayerEnteredFaction(FPlayerEnteredFactionEvent event)
     {
-        Printer.LOGGER.logDebug("FPlayerEnterFactionEvent: From: " + event.getFaction().getTag() + " To: " + event.getFactionTo().getTag());
+//        Printer.LOGGER.logDebug("FPlayerEnterFactionEvent: From: " + event.getFaction().getTag() + " To: " + event.getFactionTo().getTag());
         // If player cannot build in this territory, don't allow them
         if(!FactionsHook.canBuild(event.getfPlayer().getPlayer(), event.getFactionTo()))
         {

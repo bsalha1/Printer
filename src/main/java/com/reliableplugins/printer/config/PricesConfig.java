@@ -63,33 +63,33 @@ public class PricesConfig extends Config
                     if(BukkitUtil.isItem(material))
                     {
                         itemPrices.put(material, price);
-                        Printer.LOGGER.logDebug("Adding itemPrice from itemMaterial: " + material.name());
+//                        Printer.LOGGER.logDebug("Adding itemPrice from itemMaterial: " + material.name());
 
                         // If item has a corresponding block, add it
                         Material itemMaterialBlock = BukkitUtil.getBlock(material);
                         if(itemMaterialBlock != null)
                         {
                             blockPrices.put(itemMaterialBlock, price);
-                            Printer.LOGGER.logDebug("Adding blockPrice from itemMaterial: " + itemMaterialBlock.name());
+//                            Printer.LOGGER.logDebug("Adding blockPrice from itemMaterial: " + itemMaterialBlock.name());
                         }
                     }
                     else if(BukkitUtil.isBlock(material))
                     {
                         blockPrices.put(material, price);
-                        Printer.LOGGER.logDebug("Adding blockPrice from itemMaterialBlock: " + material.name());
+//                        Printer.LOGGER.logDebug("Adding blockPrice from itemMaterialBlock: " + material.name());
 
                         // If block has a corresponding item, add it
                         Material itemMaterial = BukkitUtil.getItem(material);
                         if(itemMaterial != null)
                         {
                             itemPrices.put(itemMaterial, price);
-                            Printer.LOGGER.logDebug("Adding itemPrice from itemMaterialBlock: " + itemMaterial.name());
+//                            Printer.LOGGER.logDebug("Adding itemPrice from itemMaterialBlock: " + itemMaterial.name());
                         }
                     }
                     else
                     {
                         blockPrices.put(material, price);
-                        Printer.LOGGER.logDebug("Adding blockPrice: " + material.name());
+//                        Printer.LOGGER.logDebug("Adding blockPrice: " + material.name());
                     }
                 }
             }

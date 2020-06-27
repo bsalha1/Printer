@@ -5,14 +5,13 @@ import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.hook.ShopGuiPlusHook;
 import com.reliableplugins.printer.type.ColoredMaterial;
 import com.reliableplugins.printer.type.PrinterPlayer;
-import net.brcdev.shopgui.ShopGuiPlusApi;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.Material;
+import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 
 public class ListenPrinterBlockPlace implements Listener
 {
@@ -24,11 +23,12 @@ public class ListenPrinterBlockPlace implements Listener
             PrinterPlayer player = Printer.INSTANCE.printerPlayers.get(event.getPlayer());
             if(player.isPrinting())
             {
-                Printer.LOGGER.logDebug("onBlockPlace: " + event.getBlock().getType());
+//                Printer.LOGGER.logDebug("onBlockPlace: " + event.getBlock().getType());
                 Double price = null;
 
                 // Prioritize colored price, then configured price, then shopgui price
-                ColoredMaterial coloredMaterial = ColoredMaterial.fromItemstack(event.getItemInHand());
+                ItemStack toPlace = event.getItemInHand();
+                ColoredMaterial coloredMaterial = ColoredMaterial.fromItemstack(toPlace);
                 if(coloredMaterial != null && Printer.INSTANCE.getPricesConfig().getColoredPrices().containsKey(coloredMaterial))
                 {
                     price = Printer.INSTANCE.getPricesConfig().getColoredPrices().get(coloredMaterial);
@@ -39,7 +39,9 @@ public class ListenPrinterBlockPlace implements Listener
                 }
                 else if(Printer.INSTANCE.isShopGuiPlus())
                 {
-                    price = ShopGuiPlusHook.getPrice(event.getItemInHand());
+                    ItemStack toPlaceCopy = toPlace.clone();
+                    toPlaceCopy.setAmount(1);
+                    price = ShopGuiPlusHook.getPrice(toPlaceCopy);
                     price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
                 }
 
@@ -61,6 +63,53 @@ public class ListenPrinterBlockPlace implements Listener
                     return;
                 }
                 player.incrementCost(price);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent event)
+    {
+        // Allow itemblocks like DIODE, COMPARATOR, etc...
+        if(event.getItem() != null && !event.getItem().getType().isBlock()
+                && Printer.INSTANCE.printerPlayers.containsKey(event.getPlayer()))
+        {
+            PrinterPlayer player = Printer.INSTANCE.printerPlayers.get(event.getPlayer());
+
+            if (player.isPrinting())
+            {
+//                Printer.LOGGER.logDebug("onPlayerInteract: " + event.getItem().getType());
+                Double price = null;
+
+                ItemStack toPlace = event.getItem();
+                if(Printer.INSTANCE.getPricesConfig().getItemPrices().containsKey(toPlace.getType()))
+                {
+                    price = Printer.INSTANCE.getPricesConfig().getItemPrices().get(toPlace.getType());
+                }
+                else if(Printer.INSTANCE.isShopGuiPlus())
+                {
+                    ItemStack toPlaceCopy = toPlace.clone();
+                    toPlaceCopy.setAmount(1);
+                    price = ShopGuiPlusHook.getPrice(toPlaceCopy);
+                    price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
+                }
+
+                if(price == null)
+                {
+                    event.setCancelled(true);
+                    event.getPlayer().sendMessage(Message.ERROR_BLOCK_NOT_ALLOWED.getMessage());
+                }
+                else if(BukkitUtil.isNoBlockPlaceItem(toPlace.getType()))
+                {
+                    if(!Printer.INSTANCE.withdrawMoney(player.getPlayer(), price))
+                    {
+                        event.setCancelled(true);
+                    }
+                    else
+                    {
+                        player.incrementCost(price);
+                    }
+                }
             }
         }
     }

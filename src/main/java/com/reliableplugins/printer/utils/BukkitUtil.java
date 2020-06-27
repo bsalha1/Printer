@@ -1,20 +1,24 @@
 package com.reliableplugins.printer.utils;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
 import org.bukkit.Material;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class BukkitUtil
 {
     private static final HashMap<Material, Material> itemToBlockMap = new HashMap<>();
+    private static final ArrayList<Material> noBlockPlaceItems = new ArrayList<>();
 
     static
     {
-        itemToBlockMap.put(Material.WATER_BUCKET,        null);
-        itemToBlockMap.put(Material.LAVA_BUCKET,         null);
+        noBlockPlaceItems.add(Material.WATER_BUCKET);
+        noBlockPlaceItems.add(Material.LAVA_BUCKET);
+
+        itemToBlockMap.put(Material.WATER_BUCKET,        Material.WATER);
+        itemToBlockMap.put(Material.LAVA_BUCKET,         Material.LAVA);
         itemToBlockMap.put(Material.REDSTONE,            Material.REDSTONE_WIRE);
         itemToBlockMap.put(Material.DIODE,               Material.DIODE_BLOCK_OFF);
         itemToBlockMap.put(Material.REDSTONE_COMPARATOR, Material.REDSTONE_COMPARATOR_OFF);
@@ -41,6 +45,11 @@ public class BukkitUtil
         itemToBlockMap.put(Material.FLOWER_POT_ITEM,     Material.FLOWER_POT);
         itemToBlockMap.put(Material.CAULDRON_ITEM,       Material.CAULDRON);
         itemToBlockMap.put(Material.CAKE,                Material.CAKE_BLOCK);
+    }
+
+    public static boolean isNoBlockPlaceItem(Material material)
+    {
+        return noBlockPlaceItems.contains(material);
     }
 
     public static boolean isItem(Material material)
