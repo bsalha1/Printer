@@ -2,7 +2,10 @@ package com.reliableplugins.printer.hook;
 
 import com.massivecraft.factions.*;
 import com.massivecraft.factions.struct.Relation;
+import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public class FactionsHook
 {
@@ -11,6 +14,19 @@ public class FactionsHook
         FPlayer fPlayer1 = getFPlayer(player1);
         FPlayer fPlayer2 = getFPlayer(player2);
         return fPlayer1.getRelationTo(fPlayer2).equals(Relation.ENEMY) || fPlayer1.getRelationTo(fPlayer2).equals(Relation.NEUTRAL);
+    }
+
+    public static boolean isEnemyOrNeutralNearby(Player player)
+    {
+        List<Player> nearbyPlayers = BukkitUtil.getNearbyPlayers(player);
+        for(Player nearbyPlayer : nearbyPlayers)
+        {
+            if(areNeutralOrEnemies(player, nearbyPlayer))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean inOwnTerritory(Player player)
@@ -32,6 +48,18 @@ public class FactionsHook
 
     public static boolean canBuild(Player player, Faction faction)
     {
+        if(faction.isWilderness())
+        {
+            return true;
+        }
+        FPlayer fPlayer = getFPlayer(player);
+        return fPlayer.getFaction().equals(faction);
+    }
+
+    public static boolean canBuild(Player player)
+    {
+        FLocation fLocation = new FLocation(player.getWorld().getName(), player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ());
+        Faction faction = Board.getInstance().getFactionAt(fLocation);
         if(faction.isWilderness())
         {
             return true;

@@ -1,10 +1,18 @@
 package com.reliableplugins.printer.utils;
 
+import com.reliableplugins.printer.Printer;
+import com.reliableplugins.printer.config.Message;
+import com.reliableplugins.printer.type.PrinterPlayer;
+import com.sun.jna.platform.win32.NTSecApi;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BukkitUtil
@@ -77,6 +85,20 @@ public class BukkitUtil
             }
         }
         return null;
+    }
+
+    public static List<Player> getNearbyPlayers(Player player)
+    {
+        ArrayList<Player> nearbyPlayers = new ArrayList<>();
+
+        for(Entity entity : player.getNearbyEntities(MinecraftUtil.getPlayerLoadDistance(player.getWorld()), 256, MinecraftUtil.getPlayerLoadDistance(player.getWorld())))
+        {
+            if(entity instanceof Player)
+            {
+                nearbyPlayers.add((Player)entity);
+            }
+        }
+        return nearbyPlayers;
     }
 
     public static String color(String text)

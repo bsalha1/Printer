@@ -1,6 +1,5 @@
 package com.reliableplugins.printer;
 
-import com.avaje.ebean.LogLevel;
 import com.reliableplugins.printer.commands.CommandHandler;
 import com.reliableplugins.printer.commands.CommandOff;
 import com.reliableplugins.printer.commands.CommandOn;
@@ -9,6 +8,8 @@ import com.reliableplugins.printer.config.*;
 import com.reliableplugins.printer.exception.VaultException;
 import com.reliableplugins.printer.listeners.*;
 import com.reliableplugins.printer.nms.*;
+import com.reliableplugins.printer.task.BukkitTask;
+import com.reliableplugins.printer.task.FactionScanner;
 import com.reliableplugins.printer.type.PrinterPlayer;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -29,6 +30,7 @@ public class Printer extends JavaPlugin implements Listener
     private CommandHandler commandHandler;
     private Economy economy;
     private SocketChannelManager socketChannelManager = null;
+    private BukkitTask factionScanner;
 
     private FileManager fileManager;
     private MainConfig mainConfig;
@@ -37,6 +39,7 @@ public class Printer extends JavaPlugin implements Listener
 
     private boolean shopGuiPlus;
     private boolean factions;
+    private boolean superiorSkyBlock;
     private boolean spigot;
 
     public static Logger LOGGER = new Logger(LogType.NONE);
@@ -67,6 +70,7 @@ public class Printer extends JavaPlugin implements Listener
             nmsHandler = setupNMSHandler();
             economy = setupEconomy();
             factions = setupFactionHook();
+            superiorSkyBlock = setupSuperiorSkyBlockHook();
             shopGuiPlus = setupShopGuiHook();
             setupListeners();
             commandHandler = setupCommands();
@@ -96,6 +100,11 @@ public class Printer extends JavaPlugin implements Listener
         if(socketChannelManager != null)
         {
             socketChannelManager.unloadChannelListener();
+        }
+
+        if(factionScanner != null)
+        {
+            factionScanner.cancel();
         }
         getLogger().log(Level.INFO, this.getDescription().getName() + " v" + this.getDescription().getVersion() + " has been unloaded");
     }
@@ -139,6 +148,24 @@ public class Printer extends JavaPlugin implements Listener
         return fileManager;
     }
 
+    private boolean setupSuperiorSkyBlockHook()
+    {
+        if(mainConfig.useSuperiorSkyBlock())
+        {
+            if(getServer().getPluginManager().isPluginEnabled("SuperiorSkyblock2"))
+            {
+                getLogger().log(Level.INFO, "Successfully hooked into SuperiorSkyblock2");
+                return true;
+            }
+            else
+            {
+                getLogger().log(Level.WARNING, "SuperiorSkyblock2 jar not found!");
+            }
+        }
+
+        return false;
+    }
+
     private boolean setupShopGuiHook()
     {
         if(mainConfig.useShopGuiPlus())
@@ -163,11 +190,13 @@ public class Printer extends JavaPlugin implements Listener
         {
             if(getServer().getPluginManager().isPluginEnabled("Factions"))
             {
-                socketChannelManager = new SocketChannelManager();
-                socketChannelManager.loadChannelListener(new SocketChannelListener());
+//                socketChannelManager = new SocketChannelManager();
+//                socketChannelManager.loadChannelListener(new SocketChannelListener());
 
-                Bukkit.getPluginManager().registerEvents(socketChannelManager, this);
-                Bukkit.getPluginManager().registerEvents(new ListenFactionEvent(), this);
+                factionScanner = new FactionScanner(0L, 5L);
+
+//                Bukkit.getPluginManager().registerEvents(socketChannelManager, this);
+//                Bukkit.getPluginManager().registerEvents(new ListenFactionEvent(), this);
                 getLogger().log(Level.INFO, "Successfully hooked into Factions");
                 return true;
             }

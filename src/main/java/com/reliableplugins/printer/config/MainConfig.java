@@ -13,6 +13,7 @@ public class MainConfig extends Config
     private boolean allowInWilderness;
     private boolean useFactions;
     private boolean useShopGuiPlus;
+    private boolean useSuperiorSkyBlock;
 
     public MainConfig()
     {
@@ -29,6 +30,8 @@ public class MainConfig extends Config
         allowInWilderness = getBoolean("factions.allow-in-wilderness", false);
 
         useShopGuiPlus = getBoolean("shopguiplus.support", true);
+
+        useSuperiorSkyBlock = getBoolean("superior-skyblock.support", true);
 
         save();
     }
@@ -56,5 +59,10 @@ public class MainConfig extends Config
     public boolean useFactions()
     {
         return useFactions;
+    }
+
+    public boolean useSuperiorSkyBlock()
+    {
+        return useSuperiorSkyBlock;
     }
 }

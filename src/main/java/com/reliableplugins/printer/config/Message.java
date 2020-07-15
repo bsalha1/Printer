@@ -10,7 +10,8 @@ public enum Message
     WITHDRAW_MONEY("withdraw-money", "&7${NUM} withdrawn"),
     RELOAD("reload", "&7Printer reloaded"),
 
-    ERROR_NO_MONEY("err-not-enough-money", "&cNot enough money"),
+
+    // Exploits
     ERROR_INVENTORY_OPEN_EXPLOIT("err-inventory-open-exploit", "&cOpening an inventory is not allowed while printer is on"),
     ERROR_DROP_ITEM_EXPLOIT("err-drop-item-exploit", "&cDropping items is not allowed while printer is on"),
     ERROR_ITEM_FRAME_EXPLOIT("err-item-frame-exploit", "&cUsing item frames is not allowed while printer is on"),
@@ -19,12 +20,17 @@ public enum Message
     ERROR_DAMAGE_EXPLOIT("err-damage-exploit", "&cDamaging entities is not allowed while printer is on"),
     ERROR_ENEMY_NEARBY_EXPLOIT("err-enemy-nearby-exploit", "&cEnemy or neutral player nearby - printer disabled"),
 
+    // Factions
     ERROR_NOT_IN_TERRITORY("err-not-in-territory", "&cYou may only use printer if you're in your own territory"),
     ERROR_BLOCK_NOT_ALLOWED("err-block-not-allowed", "&cThis block is not allowed to be placed while printer is on"),
     ERROR_ENEMY_NEARBY("err-enemy-nearby", "&cEnemy or neutral player nearby"),
     ERROR_PRINTER_ALREADY_ON("err-printer-already-on", "&cPrinter is already activated"),
     ERROR_PRINTER_NOT_ON("err-printer-not-on", "&cPrinter is not activated"),
 
+    // Skyblock
+    ERROR_NOT_IN_ISLAND("err-not-in-island", "&cYou may only use printer if you're in your own island"),
+
+    ERROR_NO_MONEY("err-not-enough-money", "&cNot enough money"),
     ERROR_NO_PERMS("err-no-perms", "&cYou do not have access to this command!"),
     ERROR_NOT_PLAYER("err-not-player", "&cOnly players may execute this command.");
 

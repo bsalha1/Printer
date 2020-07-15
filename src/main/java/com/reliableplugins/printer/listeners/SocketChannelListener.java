@@ -4,6 +4,7 @@ import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.hook.FactionsHook;
 import com.reliableplugins.printer.task.BukkitTask;
+import com.reliableplugins.printer.type.PrinterPlayer;
 import com.reliableplugins.printer.type.packet.PacketServerNamedEntitySpawn;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -22,14 +23,18 @@ public class SocketChannelListener extends ASocketChannelListener
                 && FactionsHook.areNeutralOrEnemies(player, Bukkit.getPlayer(pack.getUuid()))
                 && Printer.INSTANCE.printerPlayers.containsKey(player))
         {
+            PrinterPlayer printerPlayer = Printer.INSTANCE.printerPlayers.get(player);
             // Synchronously turn printer off
             new BukkitTask(0)
             {
                 @Override
                 public void run()
                 {
-                    Printer.INSTANCE.printerPlayers.get(player).printerOff();
-                    player.sendMessage(Message.ERROR_ENEMY_NEARBY_EXPLOIT.getMessage());
+                    if(printerPlayer.isPrinting())
+                    {
+                        Printer.INSTANCE.printerPlayers.get(player).printerOff();
+                        player.sendMessage(Message.ERROR_ENEMY_NEARBY_EXPLOIT.getMessage());
+                    }
                 }
             };
         }

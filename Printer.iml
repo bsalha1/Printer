@@ -41,6 +41,15 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
+      <library name="Maven: com.bgsoftware.superiorskyblock.api:SuperiorSkyblock:unknown">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/SuperiorSkyblockAPI.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
       <library name="Maven: com.massivecraft:Factions:unknown">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/Factions.jar!/" />

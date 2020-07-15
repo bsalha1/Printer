@@ -9,6 +9,7 @@ import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.hook.FactionsHook;
 import com.reliableplugins.printer.type.PrinterPlayer;
 import com.reliableplugins.printer.utils.MinecraftUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -70,7 +71,6 @@ public class ListenFactionEvent implements Listener
     @EventHandler
     public void onFPlayerEnteredFaction(FPlayerEnteredFactionEvent event)
     {
-//        Printer.LOGGER.logDebug("FPlayerEnterFactionEvent: From: " + event.getFaction().getTag() + " To: " + event.getFactionTo().getTag());
         // If player cannot build in this territory, don't allow them
         if(!FactionsHook.canBuild(event.getfPlayer().getPlayer(), event.getFactionTo()))
         {
