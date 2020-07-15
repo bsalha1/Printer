@@ -4,11 +4,8 @@ import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.hook.FactionsHook;
 import com.reliableplugins.printer.type.PrinterPlayer;
-import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
-import java.util.List;
 
 public class FactionScanner extends BukkitTask
 {

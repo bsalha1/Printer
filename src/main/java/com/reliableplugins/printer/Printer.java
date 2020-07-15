@@ -6,10 +6,12 @@ import com.reliableplugins.printer.commands.CommandOn;
 import com.reliableplugins.printer.commands.CommandReload;
 import com.reliableplugins.printer.config.*;
 import com.reliableplugins.printer.exception.VaultException;
-import com.reliableplugins.printer.listeners.*;
-import com.reliableplugins.printer.nms.*;
+import com.reliableplugins.printer.listeners.ListenPlayerQuit;
+import com.reliableplugins.printer.listeners.ListenPrinterBlockPlace;
+import com.reliableplugins.printer.listeners.ListenPrinterExploit;
 import com.reliableplugins.printer.task.BukkitTask;
 import com.reliableplugins.printer.task.FactionScanner;
+import com.reliableplugins.printer.task.SuperiorSkyBlockScanner;
 import com.reliableplugins.printer.type.PrinterPlayer;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -26,11 +28,11 @@ public class Printer extends JavaPlugin implements Listener
 {
     public static Printer INSTANCE;
 
-    private INMSHandler nmsHandler;
     private CommandHandler commandHandler;
     private Economy economy;
-    private SocketChannelManager socketChannelManager = null;
+
     private BukkitTask factionScanner;
+    private BukkitTask superiorSkyBlockScanner;
 
     private FileManager fileManager;
     private MainConfig mainConfig;
@@ -41,8 +43,6 @@ public class Printer extends JavaPlugin implements Listener
     private boolean factions;
     private boolean superiorSkyBlock;
     private boolean spigot;
-
-    public static Logger LOGGER = new Logger(LogType.NONE);
 
     // Database
     public HashMap<Player, PrinterPlayer> printerPlayers = new HashMap<>();
@@ -67,7 +67,6 @@ public class Printer extends JavaPlugin implements Listener
         try
         {
             fileManager = setupConfigs();
-            nmsHandler = setupNMSHandler();
             economy = setupEconomy();
             factions = setupFactionHook();
             superiorSkyBlock = setupSuperiorSkyBlockHook();
@@ -97,14 +96,14 @@ public class Printer extends JavaPlugin implements Listener
             }
         }
 
-        if(socketChannelManager != null)
-        {
-            socketChannelManager.unloadChannelListener();
-        }
-
+        // Shut off scanners
         if(factionScanner != null)
         {
             factionScanner.cancel();
+        }
+        if(superiorSkyBlockScanner != null)
+        {
+            superiorSkyBlockScanner.cancel();
         }
         getLogger().log(Level.INFO, this.getDescription().getName() + " v" + this.getDescription().getVersion() + " has been unloaded");
     }
@@ -133,15 +132,6 @@ public class Printer extends JavaPlugin implements Listener
         fileManager.addFile(mainConfig = new MainConfig());
         fileManager.addFile(messageConfig = new MessageConfig());
         fileManager.addFile(pricesConfig = new PricesConfig());
-
-        if(mainConfig.isDebug())
-        {
-            LOGGER = new Logger(LogType.DEBUG);
-        }
-        else
-        {
-            LOGGER = new Logger(LogType.NONE);
-        }
 
         downloadResources();
 
@@ -172,6 +162,7 @@ public class Printer extends JavaPlugin implements Listener
         {
             if(getServer().getPluginManager().isPluginEnabled("ShopGUIPlus"))
             {
+                superiorSkyBlockScanner = new SuperiorSkyBlockScanner(0L, 5L);
                 getLogger().log(Level.INFO, "Successfully hooked into ShopGUIPlus");
                 return true;
             }
@@ -190,13 +181,7 @@ public class Printer extends JavaPlugin implements Listener
         {
             if(getServer().getPluginManager().isPluginEnabled("Factions"))
             {
-//                socketChannelManager = new SocketChannelManager();
-//                socketChannelManager.loadChannelListener(new SocketChannelListener());
-
                 factionScanner = new FactionScanner(0L, 5L);
-
-//                Bukkit.getPluginManager().registerEvents(socketChannelManager, this);
-//                Bukkit.getPluginManager().registerEvents(new ListenFactionEvent(), this);
                 getLogger().log(Level.INFO, "Successfully hooked into Factions");
                 return true;
             }
@@ -233,37 +218,6 @@ public class Printer extends JavaPlugin implements Listener
         Bukkit.getPluginManager().registerEvents(new ListenPrinterBlockPlace(), this);
         Bukkit.getPluginManager().registerEvents(new ListenPrinterExploit(), this);
         Bukkit.getPluginManager().registerEvents(new ListenPlayerQuit(), this);
-    }
-
-    private INMSHandler setupNMSHandler()
-    {
-        String nmsVersion = getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
-        switch(nmsVersion)
-        {
-            case "v1_8_R2":
-                return new Version_1_8_R2();
-            case "v1_8_R3":
-                return new Version_1_8_R3();
-            case "v_1_9_R1":
-                return new Version_1_9_R1();
-            case "v_1_9_R2":
-                return new Version_1_9_R2();
-            case "v_1_10_R1":
-                return new Version_1_10_R1();
-            case "v1_11_R1":
-                return new Version_1_11_R1();
-            case "v1_12_R1":
-                return new Version_1_12_R1();
-            case "v1_13_R1":
-                return new Version_1_13_R1();
-            case "v1_13_R2":
-                return new Version_1_13_R2();
-            case "v1_14_R1":
-                return new Version_1_14_R1();
-            case "v1_15_R1":
-            default:
-                return new Version_1_15_R1();
-        }
     }
 
     private CommandHandler setupCommands()
@@ -310,11 +264,6 @@ public class Printer extends JavaPlugin implements Listener
         return pricesConfig;
     }
 
-    public INMSHandler getNMSHandler()
-    {
-        return nmsHandler;
-    }
-
     public Economy getEconomy()
     {
         return economy;
@@ -333,6 +282,11 @@ public class Printer extends JavaPlugin implements Listener
     public boolean isFactions()
     {
         return factions;
+    }
+
+    public boolean isSuperiorSkyBlock()
+    {
+        return superiorSkyBlock;
     }
 
     public boolean isSpigot()

@@ -8,7 +8,6 @@ package com.reliableplugins.printer.config;
 
 public class MainConfig extends Config
 {
-    private boolean debug;
     private boolean scoreboard;
     private boolean allowInWilderness;
     private boolean useFactions;
@@ -23,7 +22,6 @@ public class MainConfig extends Config
     @Override
     public void load()
     {
-        debug = getBoolean("debug-mode-enabled", false);
         scoreboard = getBoolean("scoreboard-enabled", true);
 
         useFactions = getBoolean("factions.support", true);
@@ -44,11 +42,6 @@ public class MainConfig extends Config
     public boolean allowInWilderness()
     {
         return allowInWilderness;
-    }
-
-    public boolean isDebug()
-    {
-        return debug;
     }
 
     public boolean useShopGuiPlus()

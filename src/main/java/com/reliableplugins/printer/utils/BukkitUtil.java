@@ -1,11 +1,6 @@
 package com.reliableplugins.printer.utils;
 
-import com.reliableplugins.printer.Printer;
-import com.reliableplugins.printer.config.Message;
-import com.reliableplugins.printer.type.PrinterPlayer;
-import com.sun.jna.platform.win32.NTSecApi;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;

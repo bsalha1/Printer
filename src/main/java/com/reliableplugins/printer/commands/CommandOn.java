@@ -4,6 +4,7 @@ import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.annotation.CommandBuilder;
 import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.hook.FactionsHook;
+import com.reliableplugins.printer.hook.SuperiorSkyblockHook;
 import com.reliableplugins.printer.type.PrinterPlayer;
 import com.reliableplugins.printer.utils.MinecraftUtil;
 import org.bukkit.command.CommandSender;
@@ -41,6 +42,15 @@ public class CommandOn extends Command
             if(printerPlayer.areEnemiesOrNeutralsNearby(MinecraftUtil.getPlayerLoadDistance(player.getWorld()), 256, MinecraftUtil.getPlayerLoadDistance(player.getWorld())))
             {
                 player.sendMessage(Message.ERROR_ENEMY_NEARBY.getMessage());
+                return;
+            }
+        }
+        // SuperiorSkyBlock checks
+        else if(Printer.INSTANCE.isSuperiorSkyBlock())
+        {
+            if(!SuperiorSkyblockHook.canPlayerBuild(player, player.getLocation()))
+            {
+                player.sendMessage(Message.ERROR_NOT_IN_ISLAND.getMessage());
                 return;
             }
         }

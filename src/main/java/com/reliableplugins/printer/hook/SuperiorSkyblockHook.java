@@ -10,14 +10,13 @@ public class SuperiorSkyblockHook
 {
     public static boolean canPlayerBuild(Player player, Location location)
     {
-        if(SuperiorSkyblockAPI.getIslandAt(location) == null)
+        Island locationIsland = SuperiorSkyblockAPI.getIslandAt(location);
+        if(locationIsland == null)
         {
             return true;
         }
 
-        SuperiorPlayer superiorPlayer = SuperiorSkyblockAPI.getPlayer(player.getUniqueId());
-
-        return SuperiorSkyblockAPI.getIslandAt(location).getIslandMembers(true).contains(superiorPlayer);
+        return isMemberOfIsland(player, locationIsland);
     }
 
     public static boolean isMemberOfIsland(Player player, Island island)
