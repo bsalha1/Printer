@@ -2,7 +2,6 @@ package com.reliableplugins.printer.listeners;
 
 import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.config.Message;
-import com.reliableplugins.printer.hook.ShopGuiPlusHook;
 import com.reliableplugins.printer.type.ColoredMaterial;
 import com.reliableplugins.printer.type.PrinterPlayer;
 import com.reliableplugins.printer.utils.BukkitUtil;
@@ -23,7 +22,6 @@ public class ListenPrinterBlockPlace implements Listener
             PrinterPlayer player = Printer.INSTANCE.printerPlayers.get(event.getPlayer());
             if(player.isPrinting())
             {
-//                Printer.LOGGER.logDebug("onBlockPlace: " + event.getBlock().getType());
                 Double price = null;
 
                 // Prioritize colored price, then configured price, then shopgui price
@@ -41,7 +39,7 @@ public class ListenPrinterBlockPlace implements Listener
                 {
                     ItemStack toPlaceCopy = toPlace.clone();
                     toPlaceCopy.setAmount(1);
-                    price = ShopGuiPlusHook.getPrice(toPlaceCopy);
+                    price = Printer.INSTANCE.getShopGuiPlusHook().getPrice(toPlaceCopy);
                     price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
                 }
 
@@ -59,6 +57,7 @@ public class ListenPrinterBlockPlace implements Listener
                 }
                 else if(!Printer.INSTANCE.withdrawMoney(player.getPlayer(), price))
                 {
+                    Printer.INSTANCE.getNmsHandler().sendToolTipText(player.getPlayer(), Message.ERROR_NO_MONEY.getMessage());
                     event.setCancelled(true);
                     return;
                 }
@@ -90,7 +89,7 @@ public class ListenPrinterBlockPlace implements Listener
                 {
                     ItemStack toPlaceCopy = toPlace.clone();
                     toPlaceCopy.setAmount(1);
-                    price = ShopGuiPlusHook.getPrice(toPlaceCopy);
+                    price = Printer.INSTANCE.getShopGuiPlusHook().getPrice(toPlaceCopy);
                     price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
                 }
 
@@ -103,6 +102,7 @@ public class ListenPrinterBlockPlace implements Listener
                 {
                     if(!Printer.INSTANCE.withdrawMoney(player.getPlayer(), price))
                     {
+                        Printer.INSTANCE.getNmsHandler().sendToolTipText(player.getPlayer(), Message.ERROR_NO_MONEY.getMessage());
                         event.setCancelled(true);
                     }
                     else

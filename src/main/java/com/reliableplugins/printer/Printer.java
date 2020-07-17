@@ -6,17 +6,22 @@ import com.reliableplugins.printer.commands.CommandOn;
 import com.reliableplugins.printer.commands.CommandReload;
 import com.reliableplugins.printer.config.*;
 import com.reliableplugins.printer.exception.VaultException;
+import com.reliableplugins.printer.hook.*;
+import com.reliableplugins.printer.hook.shopguiplus.ShopGuiPlusHook;
+import com.reliableplugins.printer.hook.shopguiplus.ShopGuiPlusHook_v1_3_0;
+import com.reliableplugins.printer.hook.shopguiplus.ShopGuiPlusHook_v1_4_0;
+import com.reliableplugins.printer.hook.shopguiplus.ShopGuiPlusHook_v1_5_0;
 import com.reliableplugins.printer.listeners.ListenPlayerQuit;
 import com.reliableplugins.printer.listeners.ListenPrinterBlockPlace;
 import com.reliableplugins.printer.listeners.ListenPrinterExploit;
+import com.reliableplugins.printer.nms.*;
 import com.reliableplugins.printer.task.BukkitTask;
-import com.reliableplugins.printer.task.FactionScanner;
-import com.reliableplugins.printer.task.SuperiorSkyBlockScanner;
 import com.reliableplugins.printer.type.PrinterPlayer;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -31,8 +36,10 @@ public class Printer extends JavaPlugin implements Listener
     private CommandHandler commandHandler;
     private Economy economy;
 
+    private ShopGuiPlusHook shopGuiPlusHook;
     private BukkitTask factionScanner;
     private BukkitTask superiorSkyBlockScanner;
+    private INMSHandler nmsHandler;
 
     private FileManager fileManager;
     private MainConfig mainConfig;
@@ -67,6 +74,7 @@ public class Printer extends JavaPlugin implements Listener
         try
         {
             fileManager = setupConfigs();
+            nmsHandler = setupNMS();
             economy = setupEconomy();
             factions = setupFactionHook();
             superiorSkyBlock = setupSuperiorSkyBlockHook();
@@ -138,12 +146,44 @@ public class Printer extends JavaPlugin implements Listener
         return fileManager;
     }
 
+    private INMSHandler setupNMS()
+    {
+        String nmsVersion = getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+        switch(nmsVersion)
+        {
+            case "v1_8_R2":
+                return new Version_1_8_R2();
+            case "v1_8_R3":
+                return new Version_1_8_R3();
+            case "v_1_9_R1":
+                return new Version_1_9_R1();
+            case "v_1_9_R2":
+                return new Version_1_9_R2();
+            case "v_1_10_R1":
+                return new Version_1_10_R1();
+            case "v1_11_R1":
+                return new Version_1_11_R1();
+            case "v1_12_R1":
+                return new Version_1_12_R1();
+            case "v1_13_R1":
+                return new Version_1_13_R1();
+            case "v1_13_R2":
+                return new Version_1_13_R2();
+            case "v1_14_R1":
+                return new Version_1_14_R1();
+            case "v1_15_R1":
+            default:
+                return new Version_1_15_R1();
+        }
+    }
+
     private boolean setupSuperiorSkyBlockHook()
     {
         if(mainConfig.useSuperiorSkyBlock())
         {
             if(getServer().getPluginManager().isPluginEnabled("SuperiorSkyblock2"))
             {
+                superiorSkyBlockScanner = new SuperiorSkyblockHook.SuperiorSkyBlockScanner(0L, 5L);
                 getLogger().log(Level.INFO, "Successfully hooked into SuperiorSkyblock2");
                 return true;
             }
@@ -162,7 +202,26 @@ public class Printer extends JavaPlugin implements Listener
         {
             if(getServer().getPluginManager().isPluginEnabled("ShopGUIPlus"))
             {
-                superiorSkyBlockScanner = new SuperiorSkyBlockScanner(0L, 5L);
+                Plugin shopGui = getServer().getPluginManager().getPlugin("ShopGUIPlus");
+                String[] versions = shopGui.getDescription().getVersion().split("\\.");
+                if(versions.length > 2)
+                {
+                    int major = Integer.parseInt(versions[0]);
+                    int minor = Integer.parseInt(versions[1]);
+                    int build = Integer.parseInt(versions[2]);
+                    if(minor >= 33 && minor <= 34)
+                    {
+                        shopGuiPlusHook = new ShopGuiPlusHook_v1_3_0();
+                    }
+                    else if(minor == 35)
+                    {
+                        shopGuiPlusHook = new ShopGuiPlusHook_v1_4_0();
+                    }
+                    else
+                    {
+                        shopGuiPlusHook = new ShopGuiPlusHook_v1_5_0();
+                    }
+                }
                 getLogger().log(Level.INFO, "Successfully hooked into ShopGUIPlus");
                 return true;
             }
@@ -181,7 +240,7 @@ public class Printer extends JavaPlugin implements Listener
         {
             if(getServer().getPluginManager().isPluginEnabled("Factions"))
             {
-                factionScanner = new FactionScanner(0L, 5L);
+                factionScanner = new FactionsHook.FactionScanner(0L, 5L);
                 getLogger().log(Level.INFO, "Successfully hooked into Factions");
                 return true;
             }
@@ -234,12 +293,10 @@ public class Printer extends JavaPlugin implements Listener
         if(economy.getBalance(player) - amount >= 0)
         {
             economy.withdrawPlayer(player, amount);
-            player.sendMessage(Message.WITHDRAW_MONEY.getMessage().replace("{NUM}", Double.toString(amount)));
             return true;
         }
         else
         {
-            player.sendMessage(Message.ERROR_NO_MONEY.getMessage());
             return false;
         }
     }
@@ -249,9 +306,9 @@ public class Printer extends JavaPlugin implements Listener
         fileManager = setupConfigs();
     }
 
-    public FileManager getFileManager()
+    public ShopGuiPlusHook getShopGuiPlusHook()
     {
-        return fileManager;
+        return shopGuiPlusHook;
     }
 
     public MainConfig getMainConfig()
@@ -264,14 +321,14 @@ public class Printer extends JavaPlugin implements Listener
         return pricesConfig;
     }
 
-    public Economy getEconomy()
-    {
-        return economy;
-    }
-
     public MessageConfig getMessageConfig()
     {
         return messageConfig;
+    }
+
+    public INMSHandler getNmsHandler()
+    {
+        return nmsHandler;
     }
 
     public boolean isShopGuiPlus()

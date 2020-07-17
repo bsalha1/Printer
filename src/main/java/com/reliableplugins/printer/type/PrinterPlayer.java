@@ -1,12 +1,11 @@
 package com.reliableplugins.printer.type;
 
 import com.reliableplugins.printer.Printer;
-import com.reliableplugins.printer.hook.FactionsHook;
+import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -14,16 +13,21 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
+import java.util.concurrent.Executors;
+
 public class PrinterPlayer
 {
     private GameMode initialGamemode;
     private ItemStack[] initialInventory;
     private ItemStack[] initialArmor;
+
     private final Player player;
     private boolean printing = false;
     private double totalCost;
 
-    private Score score;
+    // Scoreboard values
+    private Score costScore;
+    private Score blocksPlacedScore;
 
     public PrinterPlayer(Player player)
     {
@@ -38,15 +42,9 @@ public class PrinterPlayer
         if(!printing)
         {
             // Initialize scoreboard
-            if(Printer.INSTANCE.getMainConfig().isScoreboard())
+            if(Printer.INSTANCE.getMainConfig().isScoreboardEnabled())
             {
-                Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
-                Objective objective = board.registerNewObjective("test", "dummy");
-                objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-                objective.setDisplayName(BukkitUtil.color("&d&lPrinter"));
-                score = objective.getScore(ChatColor.WHITE + "Cost:");
-                score.setScore(0);
-                player.setScoreboard(board);
+                initializeScoreboard();
             }
 
             totalCost = 0;
@@ -65,6 +63,7 @@ public class PrinterPlayer
             player.getInventory().setArmorContents(new ItemStack[player.getInventory().getArmorContents().length]);
             player.setGameMode(GameMode.CREATIVE);
             printing = true;
+            Executors.newSingleThreadExecutor().submit(this::showCost);
         }
     }
 
@@ -72,7 +71,8 @@ public class PrinterPlayer
     {
         if(printing)
         {
-            if(Printer.INSTANCE.getMainConfig().isScoreboard())
+            // Reset scoreboard
+            if(Printer.INSTANCE.getMainConfig().isScoreboardEnabled())
             {
                 player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
             }
@@ -85,27 +85,46 @@ public class PrinterPlayer
         }
     }
 
-    public boolean areEnemiesOrNeutralsNearby(int xRange, int yRange, int zRange)
+    public void showCost()
     {
-        if(Printer.INSTANCE.isFactions())
+        while(printing)
         {
-            for(Entity entity : player.getNearbyEntities(xRange, yRange, zRange))
+            Printer.INSTANCE.getNmsHandler().sendToolTipText(player, Message.WITHDRAW_MONEY.getMessage().replace("{NUM}", Double.toString(totalCost)));
+            try
             {
-                if(entity instanceof Player && FactionsHook.areNeutralOrEnemies((Player) entity, player))
-                {
-                    return true;
-                }
+                Thread.sleep(Printer.INSTANCE.getMainConfig().getCostNotificationTime() * 1000);
+            }
+            catch (InterruptedException e)
+            {
+                return;
             }
         }
-        return false;
+    }
+
+    public void initializeScoreboard()
+    {
+        Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
+        Objective objective = board.registerNewObjective("test", "dummy");
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        objective.setDisplayName(BukkitUtil.color("&d&lPrinter"));
+
+        costScore = objective.getScore(BukkitUtil.color("&7Cost&f:"));
+        blocksPlacedScore = objective.getScore(BukkitUtil.color("&7Blocks Placed&f:"));
+        costScore.setScore(0);
+        blocksPlacedScore.setScore(0);
+
+        player.setScoreboard(board);
     }
 
     public void incrementCost(double cost)
     {
         this.totalCost += cost;
-        if(Printer.INSTANCE.getMainConfig().isScoreboard())
+
+        // Update cost on scoreboard
+        if(Printer.INSTANCE.getMainConfig().isScoreboardEnabled())
         {
-            this.score.setScore((int)Math.ceil(this.totalCost));
+            this.costScore.setScore((int)Math.ceil(this.totalCost));
+            this.blocksPlacedScore.setScore(blocksPlacedScore.getScore() + 1);
         }
     }
 

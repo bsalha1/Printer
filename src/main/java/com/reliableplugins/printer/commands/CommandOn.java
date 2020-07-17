@@ -31,15 +31,15 @@ public class CommandOn extends Command
         // Factions checks
         if(Printer.INSTANCE.isFactions())
         {
-            // If you must be in your own territory and you aren't, no printer
+            // In territory
             if(!Printer.INSTANCE.getMainConfig().allowInWilderness() && !FactionsHook.inOwnTerritory(player))
             {
                 player.sendMessage(Message.ERROR_NOT_IN_TERRITORY.getMessage());
                 return;
             }
 
-            // If enemies or neutrals nearby, no printer
-            if(printerPlayer.areEnemiesOrNeutralsNearby(MinecraftUtil.getPlayerLoadDistance(player.getWorld()), 256, MinecraftUtil.getPlayerLoadDistance(player.getWorld())))
+            // Enemies/neutral nearby
+            else if(FactionsHook.isEnemyOrNeutralNearby(player))
             {
                 player.sendMessage(Message.ERROR_ENEMY_NEARBY.getMessage());
                 return;
@@ -48,11 +48,21 @@ public class CommandOn extends Command
         // SuperiorSkyBlock checks
         else if(Printer.INSTANCE.isSuperiorSkyBlock())
         {
-            if(!SuperiorSkyblockHook.canPlayerBuild(player, player.getLocation()))
+            // In island
+            if((Printer.INSTANCE.getMainConfig().allowInNonIsland() && !SuperiorSkyblockHook.canPlayerBuild(player, player.getLocation()))
+                    || !SuperiorSkyblockHook.isOnOwnIsland(player))
             {
                 player.sendMessage(Message.ERROR_NOT_IN_ISLAND.getMessage());
                 return;
             }
+
+            // Non-island members nearby
+            else if(Printer.INSTANCE.getMainConfig().allowNearNonIslandMembers() && SuperiorSkyblockHook.isNonIslandMemberNearby(player))
+            {
+                player.sendMessage(Message.ERROR_NON_ISLAND_MEMBER_NEARBY.getMessage());
+                return;
+            }
+
         }
 
         printerPlayer.printerOn();

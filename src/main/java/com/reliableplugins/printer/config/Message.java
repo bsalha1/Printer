@@ -29,6 +29,7 @@ public enum Message
 
     // Skyblock
     ERROR_NOT_IN_ISLAND("err-not-in-island", "&cYou may only use printer if you're in your own island"),
+    ERROR_NON_ISLAND_MEMBER_NEARBY("err-non-island-member-nearby", "&cNon island member nearby"),
 
     ERROR_NO_MONEY("err-not-enough-money", "&cNot enough money"),
     ERROR_NO_PERMS("err-no-perms", "&cYou do not have access to this command!"),
