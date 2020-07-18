@@ -63,6 +63,7 @@ public class MainConfig extends Config
 
             unbreakables.add(unbreakable);
         }
+
         save();
     }
 

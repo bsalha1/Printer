@@ -10,7 +10,7 @@ import java.util.*;
 
 public class CommandHandler implements CommandExecutor
 {
-    private final Map<String, Command> subcommands = new HashMap<>();
+    private final Map<String, Command> subCommands = new HashMap<>();
     private final CommandHelp commandHelp;
     private final String label;
 
@@ -26,7 +26,7 @@ public class CommandHandler implements CommandExecutor
 
         if(args.length == 0)
         {
-            if(commandSender.hasPermission(commandHelp.getPermission()))
+            if(commandSender.hasPermission(commandHelp.getPermission()) || !commandHelp.hasPermission())
             {
                 commandHelp.execute(commandSender, args);
             }
@@ -37,7 +37,7 @@ public class CommandHandler implements CommandExecutor
             return true;
         }
 
-        for (Command subcommand : subcommands.values())
+        for (Command subcommand : subCommands.values())
         {
             // If argument isn't a subcommand or an alias of a subcommand, continue
             if(!args[0].equalsIgnoreCase(subcommand.getLabel()) && !subcommand.getAlias().contains(args[0].toLowerCase())) continue;
@@ -72,12 +72,12 @@ public class CommandHandler implements CommandExecutor
 
     public void addCommand(Command command)
     {
-        this.subcommands.put(command.getLabel().toLowerCase(), command);
+        this.subCommands.put(command.getLabel().toLowerCase(), command);
     }
 
-    public Collection<Command> getCommands()
+    public Collection<Command> getSubCommands()
     {
-        return Collections.unmodifiableCollection(subcommands.values());
+        return Collections.unmodifiableCollection(subCommands.values());
     }
 
     public String getLabel()
