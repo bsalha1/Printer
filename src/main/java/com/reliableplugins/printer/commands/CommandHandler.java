@@ -10,9 +10,9 @@ import java.util.*;
 
 public class CommandHandler implements CommandExecutor
 {
-    private Map<String, Command> subcommands = new HashMap<>();
-    private CommandHelp commandHelp;
-    private String label;
+    private final Map<String, Command> subcommands = new HashMap<>();
+    private final CommandHelp commandHelp;
+    private final String label;
 
     public CommandHandler(String label)
     {

@@ -1,9 +1,6 @@
 package com.reliableplugins.printer;
 
-import com.reliableplugins.printer.commands.CommandHandler;
-import com.reliableplugins.printer.commands.CommandOff;
-import com.reliableplugins.printer.commands.CommandOn;
-import com.reliableplugins.printer.commands.CommandReload;
+import com.reliableplugins.printer.commands.*;
 import com.reliableplugins.printer.config.*;
 import com.reliableplugins.printer.exception.VaultException;
 import com.reliableplugins.printer.hook.*;
@@ -32,6 +29,7 @@ import java.util.logging.Level;
 public class Printer extends JavaPlugin implements Listener
 {
     public static Printer INSTANCE;
+    private String version;
 
     private CommandHandler commandHandler;
     private Economy economy;
@@ -58,6 +56,7 @@ public class Printer extends JavaPlugin implements Listener
     public void onEnable()
     {
         Printer.INSTANCE = this;
+        version = getDescription().getVersion();
 
         shopGuiPlus = false;
         factions = false;
@@ -89,7 +88,7 @@ public class Printer extends JavaPlugin implements Listener
             return;
         }
 
-        getLogger().log(Level.INFO, this.getDescription().getName() + " v" + this.getDescription().getVersion() + " has been loaded");
+        getLogger().log(Level.INFO, this.getDescription().getName() + " v" + version + " has been loaded");
     }
 
     @Override
@@ -285,6 +284,7 @@ public class Printer extends JavaPlugin implements Listener
         commandHandler.addCommand(new CommandOn());
         commandHandler.addCommand(new CommandOff());
         commandHandler.addCommand(new CommandReload());
+        commandHandler.addCommand(new CommandVersion());
         return commandHandler;
     }
 
@@ -299,6 +299,11 @@ public class Printer extends JavaPlugin implements Listener
         {
             return false;
         }
+    }
+
+    public String getVersion()
+    {
+        return version;
     }
 
     public void reloadConfigs()

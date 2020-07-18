@@ -8,6 +8,7 @@ public enum Message
     PRINTER_ON("printer-on", "&7Printer has been activated"),
     PRINTER_OFF("printer-off", "&7Printer has been deactivated"),
     WITHDRAW_MONEY("withdraw-money", "&7${NUM} withdrawn"),
+    VERSION_MESSAGE("version-message", "&7Printer v{NUM}"),
     RELOAD("reload", "&7Printer reloaded"),
 
 
@@ -22,7 +23,8 @@ public enum Message
 
     // Factions
     ERROR_NOT_IN_TERRITORY("err-not-in-territory", "&cYou may only use printer if you're in your own territory"),
-    ERROR_BLOCK_NOT_ALLOWED("err-block-not-allowed", "&cThis block is not allowed to be placed while printer is on"),
+    ERROR_BLOCK_PLACE_NOT_ALLOWED("err-block-not-allowed", "&cThis block is not allowed to be placed while printer is on"),
+    ERROR_BLOCK_BREAK_NOT_ALLOWED("err-block-break-not-allowed", "&cThis block is not allowed to be broken while printer is on"),
     ERROR_ENEMY_NEARBY("err-enemy-nearby", "&cEnemy or neutral player nearby"),
     ERROR_PRINTER_ALREADY_ON("err-printer-already-on", "&cPrinter is already activated"),
     ERROR_PRINTER_NOT_ON("err-printer-not-on", "&cPrinter is not activated"),

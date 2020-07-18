@@ -115,10 +115,10 @@ public abstract class Config
         return get;
     }
 
-    public <T> List getList(String path, T def)
+    public List<String> getStringList(String path, List<String> def)
     {
         config.addDefault(path, def);
-        return config.getList(path, config.getList(path));
+        return config.getStringList(path);
     }
 
     public String getString(String path, String def)

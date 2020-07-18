@@ -6,10 +6,17 @@
 
 package com.reliableplugins.printer.config;
 
+import org.bukkit.Material;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class MainConfig extends Config
 {
     private boolean scoreboard;
     private int costNotificationTime;
+    private List<Material> unbreakables;
 
     private boolean allowInWilderness;
     private boolean useFactions;
@@ -30,6 +37,7 @@ public class MainConfig extends Config
     {
         scoreboard = getBoolean("scoreboard-enabled", true);
         costNotificationTime = getInt("cost-notification-time", 5);
+        List<String> unbreakableStrings = getStringList("unbreakable-blocks", Arrays.asList("BEDROCK", "BARRIER", "ENDER_PORTAL_FRAME", "DRAGON_EGG"));
 
         useFactions = getBoolean("factions.support", true);
         allowInWilderness = getBoolean("factions.allow-in-wilderness", false);
@@ -40,6 +48,21 @@ public class MainConfig extends Config
         allowInNonIsland = getBoolean("superior-skyblock.allow-in-non-island", false);
         allowNearNonIslandMembers = getBoolean("superior-skyblock.allow-near-non-island-members", false);
 
+        unbreakables = new ArrayList<>();
+        for(String unbreakableString : unbreakableStrings)
+        {
+            Material unbreakable;
+            try
+            {
+                unbreakable = Material.valueOf(unbreakableString);
+            }
+            catch (IllegalArgumentException e)
+            {
+                continue;
+            }
+
+            unbreakables.add(unbreakable);
+        }
         save();
     }
 
@@ -51,6 +74,11 @@ public class MainConfig extends Config
     public boolean isScoreboardEnabled()
     {
         return scoreboard;
+    }
+
+    public List<Material> getUnbreakables()
+    {
+        return unbreakables;
     }
 
     public boolean allowInWilderness()

@@ -52,7 +52,7 @@ public class ListenPrinterBlockPlace implements Listener
                 if(price == null)
                 {
                     event.setCancelled(true);
-                    event.getPlayer().sendMessage(Message.ERROR_BLOCK_NOT_ALLOWED.getMessage());
+                    event.getPlayer().sendMessage(Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.getMessage());
                     return;
                 }
                 else if(!Printer.INSTANCE.withdrawMoney(player.getPlayer(), price))
@@ -96,7 +96,7 @@ public class ListenPrinterBlockPlace implements Listener
                 if(price == null)
                 {
                     event.setCancelled(true);
-                    event.getPlayer().sendMessage(Message.ERROR_BLOCK_NOT_ALLOWED.getMessage());
+                    event.getPlayer().sendMessage(Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.getMessage());
                 }
                 else if(BukkitUtil.isNoBlockPlaceItem(toPlace.getType()))
                 {
