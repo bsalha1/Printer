@@ -6,7 +6,6 @@ import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.hook.FactionsHook;
 import com.reliableplugins.printer.hook.SuperiorSkyblockHook;
 import com.reliableplugins.printer.type.PrinterPlayer;
-import com.reliableplugins.printer.utils.MinecraftUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

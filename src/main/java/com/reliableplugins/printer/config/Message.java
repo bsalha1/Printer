@@ -20,6 +20,9 @@ public enum Message
     ERROR_ITEM_EXPLOIT("err-item-exploit", "&cUsing items is not allowed while printer is on"),
     ERROR_DAMAGE_EXPLOIT("err-damage-exploit", "&cDamaging entities is not allowed while printer is on"),
     ERROR_ENEMY_NEARBY_EXPLOIT("err-enemy-nearby-exploit", "&cEnemy or neutral player nearby - printer disabled"),
+    ERROR_COMMAND_EXPLOIT("err-command-exploit", "&cEntering commands is not allowed while printer is on"),
+    ERROR_PICKUP_EXPLOIT("err-pickup-exploit", "&cPicking up items is not allowed while printer is on"),
+    ERROR_DISPENSE_ARMOR_EXPLOIT("err-dispense-armor-exploit", "&cDispensed armor activity is not allowed while printer is on"),
 
     // Factions
     ERROR_NOT_IN_TERRITORY("err-not-in-territory", "&cYou may only use printer if you're in your own territory"),

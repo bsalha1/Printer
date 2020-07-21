@@ -1,6 +1,6 @@
 name: Printer
 main: com.reliableplugins.printer.Printer
-version: 1.3.1
+version: 1.3.2
 depend:
   - Vault
 softdepend:

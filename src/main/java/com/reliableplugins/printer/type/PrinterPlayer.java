@@ -4,7 +4,6 @@ import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

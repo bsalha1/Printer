@@ -1,9 +1,13 @@
 package com.reliableplugins.printer;
 
 import com.reliableplugins.printer.commands.*;
-import com.reliableplugins.printer.config.*;
+import com.reliableplugins.printer.config.FileManager;
+import com.reliableplugins.printer.config.MainConfig;
+import com.reliableplugins.printer.config.MessageConfig;
+import com.reliableplugins.printer.config.PricesConfig;
 import com.reliableplugins.printer.exception.VaultException;
-import com.reliableplugins.printer.hook.*;
+import com.reliableplugins.printer.hook.FactionsHook;
+import com.reliableplugins.printer.hook.SuperiorSkyblockHook;
 import com.reliableplugins.printer.hook.shopguiplus.ShopGuiPlusHook;
 import com.reliableplugins.printer.hook.shopguiplus.ShopGuiPlusHook_v1_3_0;
 import com.reliableplugins.printer.hook.shopguiplus.ShopGuiPlusHook_v1_4_0;
