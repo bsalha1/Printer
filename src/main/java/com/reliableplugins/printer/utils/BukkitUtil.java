@@ -1,14 +1,13 @@
 package com.reliableplugins.printer.utils;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BukkitUtil
 {
@@ -99,5 +98,28 @@ public class BukkitUtil
     public static String color(String text)
     {
         return ChatColor.translateAlternateColorCodes('&', text);
+    }
+
+    public static List<Entity> getEntities(Location location, double radius)
+    {
+        List<Entity> entities = new ArrayList<>();
+        World world = location.getWorld();
+
+        int xMin = (int)Math.floor((location.getX() - radius) / 16.0D);
+        int xMax = (int)Math.floor((location.getX() + radius) / 16.0D);
+        int zMin = (int)Math.floor((location.getZ() - radius) / 16.0D);
+        int zMax = (int)Math.floor((location.getZ() + radius) / 16.0D);
+
+        for (int x = xMin; x <= xMax; x++)
+            for (int z = zMin; z <= zMax; z++)
+            {
+                if (world.isChunkLoaded(x, z))
+                {
+                    entities.addAll(Arrays.asList(world.getChunkAt(x, z).getEntities())); // Add all entities from this chunk to the list
+                }
+            }
+
+        entities.removeIf(entity -> entity.getLocation().distanceSquared(location) > radius * radius);
+        return entities;
     }
 }
