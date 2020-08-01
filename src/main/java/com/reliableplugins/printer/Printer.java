@@ -13,6 +13,7 @@ import com.reliableplugins.printer.hook.shopguiplus.ShopGuiPlusHook_v1_3_0;
 import com.reliableplugins.printer.hook.shopguiplus.ShopGuiPlusHook_v1_4_0;
 import com.reliableplugins.printer.hook.shopguiplus.ShopGuiPlusHook_v1_5_0;
 import com.reliableplugins.printer.listeners.ListenPlayerQuit;
+import com.reliableplugins.printer.listeners.ListenPluginLoad;
 import com.reliableplugins.printer.listeners.ListenPrinterBlockPlace;
 import com.reliableplugins.printer.listeners.ListenPrinterExploit;
 import com.reliableplugins.printer.nms.*;
@@ -77,14 +78,15 @@ public class Printer extends JavaPlugin implements Listener
 
         try
         {
+
             fileManager = setupConfigs();
             nmsHandler = setupNMS();
             economy = setupEconomy();
             factions = setupFactionHook();
             superiorSkyBlock = setupSuperiorSkyBlockHook();
             shopGuiPlus = setupShopGuiHook();
-            setupListeners();
             commandHandler = setupCommands();
+            setupListeners();
         }
         catch (Exception e)
         {
@@ -240,7 +242,7 @@ public class Printer extends JavaPlugin implements Listener
         return false;
     }
 
-    private boolean setupFactionHook()
+    public boolean setupFactionHook()
     {
         if(mainConfig.useFactions())
         {
@@ -280,6 +282,7 @@ public class Printer extends JavaPlugin implements Listener
 
     private void setupListeners()
     {
+        Bukkit.getPluginManager().registerEvents(new ListenPluginLoad(), this);
         Bukkit.getPluginManager().registerEvents(new ListenPrinterBlockPlace(), this);
         Bukkit.getPluginManager().registerEvents(new ListenPrinterExploit(), this);
         Bukkit.getPluginManager().registerEvents(new ListenPlayerQuit(), this);
@@ -306,6 +309,12 @@ public class Printer extends JavaPlugin implements Listener
         {
             return false;
         }
+    }
+
+
+    public void setFactionScanner(BukkitTask factionScanner)
+    {
+        this.factionScanner = factionScanner;
     }
 
     public String getVersion()
