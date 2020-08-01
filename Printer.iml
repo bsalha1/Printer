@@ -95,7 +95,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: org.spigotmc.:spigot1_9_R1:unknown">
+      <library name="Maven: org.spigotmc:spigot1_9_R1:unknown">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/spigot1_9_R1.jar!/" />
         </CLASSES>
@@ -104,7 +104,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: org.spigotmc.:spigot1_9_R2:unknown">
+      <library name="Maven: org.spigotmc:spigot1_9_R2:unknown">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/spigot1_9_R2.jar!/" />
         </CLASSES>
@@ -113,7 +113,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: org.spigotmc.:spigot1_10_R1:unknown">
+      <library name="Maven: org.spigotmc:spigot1_10_R1:unknown">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/spigot1_10_R1.jar!/" />
         </CLASSES>
@@ -122,7 +122,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: org.spigotmc.:spigot1_11_R1:unknown">
+      <library name="Maven: org.spigotmc:spigot1_11_R1:unknown">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/spigot1_11_R1.jar!/" />
         </CLASSES>
@@ -131,7 +131,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: org.spigotmc..:spigot1_12_R1:unknown">
+      <library name="Maven: org.spigotmc:spigot1_12_R1:unknown">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/spigot1_12_R1.jar!/" />
         </CLASSES>
@@ -140,7 +140,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: org.spigotmc...:spigot1_13_R1:unknown">
+      <library name="Maven: org.spigotmc:spigot1_13_R1:unknown">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/spigot1_13_R1.jar!/" />
         </CLASSES>
@@ -167,9 +167,18 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: org.spigotmc...:spigot1_15_R1:unknown">
+      <library name="Maven: org.spigotmc:spigot1_15_R1:unknown">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/spigot1_15_R1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: org.spigotmc:spigot1_16_R1:unknown">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/spigot1_16_R1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

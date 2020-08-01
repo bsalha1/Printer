@@ -89,37 +89,37 @@
             <systemPath>${project.basedir}/lib/spigot1_8_R3.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>org.spigotmc.</groupId>
+            <groupId>org.spigotmc</groupId>
             <artifactId>spigot1_9_R1</artifactId>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot1_9_R1.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>org.spigotmc.</groupId>
+            <groupId>org.spigotmc</groupId>
             <artifactId>spigot1_9_R2</artifactId>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot1_9_R2.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>org.spigotmc.</groupId>
+            <groupId>org.spigotmc</groupId>
             <artifactId>spigot1_10_R1</artifactId>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot1_10_R1.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>org.spigotmc.</groupId>
+            <groupId>org.spigotmc</groupId>
             <artifactId>spigot1_11_R1</artifactId>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot1_11_R1.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>org.spigotmc..</groupId>
+            <groupId>org.spigotmc</groupId>
             <artifactId>spigot1_12_R1</artifactId>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot1_12_R1.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>org.spigotmc...</groupId>
+            <groupId>org.spigotmc</groupId>
             <artifactId>spigot1_13_R1</artifactId>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot1_13_R1.jar</systemPath>
@@ -137,10 +137,16 @@
             <systemPath>${project.basedir}/lib/spigot1_14_R1.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>org.spigotmc...</groupId>
+            <groupId>org.spigotmc</groupId>
             <artifactId>spigot1_15_R1</artifactId>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot1_15_R1.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot1_16_R1</artifactId>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/spigot1_16_R1.jar</systemPath>
         </dependency>
         <!-- End Spigot Jars -->
 

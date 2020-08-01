@@ -27,6 +27,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.logging.Level;
 
@@ -175,8 +176,10 @@ public class Printer extends JavaPlugin implements Listener
             case "v1_14_R1":
                 return new Version_1_14_R1();
             case "v1_15_R1":
-            default:
                 return new Version_1_15_R1();
+            case "v1_16_R1":
+            default:
+                return new Version_1_16_R1();
         }
     }
 
