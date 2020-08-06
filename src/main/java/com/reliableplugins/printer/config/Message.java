@@ -1,3 +1,9 @@
+/*
+ * Project: Printer
+ * Copyright (C) 2020 Bilal Salha <bsalha1@gmail.com>
+ * GNU GPLv3 <https://www.gnu.org/licenses/gpl-3.0.en.html>
+ */
+
 package com.reliableplugins.printer.config;
 
 import com.reliableplugins.printer.Printer;
@@ -27,6 +33,7 @@ public enum Message
     // Factions
     ERROR_NOT_IN_TERRITORY("err-not-in-territory", "&cYou may only use printer if you're in your own territory"),
     ERROR_BLOCK_PLACE_NOT_ALLOWED("err-block-not-allowed", "&cThis block is not allowed to be placed while printer is on"),
+    ERROR_ITEM_PLACE_NOT_ALLOWED("err-item-not-allowed", "&cThis item is not allowed to be used while printer is on"),
     ERROR_BLOCK_BREAK_NOT_ALLOWED("err-block-break-not-allowed", "&cThis block is not allowed to be broken while printer is on"),
     ERROR_ENEMY_NEARBY("err-enemy-nearby", "&cEnemy or neutral player nearby"),
     ERROR_PRINTER_ALREADY_ON("err-printer-already-on", "&cPrinter is already activated"),

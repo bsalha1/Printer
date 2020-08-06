@@ -1,3 +1,9 @@
+/*
+ * Project: Printer
+ * Copyright (C) 2020 Bilal Salha <bsalha1@gmail.com>
+ * GNU GPLv3 <https://www.gnu.org/licenses/gpl-3.0.en.html>
+ */
+
 package com.reliableplugins.printer.listeners;
 
 import com.reliableplugins.printer.Printer;
@@ -22,9 +28,19 @@ public class ListenPrinterBlockPlace implements Listener
             PrinterPlayer player = Printer.INSTANCE.printerPlayers.get(event.getPlayer());
             if(player.isPrinting())
             {
-                Double price = null;
+                // Check if Unplaceable
+                if(Printer.INSTANCE.getMainConfig().isUnplaceable(event.getBlockPlaced().getType()))
+                {
+                    event.setCancelled(true);
+                    event.getPlayer().sendMessage(Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.getMessage());
+                    return;
+                }
 
-                // Prioritize colored price, then configured price, then shopgui price
+                // Get Price
+                // - Prioritize colored price, then uncolored price, then shopgui price
+                //   . We want to sell the blue wool for price of blue wool not for the price of uncolored wool
+                //   . We want our prices.yml to overwrite ShopGUIPlus
+                Double price = null;
                 ItemStack toPlace = event.getItemInHand();
                 ColoredMaterial coloredMaterial = ColoredMaterial.fromItemstack(toPlace);
                 if(coloredMaterial != null && Printer.INSTANCE.getPricesConfig().getColoredPrices().containsKey(coloredMaterial))
@@ -43,7 +59,7 @@ public class ListenPrinterBlockPlace implements Listener
                     price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
                 }
 
-                // Clear inventory from block before placement
+                // Clear inventory from inventory block before placement
                 if(event.getBlock().getState() instanceof InventoryHolder)
                 {
                     ((InventoryHolder) event.getBlock().getState()).getInventory().clear();
@@ -77,9 +93,16 @@ public class ListenPrinterBlockPlace implements Listener
 
             if (player.isPrinting())
             {
-//                Printer.LOGGER.logDebug("onPlayerInteract: " + event.getItem().getType());
-                Double price = null;
+                // Check if Unplaceable
+                if(Printer.INSTANCE.getMainConfig().isUnplaceable(event.getItem().getType()))
+                {
+                    event.setCancelled(true);
+                    event.getPlayer().sendMessage(Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.getMessage());
+                    return;
+                }
 
+                // Get Price
+                Double price = null;
                 ItemStack toPlace = event.getItem();
                 if(Printer.INSTANCE.getPricesConfig().getItemPrices().containsKey(toPlace.getType()))
                 {
@@ -93,6 +116,7 @@ public class ListenPrinterBlockPlace implements Listener
                     price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
                 }
 
+                // Charge Player
                 if(price == null)
                 {
                     event.setCancelled(true);
@@ -109,6 +133,11 @@ public class ListenPrinterBlockPlace implements Listener
                     {
                         player.incrementCost(price);
                     }
+                }
+                else // Bow shoot, snowball, egg, etc..
+                {
+                    event.setCancelled(true);
+                    event.getPlayer().sendMessage(Message.ERROR_ITEM_PLACE_NOT_ALLOWED.getMessage());
                 }
             }
         }

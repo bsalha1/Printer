@@ -1,3 +1,9 @@
+/*
+ * Project: Printer
+ * Copyright (C) 2020 Bilal Salha <bsalha1@gmail.com>
+ * GNU GPLv3 <https://www.gnu.org/licenses/gpl-3.0.en.html>
+ */
+
 package com.reliableplugins.printer.utils;
 
 import org.bukkit.ChatColor;
@@ -18,7 +24,9 @@ public class BukkitUtil
     {
         noBlockPlaceItems.add(Material.WATER_BUCKET);
         noBlockPlaceItems.add(Material.LAVA_BUCKET);
+        noBlockPlaceItems.add(Material.POTION);
 
+        itemToBlockMap.put(Material.POTION,              null);
         itemToBlockMap.put(Material.WATER_BUCKET,        Material.WATER);
         itemToBlockMap.put(Material.LAVA_BUCKET,         Material.LAVA);
         itemToBlockMap.put(Material.REDSTONE,            Material.REDSTONE_WIRE);

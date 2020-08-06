@@ -1,11 +1,19 @@
+/*
+ * Project: Printer
+ * Copyright (C) 2020 Bilal Salha <bsalha1@gmail.com>
+ * GNU GPLv3 <https://www.gnu.org/licenses/gpl-3.0.en.html>
+ */
+
 package com.reliableplugins.printer.config;
 
 import com.reliableplugins.printer.Printer;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,7 +21,7 @@ import java.util.logging.Level;
 
 public abstract class Config
 {
-    private File configFile;
+    private final File configFile;
     protected YamlConfiguration config;
     protected boolean isNew = false;
 
@@ -119,6 +127,30 @@ public abstract class Config
     {
         config.addDefault(path, def);
         return config.getStringList(path);
+    }
+
+    public List<Material> getMaterialList(String path, List<Material> def)
+    {
+        List<String> defMaterialNameList = new ArrayList<>();
+        for (Material material : def)
+        {
+            defMaterialNameList.add(material.name());
+        }
+
+        List<String> materialNameList = getStringList(path, defMaterialNameList);
+        List<Material> materialList = new ArrayList<>();
+        for(String materialName : materialNameList)
+        {
+            try
+            {
+                materialList.add(Material.valueOf(materialName));
+            }
+            catch (IllegalArgumentException e)
+            {
+                // ignored
+            }
+        }
+        return materialList;
     }
 
     public String getString(String path, String def)
