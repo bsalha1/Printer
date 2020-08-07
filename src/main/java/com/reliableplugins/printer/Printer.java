@@ -317,6 +317,11 @@ public class Printer extends JavaPlugin implements Listener
         }
     }
 
+    public double getBalance(Player player)
+    {
+        return economy.getBalance(player);
+    }
+
 
     public void setFactionScanner(BukkitTask factionScanner)
     {

@@ -8,7 +8,7 @@ package com.reliableplugins.printer.type;
 
 import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.config.Message;
-import com.reliableplugins.printer.utils.BukkitUtil;
+import com.reliableplugins.printer.utils.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -29,10 +29,13 @@ public class PrinterPlayer
     private final Player player;
     private boolean printing = false;
     private double totalCost;
+    private int totalBlocks;
 
     // Scoreboard values
-    private Score costScore;
-    private Score blocksPlacedScore;
+    private Objective objective;
+    private Score cost;
+    private Score blocks;
+    private Score balance;
 
     public PrinterPlayer(Player player)
     {
@@ -52,6 +55,7 @@ public class PrinterPlayer
                 initializeScoreboard();
             }
 
+            totalBlocks = 0;
             totalCost = 0;
 
             // Cache initial values
@@ -109,14 +113,29 @@ public class PrinterPlayer
     public void initializeScoreboard()
     {
         Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
-        Objective objective = board.registerNewObjective("test", "dummy");
+        objective = board.registerNewObjective("test", "dummy");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        objective.setDisplayName(BukkitUtil.color("&d&lPrinter"));
+        objective.setDisplayName(Printer.INSTANCE.getMainConfig().getScoreboardTitle());
 
-        costScore = objective.getScore(BukkitUtil.color("&7Cost&f:"));
-        blocksPlacedScore = objective.getScore(BukkitUtil.color("&7Blocks Placed&f:"));
-        costScore.setScore(0);
-        blocksPlacedScore.setScore(0);
+        objective.getScore(Printer.INSTANCE.getMainConfig().getCostScoreTitle()).setScore(16);
+        cost = objective.getScore(
+                Printer.INSTANCE.getMainConfig().getCostFormat().replace("{NUM}", Double.toString(0.0d))
+        );
+        cost.setScore(15);
+
+        objective.getScore("").setScore(14); // Margin
+        objective.getScore(Printer.INSTANCE.getMainConfig().getBlocksScoreTitle()).setScore(13);
+        blocks = objective.getScore(
+                Printer.INSTANCE.getMainConfig().getBlocksFormat().replace("{NUM}", Integer.toString(0))
+        );
+        blocks.setScore(12);
+
+        objective.getScore(StringUtil.getSpaces(Printer.INSTANCE.getMainConfig().getScoreboardMargin())).setScore(11); // Margin
+        objective.getScore(Printer.INSTANCE.getMainConfig().getBalanceScoreTitle()).setScore(10);
+        balance = objective.getScore(
+                Printer.INSTANCE.getMainConfig().getBalanceFormat().replace("{NUM}", Double.toString(Printer.INSTANCE.getBalance(player)))
+        );
+        balance.setScore(9);
 
         player.setScoreboard(board);
     }
@@ -124,12 +143,28 @@ public class PrinterPlayer
     public void incrementCost(double cost)
     {
         this.totalCost += cost;
+        this.totalBlocks++;
 
         // Update cost on scoreboard
         if(Printer.INSTANCE.getMainConfig().isScoreboardEnabled())
         {
-            this.costScore.setScore((int)Math.ceil(this.totalCost));
-            this.blocksPlacedScore.setScore(blocksPlacedScore.getScore() + 1);
+            objective.getScoreboard().resetScores(this.cost.getEntry());
+            this.cost = objective.getScore(
+                    Printer.INSTANCE.getMainConfig().getCostFormat().replace("{NUM}", Double.toString(this.totalCost))
+            );
+            this.cost.setScore(15);
+
+            objective.getScoreboard().resetScores(this.blocks.getEntry());
+            this.blocks = objective.getScore(
+                    Printer.INSTANCE.getMainConfig().getBlocksFormat().replace("{NUM}", Integer.toString(this.totalBlocks))
+            );
+            this.blocks.setScore(12);
+
+            objective.getScoreboard().resetScores(this.balance.getEntry());
+            this.balance = objective.getScore(
+                    Printer.INSTANCE.getMainConfig().getBalanceFormat().replace("{NUM}", Double.toString(Printer.INSTANCE.getBalance(player)))
+            );
+            this.balance.setScore(9);
         }
     }
 

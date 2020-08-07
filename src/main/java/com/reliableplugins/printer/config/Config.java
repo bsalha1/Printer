@@ -7,6 +7,7 @@
 package com.reliableplugins.printer.config;
 
 import com.reliableplugins.printer.Printer;
+import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -157,6 +158,11 @@ public abstract class Config
     {
         config.addDefault(path, def);
         return config.getString(path, config.getString(path));
+    }
+
+    public String getColoredString(String path, String def)
+    {
+        return BukkitUtil.color(getString(path, def));
     }
 
     public YamlConfiguration getConfig()

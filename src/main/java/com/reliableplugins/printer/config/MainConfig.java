@@ -28,6 +28,15 @@ public class MainConfig extends Config
     private boolean allowInNonIsland;
     private boolean allowNearNonIslandMembers;
 
+    private int scoreboardMargin;
+    private String scoreboardTitle;
+    private String costScoreTitle;
+    private String blocksScoreTitle;
+    private String balanceScoreTitle;
+    private String costFormat;
+    private String blocksFormat;
+    private String balanceFormat;
+
     public MainConfig()
     {
         super("config.yml");
@@ -50,6 +59,15 @@ public class MainConfig extends Config
         useSuperiorSkyBlock = getBoolean("superior-skyblock.support", true);
         allowInNonIsland = getBoolean("superior-skyblock.allow-in-non-island", false);
         allowNearNonIslandMembers = getBoolean("superior-skyblock.allow-near-non-island-members", false);
+
+        scoreboardMargin = getInt("scoreboard.margin", 32);
+        scoreboardTitle = getColoredString("scoreboard.title", "&d&lPrinter");
+        costScoreTitle = getColoredString("scoreboard.cost-score-title", "&7Cost&f:");
+        costFormat = getColoredString("scoreboard.cost-format", "&c${NUM}");
+        blocksScoreTitle = getColoredString("scoreboard.blocks-score-title", "&7Blocks&f:");
+        blocksFormat = getColoredString("scoreboard.blocks-format", "&a{NUM}");
+        balanceScoreTitle = getColoredString("scoreboard.balance-score-title", "&7Balance&f:");
+        balanceFormat = getColoredString("scoreboard.balance-format", "&a${NUM}");
 
         save();
     }
@@ -139,5 +157,45 @@ public class MainConfig extends Config
     public boolean useSuperiorSkyBlock()
     {
         return useSuperiorSkyBlock;
+    }
+
+    public String getScoreboardTitle()
+    {
+        return scoreboardTitle;
+    }
+
+    public String getBlocksScoreTitle()
+    {
+        return blocksScoreTitle;
+    }
+
+    public String getCostScoreTitle()
+    {
+        return costScoreTitle;
+    }
+
+    public String getBalanceScoreTitle()
+    {
+        return balanceScoreTitle;
+    }
+
+    public int getScoreboardMargin()
+    {
+        return scoreboardMargin;
+    }
+
+    public String getBalanceFormat()
+    {
+        return balanceFormat;
+    }
+
+    public String getBlocksFormat()
+    {
+        return blocksFormat;
+    }
+
+    public String getCostFormat()
+    {
+        return costFormat;
     }
 }
