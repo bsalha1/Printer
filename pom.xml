@@ -64,9 +64,21 @@
         <!-- Factions -->
         <dependency>
             <groupId>com.massivecraft</groupId>
-            <artifactId>Factions</artifactId>
+            <artifactId>FactionsUUID</artifactId>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/Factions.jar</systemPath>
+            <systemPath>${project.basedir}/lib/FactionsUUID.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.massivecraft</groupId>
+            <artifactId>FactionsMassiveCraft</artifactId>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/FactionsMassiveCraft.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.massivecraft</groupId>
+            <artifactId>MassiveCore</artifactId>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/MassiveCore.jar</systemPath>
         </dependency>
 
         <!-- Spigot Jars -->

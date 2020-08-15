@@ -7,7 +7,7 @@
 package com.reliableplugins.printer.listeners;
 
 import com.reliableplugins.printer.Printer;
-import com.reliableplugins.printer.hook.FactionsHook;
+import com.reliableplugins.printer.hook.factions.FactionsScanner;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginEnableEvent;
@@ -21,7 +21,7 @@ public class ListenPluginLoad implements Listener
     {
         if(event.getPlugin().getName().contains("Factions") && Printer.INSTANCE.getMainConfig().useFactions() && !Printer.INSTANCE.isFactions())
         {
-            Printer.INSTANCE.setFactionScanner(new FactionsHook.FactionScanner(0L, 5L));
+            Printer.INSTANCE.setFactionScanner(new FactionsScanner(0L, 5L));
             Printer.INSTANCE.getLogger().log(Level.INFO, "Successfully hooked into Factions");
         }
     }

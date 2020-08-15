@@ -11,6 +11,7 @@ import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.utils.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -18,6 +19,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
+import java.util.HashSet;
 import java.util.concurrent.Executors;
 
 public class PrinterPlayer
@@ -25,6 +27,7 @@ public class PrinterPlayer
     private GameMode initialGamemode;
     private ItemStack[] initialInventory;
     private ItemStack[] initialArmor;
+    private HashSet<Block> placedBlocks;
 
     private final Player player;
     private boolean printing = false;
@@ -43,6 +46,7 @@ public class PrinterPlayer
         this.initialGamemode = player.getGameMode();
         this.initialInventory = player.getInventory().getContents();
         this.initialArmor = player.getInventory().getArmorContents();
+        this.placedBlocks = new HashSet<>();
     }
 
     public void printerOn()
@@ -62,6 +66,7 @@ public class PrinterPlayer
             initialGamemode = player.getGameMode();
             initialInventory = player.getInventory().getContents();
             initialArmor = player.getInventory().getArmorContents();
+            placedBlocks = new HashSet<>();
 
             if(player.getOpenInventory() != null)
             {
@@ -90,6 +95,7 @@ public class PrinterPlayer
             player.setGameMode(initialGamemode);
             player.getInventory().setContents(initialInventory);
             player.getInventory().setArmorContents(initialArmor);
+            placedBlocks.clear();
             printing = false;
         }
     }
@@ -168,9 +174,19 @@ public class PrinterPlayer
         }
     }
 
-    public double getTotalCost()
+    public boolean isPlacedBlock(Block block)
     {
-        return totalCost;
+        return placedBlocks.contains(block);
+    }
+
+    public void removePlacedBlock(Block block)
+    {
+        placedBlocks.remove(block);
+    }
+
+    public void addPlacedBlock(Block block)
+    {
+        placedBlocks.add(block);
     }
 
     public Player getPlayer()

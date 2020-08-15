@@ -77,7 +77,12 @@ public class ListenPrinterBlockPlace implements Listener
                     event.setCancelled(true);
                     return;
                 }
+
                 player.incrementCost(price);
+                if(Printer.INSTANCE.getMainConfig().onlyBreakPlaced())
+                {
+                    player.addPlacedBlock(event.getBlock());
+                }
             }
         }
     }

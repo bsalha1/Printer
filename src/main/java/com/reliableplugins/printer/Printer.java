@@ -12,8 +12,11 @@ import com.reliableplugins.printer.config.MainConfig;
 import com.reliableplugins.printer.config.MessageConfig;
 import com.reliableplugins.printer.config.PricesConfig;
 import com.reliableplugins.printer.exception.VaultException;
-import com.reliableplugins.printer.hook.FactionsHook;
 import com.reliableplugins.printer.hook.SuperiorSkyblockHook;
+import com.reliableplugins.printer.hook.factions.FactionsHook;
+import com.reliableplugins.printer.hook.factions.FactionsHook_MassiveCraft;
+import com.reliableplugins.printer.hook.factions.FactionsScanner;
+import com.reliableplugins.printer.hook.factions.FactionsHook_UUID;
 import com.reliableplugins.printer.hook.shopguiplus.ShopGuiPlusHook;
 import com.reliableplugins.printer.hook.shopguiplus.ShopGuiPlusHook_v1_3_0;
 import com.reliableplugins.printer.hook.shopguiplus.ShopGuiPlusHook_v1_4_0;
@@ -34,7 +37,6 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.logging.Level;
 
@@ -46,6 +48,7 @@ public class Printer extends JavaPlugin implements Listener
     private CommandHandler commandHandler;
     private Economy economy;
 
+    private FactionsHook factionsHook;
     private ShopGuiPlusHook shopGuiPlusHook;
     private BukkitTask factionScanner;
     private BukkitTask superiorSkyBlockScanner;
@@ -84,7 +87,6 @@ public class Printer extends JavaPlugin implements Listener
 
         try
         {
-
             fileManager = setupConfigs();
             nmsHandler = setupNMS();
             economy = setupEconomy();
@@ -254,7 +256,16 @@ public class Printer extends JavaPlugin implements Listener
         {
             if(getServer().getPluginManager().isPluginEnabled("Factions"))
             {
-                factionScanner = new FactionsHook.FactionScanner(0L, 5L);
+                if(getServer().getPluginManager().isPluginEnabled("MassiveCore"))
+                {
+                    factionsHook = new FactionsHook_MassiveCraft();
+                }
+                else
+                {
+                    factionsHook = new FactionsHook_UUID();
+                }
+
+                factionScanner = new FactionsScanner(0L, 5L);
                 getLogger().log(Level.INFO, "Successfully hooked into Factions");
                 return true;
             }
@@ -326,6 +337,7 @@ public class Printer extends JavaPlugin implements Listener
     public void setFactionScanner(BukkitTask factionScanner)
     {
         this.factionScanner = factionScanner;
+        this.factions = true;
     }
 
     public String getVersion()
@@ -382,4 +394,10 @@ public class Printer extends JavaPlugin implements Listener
     {
         return spigot;
     }
+
+    public FactionsHook getFactionsHook()
+    {
+        return factionsHook;
+    }
+
 }

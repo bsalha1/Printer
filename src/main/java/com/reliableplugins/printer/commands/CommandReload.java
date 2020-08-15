@@ -9,7 +9,6 @@ package com.reliableplugins.printer.commands;
 import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.annotation.CommandBuilder;
 import com.reliableplugins.printer.config.Message;
-import com.reliableplugins.printer.hook.FactionsHook;
 import com.reliableplugins.printer.type.PrinterPlayer;
 import org.bukkit.command.CommandSender;
 
@@ -30,7 +29,7 @@ public class CommandReload extends Command
         {
             for(PrinterPlayer player : Printer.INSTANCE.printerPlayers.values())
             {
-                if(player.isPrinting() && FactionsHook.inWilderness(player.getPlayer()))
+                if(player.isPrinting() && Printer.INSTANCE.getFactionsHook().inWilderness(player.getPlayer()))
                 {
                     player.printerOff();
                     player.getPlayer().sendMessage(Message.ERROR_NOT_IN_TERRITORY.getMessage());

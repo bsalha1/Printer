@@ -17,7 +17,6 @@ public enum Message
     VERSION_MESSAGE("version-message", "&7Printer v{NUM}"),
     RELOAD("reload", "&7Printer reloaded"),
 
-
     // Exploits
     ERROR_INVENTORY_OPEN_EXPLOIT("err-inventory-open-exploit", "&cOpening an inventory is not allowed while printer is on"),
     ERROR_DROP_ITEM_EXPLOIT("err-drop-item-exploit", "&cDropping items is not allowed while printer is on"),
@@ -43,13 +42,15 @@ public enum Message
     ERROR_NOT_IN_ISLAND("err-not-in-island", "&cYou may only use printer if you're in your own island"),
     ERROR_NON_ISLAND_MEMBER_NEARBY("err-non-island-member-nearby", "&cNon island member nearby"),
 
+    ERROR_NON_EMPTY_INVENTORY("err-non-empty-inventory", "&cMust have empty inventory to activate printer"),
+    ERROR_NOT_PLACED_IN_PRINTER("err-not-placed-in-printer", "&cCannot break blocks not placed in printer"),
     ERROR_NO_MONEY("err-not-enough-money", "&cNot enough money"),
     ERROR_NO_PERMS("err-no-perms", "&cYou do not have access to this command!"),
     ERROR_NOT_PLAYER("err-not-player", "&cOnly players may execute this command.");
 
     private String message;
-    private String configKey;
-    private static String header;
+    private final String configKey;
+    private static final String header;
 
     static
     {

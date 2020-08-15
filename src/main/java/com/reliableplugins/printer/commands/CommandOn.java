@@ -9,7 +9,6 @@ package com.reliableplugins.printer.commands;
 import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.annotation.CommandBuilder;
 import com.reliableplugins.printer.config.Message;
-import com.reliableplugins.printer.hook.FactionsHook;
 import com.reliableplugins.printer.hook.SuperiorSkyblockHook;
 import com.reliableplugins.printer.type.PrinterPlayer;
 import org.bukkit.command.CommandSender;
@@ -37,14 +36,14 @@ public class CommandOn extends Command
         if(Printer.INSTANCE.isFactions())
         {
             // In territory
-            if(!Printer.INSTANCE.getMainConfig().allowInWilderness() && !FactionsHook.inOwnTerritory(player))
+            if(!Printer.INSTANCE.getMainConfig().allowInWilderness() && !Printer.INSTANCE.getFactionsHook().inOwnTerritory(player))
             {
                 player.sendMessage(Message.ERROR_NOT_IN_TERRITORY.getMessage());
                 return;
             }
 
             // Enemies/neutral nearby
-            else if(FactionsHook.isEnemyOrNeutralNearby(player))
+            else if(Printer.INSTANCE.getFactionsHook().isEnemyOrNeutralNearby(player))
             {
                 player.sendMessage(Message.ERROR_ENEMY_NEARBY.getMessage());
                 return;
@@ -68,6 +67,12 @@ public class CommandOn extends Command
                 return;
             }
 
+        }
+
+        if(Printer.INSTANCE.getMainConfig().requireEmptyInventory() && (player.getInventory().getArmorContents().length > 0 || player.getInventory().getContents().length > 0))
+        {
+            player.sendMessage(Message.ERROR_NON_EMPTY_INVENTORY.getMessage());
+            return;
         }
 
         printerPlayer.printerOn();

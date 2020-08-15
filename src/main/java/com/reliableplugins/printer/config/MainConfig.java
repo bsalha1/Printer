@@ -18,6 +18,8 @@ public class MainConfig extends Config
     private List<Material> unbreakables;
     private List<Material> unplaceables;
     private List<String> allowedCommands;
+    private boolean onlyBreakPlaced;
+    private boolean requireEmptyInventory;
 
     private boolean allowInWilderness;
     private boolean useFactions;
@@ -47,6 +49,8 @@ public class MainConfig extends Config
     {
         scoreboard = getBoolean("scoreboard-enabled", true);
         costNotificationTime = getInt("cost-notification-time", 5);
+        onlyBreakPlaced = getBoolean("only-break-placed", true);
+        requireEmptyInventory = getBoolean("require-empty-inventory", false);
         unbreakables = getMaterialList("unbreakable-blocks", Arrays.asList(Material.BEDROCK, Material.BARRIER, Material.ENDER_PORTAL_FRAME, Material.DRAGON_EGG));
         unplaceables = getMaterialList("unplaceable-blocks", Arrays.asList(Material.POTION, Material.MONSTER_EGG));
         allowedCommands = getStringList("allowed-commands", Arrays.asList("f*", "printer*", "bal*", "tp*", "etp*", "msg % %"));
@@ -197,5 +201,15 @@ public class MainConfig extends Config
     public String getCostFormat()
     {
         return costFormat;
+    }
+
+    public boolean onlyBreakPlaced()
+    {
+        return onlyBreakPlaced;
+    }
+
+    public boolean requireEmptyInventory()
+    {
+        return requireEmptyInventory;
     }
 }

@@ -59,9 +59,27 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: com.massivecraft:Factions:unknown">
+      <library name="Maven: com.massivecraft:FactionsUUID:unknown">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/Factions.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/FactionsUUID.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.massivecraft:FactionsMassiveCraft:unknown">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/FactionsMassiveCraft.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.massivecraft:MassiveCore:unknown">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/MassiveCore.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
