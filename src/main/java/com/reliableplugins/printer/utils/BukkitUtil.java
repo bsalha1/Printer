@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
@@ -129,5 +130,31 @@ public class BukkitUtil
 
         entities.removeIf(entity -> entity.getLocation().distanceSquared(location) > radius * radius);
         return entities;
+    }
+
+    public static boolean isArmorInventoryEmpty(Player player)
+    {
+        ItemStack[] armors = player.getInventory().getArmorContents();
+        for(ItemStack armor : armors)
+        {
+            if(!armor.getType().equals(Material.AIR))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isInventoryEmpty(Player player)
+    {
+        ItemStack[] items = player.getInventory().getContents();
+        for(ItemStack item : items)
+        {
+            if(item != null)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }

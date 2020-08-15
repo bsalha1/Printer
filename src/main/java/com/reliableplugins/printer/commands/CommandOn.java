@@ -11,8 +11,11 @@ import com.reliableplugins.printer.annotation.CommandBuilder;
 import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.hook.SuperiorSkyblockHook;
 import com.reliableplugins.printer.type.PrinterPlayer;
+import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Arrays;
 
 @CommandBuilder(label = "on", description = "Turns on printer", permission = "printer.on", playerRequired = true)
 public class CommandOn extends Command
@@ -69,7 +72,7 @@ public class CommandOn extends Command
 
         }
 
-        if(Printer.INSTANCE.getMainConfig().requireEmptyInventory() && (player.getInventory().getArmorContents().length > 0 || player.getInventory().getContents().length > 0))
+        if(Printer.INSTANCE.getMainConfig().requireEmptyInventory() && (!BukkitUtil.isArmorInventoryEmpty(player) || !BukkitUtil.isInventoryEmpty(player)))
         {
             player.sendMessage(Message.ERROR_NON_EMPTY_INVENTORY.getMessage());
             return;
