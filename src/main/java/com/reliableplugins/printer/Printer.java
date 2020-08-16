@@ -90,7 +90,7 @@ public class Printer extends JavaPlugin implements Listener
             fileManager = setupConfigs();
             nmsHandler = setupNMS();
             economy = setupEconomy();
-            factions = setupFactionHook();
+            factions = setupFactionsHook();
             superiorSkyBlock = setupSuperiorSkyBlockHook();
             shopGuiPlus = setupShopGuiHook();
             commandHandler = setupCommands();
@@ -250,7 +250,7 @@ public class Printer extends JavaPlugin implements Listener
         return false;
     }
 
-    public boolean setupFactionHook()
+    public boolean setupFactionsHook()
     {
         if(mainConfig.useFactions())
         {
@@ -400,4 +400,8 @@ public class Printer extends JavaPlugin implements Listener
         return factionsHook;
     }
 
+    public void setFactionsHook(FactionsHook factionsHook)
+    {
+        this.factionsHook = factionsHook;
+    }
 }

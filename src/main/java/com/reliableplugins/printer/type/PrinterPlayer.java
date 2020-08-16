@@ -30,9 +30,10 @@ public class PrinterPlayer
     private HashSet<Block> placedBlocks;
 
     private final Player player;
-    private boolean printing = false;
+    private volatile boolean printing = false;
     private double totalCost;
     private int totalBlocks;
+    private long printerOffTimestamp;
 
     // Scoreboard values
     private Objective objective;
@@ -97,6 +98,7 @@ public class PrinterPlayer
             player.getInventory().setArmorContents(initialArmor);
             placedBlocks.clear();
             printing = false;
+            printerOffTimestamp = System.currentTimeMillis();
         }
     }
 
@@ -197,5 +199,10 @@ public class PrinterPlayer
     public boolean isPrinting()
     {
         return printing;
+    }
+
+    public long getPrinterOffTimestamp()
+    {
+        return printerOffTimestamp;
     }
 }

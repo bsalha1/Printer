@@ -7,6 +7,8 @@
 package com.reliableplugins.printer.listeners;
 
 import com.reliableplugins.printer.Printer;
+import com.reliableplugins.printer.hook.factions.FactionsHook_MassiveCraft;
+import com.reliableplugins.printer.hook.factions.FactionsHook_UUID;
 import com.reliableplugins.printer.hook.factions.FactionsScanner;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,6 +23,15 @@ public class ListenPluginLoad implements Listener
     {
         if(event.getPlugin().getName().contains("Factions") && Printer.INSTANCE.getMainConfig().useFactions() && !Printer.INSTANCE.isFactions())
         {
+            if(Printer.INSTANCE.getServer().getPluginManager().isPluginEnabled("MassiveCore"))
+            {
+                Printer.INSTANCE.setFactionsHook(new FactionsHook_MassiveCraft());
+            }
+            else
+            {
+                Printer.INSTANCE.setFactionsHook(new FactionsHook_UUID());
+            }
+
             Printer.INSTANCE.setFactionScanner(new FactionsScanner(0L, 5L));
             Printer.INSTANCE.getLogger().log(Level.INFO, "Successfully hooked into Factions");
         }

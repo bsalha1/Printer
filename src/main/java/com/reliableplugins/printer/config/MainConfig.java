@@ -15,11 +15,12 @@ public class MainConfig extends Config
 {
     private boolean scoreboard;
     private int costNotificationTime;
+    private boolean onlyBreakPlaced;
+    private boolean requireEmptyInventory;
+    private int noFallDamageSeconds;
     private List<Material> unbreakables;
     private List<Material> unplaceables;
     private List<String> allowedCommands;
-    private boolean onlyBreakPlaced;
-    private boolean requireEmptyInventory;
 
     private boolean allowInWilderness;
     private boolean useFactions;
@@ -47,8 +48,9 @@ public class MainConfig extends Config
     @Override
     public void load()
     {
+        costNotificationTime = getInt("cost-notification-seconds", 5);
+        noFallDamageSeconds = getInt("no-fall-damage-seconds", 5);
         scoreboard = getBoolean("scoreboard-enabled", true);
-        costNotificationTime = getInt("cost-notification-time", 5);
         onlyBreakPlaced = getBoolean("only-break-placed", true);
         requireEmptyInventory = getBoolean("require-empty-inventory", false);
         unbreakables = getMaterialList("unbreakable-blocks", Arrays.asList(Material.BEDROCK, Material.BARRIER, Material.ENDER_PORTAL_FRAME, Material.DRAGON_EGG));
@@ -211,5 +213,10 @@ public class MainConfig extends Config
     public boolean requireEmptyInventory()
     {
         return requireEmptyInventory;
+    }
+
+    public int getNoFallDamageSeconds()
+    {
+        return noFallDamageSeconds;
     }
 }
