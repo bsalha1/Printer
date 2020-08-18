@@ -11,6 +11,7 @@ import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.type.ColoredMaterial;
 import com.reliableplugins.printer.type.PrinterPlayer;
 import com.reliableplugins.printer.utils.BukkitUtil;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -127,7 +128,7 @@ public class ListenPrinterBlockPlace implements Listener
                     event.setCancelled(true);
                     event.getPlayer().sendMessage(Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.getMessage());
                 }
-                else if(BukkitUtil.isNoBlockPlaceItem(toPlace.getType()))
+                else if(BukkitUtil.isNoBlockPlaceItem(toPlace.getType()) || BukkitUtil.isItemBlock(toPlace.getType()))
                 {
                     if(!Printer.INSTANCE.withdrawMoney(player.getPlayer(), price))
                     {

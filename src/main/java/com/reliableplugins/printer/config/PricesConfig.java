@@ -66,7 +66,7 @@ public class PricesConfig extends Config
                         continue;
                     }
 
-                    if(BukkitUtil.isItem(material))
+                    if(BukkitUtil.isItemBlock(material))
                     {
                         itemPrices.put(material, price);
 

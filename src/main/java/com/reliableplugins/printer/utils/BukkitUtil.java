@@ -63,7 +63,7 @@ public class BukkitUtil
         return noBlockPlaceItems.contains(material);
     }
 
-    public static boolean isItem(Material material)
+    public static boolean isItemBlock(Material material)
     {
         return itemToBlockMap.containsKey(material);
     }
