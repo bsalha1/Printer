@@ -128,7 +128,7 @@ public class ListenPrinterBlockPlace implements Listener
                     event.setCancelled(true);
                     event.getPlayer().sendMessage(Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.getMessage());
                 }
-                else if(BukkitUtil.isNoBlockPlaceItem(toPlace.getType()) || BukkitUtil.isItemBlock(toPlace.getType()))
+                else if(BukkitUtil.isNoBlockPlaceItem(toPlace.getType()))
                 {
                     if(!Printer.INSTANCE.withdrawMoney(player.getPlayer(), price))
                     {
@@ -139,6 +139,10 @@ public class ListenPrinterBlockPlace implements Listener
                     {
                         player.incrementCost(price);
                     }
+                }
+                else if(BukkitUtil.isItemBlock(toPlace.getType()))
+                {
+
                 }
                 else // Bow shoot, snowball, egg, etc..
                 {
