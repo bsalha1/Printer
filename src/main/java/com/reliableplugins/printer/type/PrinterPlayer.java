@@ -8,6 +8,7 @@ package com.reliableplugins.printer.type;
 
 import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.config.Message;
+import com.reliableplugins.printer.task.BukkitTask;
 import com.reliableplugins.printer.utils.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -28,6 +29,7 @@ public class PrinterPlayer
     private ItemStack[] initialInventory;
     private ItemStack[] initialArmor;
     private HashSet<Block> placedBlocks;
+    private HashSet<ItemStack> internalItems;
 
     private final Player player;
     private volatile boolean printing = false;
@@ -48,6 +50,7 @@ public class PrinterPlayer
         this.initialInventory = player.getInventory().getContents();
         this.initialArmor = player.getInventory().getArmorContents();
         this.placedBlocks = new HashSet<>();
+        this.internalItems = new HashSet<>();
     }
 
     public void printerOn()
@@ -68,6 +71,7 @@ public class PrinterPlayer
             initialInventory = player.getInventory().getContents();
             initialArmor = player.getInventory().getArmorContents();
             placedBlocks = new HashSet<>();
+            internalItems = new HashSet<>();
 
             if(player.getOpenInventory() != null)
             {
@@ -97,6 +101,8 @@ public class PrinterPlayer
             player.getInventory().setContents(initialInventory);
             player.getInventory().setArmorContents(initialArmor);
             placedBlocks.clear();
+            internalItems.clear();
+
             printing = false;
             printerOffTimestamp = System.currentTimeMillis();
         }
@@ -189,6 +195,16 @@ public class PrinterPlayer
     public void addPlacedBlock(Block block)
     {
         placedBlocks.add(block);
+    }
+
+    public void addInternalItem(ItemStack itemStack)
+    {
+        internalItems.add(itemStack);
+    }
+
+    public boolean isInternalItem(ItemStack itemStack)
+    {
+        return internalItems.contains(itemStack);
     }
 
     public Player getPlayer()

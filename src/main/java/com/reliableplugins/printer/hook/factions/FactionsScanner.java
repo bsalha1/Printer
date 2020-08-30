@@ -44,8 +44,6 @@ public class FactionsScanner extends BukkitTask
                         player.sendMessage(Message.ERROR_ENEMY_NEARBY.getMessage());
                     }
                 }
-
-
             }
         }
     }

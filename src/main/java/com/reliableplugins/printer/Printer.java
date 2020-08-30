@@ -27,6 +27,7 @@ import com.reliableplugins.printer.listeners.ListenPrinterBlockPlace;
 import com.reliableplugins.printer.listeners.ListenPrinterExploit;
 import com.reliableplugins.printer.nms.*;
 import com.reliableplugins.printer.task.BukkitTask;
+import com.reliableplugins.printer.task.InventoryScanner;
 import com.reliableplugins.printer.type.PrinterPlayer;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -94,6 +95,7 @@ public class Printer extends JavaPlugin implements Listener
             superiorSkyBlock = setupSuperiorSkyBlockHook();
             shopGuiPlus = setupShopGuiHook();
             commandHandler = setupCommands();
+            setupTasks();
             setupListeners();
         }
         catch (Exception e)
@@ -303,6 +305,11 @@ public class Printer extends JavaPlugin implements Listener
         Bukkit.getPluginManager().registerEvents(new ListenPrinterBlockPlace(), this);
         Bukkit.getPluginManager().registerEvents(new ListenPrinterExploit(), this);
         Bukkit.getPluginManager().registerEvents(new ListenPlayerQuit(), this);
+    }
+
+    private void setupTasks()
+    {
+        new InventoryScanner(0L, 1L);
     }
 
     private CommandHandler setupCommands()
