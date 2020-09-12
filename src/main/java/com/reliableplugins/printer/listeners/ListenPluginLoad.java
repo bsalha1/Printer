@@ -23,7 +23,7 @@ public class ListenPluginLoad implements Listener
     {
         if(event.getPlugin().getName().contains("Factions") && Printer.INSTANCE.getMainConfig().useFactions() && !Printer.INSTANCE.isFactions())
         {
-            if(Printer.INSTANCE.getServer().getPluginManager().isPluginEnabled("MassiveCore"))
+            if(event.getPlugin().getDescription().getDepend().contains("MassiveCore"))
             {
                 Printer.INSTANCE.setFactionsHook(new FactionsHook_MassiveCraft());
             }
