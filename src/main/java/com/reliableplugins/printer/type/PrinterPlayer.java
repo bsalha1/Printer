@@ -8,7 +8,6 @@ package com.reliableplugins.printer.type;
 
 import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.config.Message;
-import com.reliableplugins.printer.task.BukkitTask;
 import com.reliableplugins.printer.utils.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;

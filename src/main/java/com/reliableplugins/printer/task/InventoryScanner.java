@@ -1,7 +1,6 @@
 package com.reliableplugins.printer.task;
 
 import com.reliableplugins.printer.Printer;
-import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.type.PrinterPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

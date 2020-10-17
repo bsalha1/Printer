@@ -27,7 +27,16 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>everything</id>
+            <url>http://repo.citizensnpcs.co/</url>
+        </repository>
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
     </repositories>
+
 
     <dependencies>
 
@@ -62,12 +71,27 @@
             <systemPath>${project.basedir}/lib/SuperiorSkyblockAPI.jar</systemPath>
         </dependency>
 
+        <!-- Citizens -->
+        <dependency>
+            <groupId>net.citizensnpcs</groupId>
+            <artifactId>citizensapi</artifactId>
+            <version>2.0.16-SNAPSHOT</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- Factions -->
         <dependency>
             <groupId>com.massivecraft</groupId>
-            <artifactId>FactionsUUID</artifactId>
+            <artifactId>FactionsUUID-0.2.1</artifactId>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/FactionsUUID.jar</systemPath>
+            <systemPath>${project.basedir}/lib/FactionsUUID-0.2.1.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.massivecraft</groupId>
+            <artifactId>FactionsUUID-0.5.18</artifactId>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/FactionsUUID-0.5.18.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.massivecraft</groupId>

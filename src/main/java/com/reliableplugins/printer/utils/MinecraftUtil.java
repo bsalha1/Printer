@@ -13,10 +13,13 @@ public class MinecraftUtil
 {
     public static int getPlayerLoadDistance(World world)
     {
+        int loadDistance = 48;
         if(Printer.INSTANCE.isSpigot())
         {
-            return SpigotUtil.getPlayerLoadDistance(world);
+            loadDistance = SpigotUtil.getPlayerLoadDistance(world);
         }
-        return 48;
+
+        // If the config's check radius is less than or equal to the physical load distance, it's valid
+        return Math.min(Printer.INSTANCE.getMainConfig().getCheckRadius(), loadDistance);
     }
 }

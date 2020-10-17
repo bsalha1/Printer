@@ -9,13 +9,10 @@ package com.reliableplugins.printer.commands;
 import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.annotation.CommandBuilder;
 import com.reliableplugins.printer.config.Message;
-import com.reliableplugins.printer.hook.SuperiorSkyblockHook;
 import com.reliableplugins.printer.type.PrinterPlayer;
 import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.Arrays;
 
 @CommandBuilder(label = "on", description = "Turns on printer", permission = "printer.on", playerRequired = true)
 public class CommandOn extends Command
@@ -56,15 +53,15 @@ public class CommandOn extends Command
         else if(Printer.INSTANCE.isSuperiorSkyBlock())
         {
             // In island
-            if((Printer.INSTANCE.getMainConfig().allowInNonIsland() && !SuperiorSkyblockHook.canPlayerBuild(player, player.getLocation()))
-                    || !SuperiorSkyblockHook.isOnOwnIsland(player))
+            if((Printer.INSTANCE.getMainConfig().allowInNonIsland() && !Printer.INSTANCE.getSuperiorSkyBlockHook().canPlayerBuild(player, player.getLocation()))
+                    || !Printer.INSTANCE.getSuperiorSkyBlockHook().isOnOwnIsland(player))
             {
                 player.sendMessage(Message.ERROR_NOT_IN_ISLAND.getMessage());
                 return;
             }
 
             // Non-island members nearby
-            else if(Printer.INSTANCE.getMainConfig().allowNearNonIslandMembers() && SuperiorSkyblockHook.isNonIslandMemberNearby(player))
+            else if(Printer.INSTANCE.getMainConfig().allowNearNonIslandMembers() && Printer.INSTANCE.getSuperiorSkyBlockHook().isNonIslandMemberNearby(player))
             {
                 player.sendMessage(Message.ERROR_NON_ISLAND_MEMBER_NEARBY.getMessage());
                 return;

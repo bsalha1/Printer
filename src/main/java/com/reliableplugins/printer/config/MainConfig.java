@@ -18,6 +18,7 @@ public class MainConfig extends Config
     private boolean onlyBreakPlaced;
     private boolean requireEmptyInventory;
     private int noFallDamageSeconds;
+    private int checkRadius;
     private List<Material> unbreakables;
     private List<Material> unplaceables;
     private List<String> allowedCommands;
@@ -53,6 +54,7 @@ public class MainConfig extends Config
         scoreboard = getBoolean("scoreboard-enabled", true);
         onlyBreakPlaced = getBoolean("only-break-placed", true);
         requireEmptyInventory = getBoolean("require-empty-inventory", false);
+        checkRadius = getInt("player-check-radius", 64);
         unbreakables = getMaterialList("unbreakable-blocks", Arrays.asList(Material.BEDROCK, Material.BARRIER, Material.ENDER_PORTAL_FRAME, Material.DRAGON_EGG));
         unplaceables = getMaterialList("unplaceable-blocks", Arrays.asList(Material.POTION, Material.MONSTER_EGG));
         allowedCommands = getStringList("allowed-commands", Arrays.asList("f*", "printer*", "bal*", "tp*", "etp*", "msg % %"));
@@ -218,5 +220,10 @@ public class MainConfig extends Config
     public int getNoFallDamageSeconds()
     {
         return noFallDamageSeconds;
+    }
+
+    public int getCheckRadius()
+    {
+        return checkRadius;
     }
 }

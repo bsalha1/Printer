@@ -11,7 +11,6 @@ import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.type.ColoredMaterial;
 import com.reliableplugins.printer.type.PrinterPlayer;
 import com.reliableplugins.printer.utils.BukkitUtil;
-import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;

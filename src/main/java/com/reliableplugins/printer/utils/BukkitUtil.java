@@ -6,6 +6,7 @@
 
 package com.reliableplugins.printer.utils;
 
+import com.reliableplugins.printer.Printer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -98,6 +99,11 @@ public class BukkitUtil
         {
             if(entity instanceof Player)
             {
+                // Citizens shouldn't count as nearby players
+                if(Printer.INSTANCE.isCitizens() && Printer.INSTANCE.getCitizensHook().isCitizen(entity))
+                {
+                    continue;
+                }
                 nearbyPlayers.add((Player)entity);
             }
         }
