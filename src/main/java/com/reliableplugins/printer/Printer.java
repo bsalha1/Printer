@@ -59,6 +59,12 @@ public class Printer extends JavaPlugin
     private BukkitTask superiorSkyBlockScanner;
     private INMSHandler nmsHandler;
 
+    private boolean shopGuiPlus;
+    private boolean citizens;
+    private boolean factions;
+    private boolean superiorSkyBlock;
+
+
     private FileManager fileManager;
     private MainConfig mainConfig;
     private MessageConfig messageConfig;
@@ -203,9 +209,11 @@ public class Printer extends JavaPlugin
         {
             if(getServer().getPluginManager().isPluginEnabled("SuperiorSkyblock2"))
             {
+                SuperiorSkyblockHook hook = new SuperiorSkyblockHook_v1();
                 superiorSkyBlockScanner = new SuperiorSkyblockScanner(0L, 5L);
+                superiorSkyBlock = true;
                 getLogger().log(Level.INFO, "Successfully hooked into SuperiorSkyblock2");
-                return new SuperiorSkyblockHook_v1();
+                return hook;
             }
             else
             {
@@ -226,20 +234,27 @@ public class Printer extends JavaPlugin
                 String[] versions = shopGui.getDescription().getVersion().split("\\.");
                 if(versions.length > 2)
                 {
-                    getLogger().log(Level.INFO, "Successfully hooked into ShopGUIPlus");
+                    ShopGuiPlusHook hook;
 
                     int major = Integer.parseInt(versions[0]);
                     int minor = Integer.parseInt(versions[1]);
                     int build = Integer.parseInt(versions[2]);
                     if(minor >= 33 && minor <= 34)
                     {
-                        return new ShopGuiPlusHook_v1_3_0();
+                        hook = new ShopGuiPlusHook_v1_3_0();
                     }
                     else if(minor == 35)
                     {
-                        return new ShopGuiPlusHook_v1_4_0();
+                        hook = new ShopGuiPlusHook_v1_4_0();
                     }
-                    return new ShopGuiPlusHook_v1_5_0();
+                    else
+                    {
+                        hook = new ShopGuiPlusHook_v1_5_0();
+                    }
+
+                    shopGuiPlus = true;
+                    getLogger().log(Level.INFO, "Successfully hooked into ShopGUIPlus: " + hook);
+                    return hook;
                 }
                 getLogger().log(Level.WARNING, "Failed to parse ShopGUIPlus version!");
             }
@@ -282,6 +297,7 @@ public class Printer extends JavaPlugin
                 }
 
                 factionScanner = new FactionsScanner(0L, 5L);
+                factions = true;
                 getLogger().log(Level.INFO, "Successfully hooked into Factions");
                 return hook;
             }
@@ -297,8 +313,10 @@ public class Printer extends JavaPlugin
     {
         if (getServer().getPluginManager().isPluginEnabled("Citizens"))
         {
+            CitizensHook hook = new CitizensHook_v2_0_16();
+            citizens = true;
             getLogger().log(Level.INFO, "Successfully hooked into Citizens");
-            return new CitizensHook_v2_0_16();
+            return hook;
         }
 
         return null;
@@ -386,6 +404,11 @@ public class Printer extends JavaPlugin
         return shopGuiPlusHook;
     }
 
+    public void setShopGuiPlusHook(ShopGuiPlusHook shopGuiPlusHook)
+    {
+        this.shopGuiPlusHook = shopGuiPlusHook;
+    }
+
     public MainConfig getMainConfig()
     {
         return mainConfig;
@@ -408,22 +431,32 @@ public class Printer extends JavaPlugin
 
     public boolean isShopGuiPlus()
     {
-        return shopGuiPlusHook != null;
+        return shopGuiPlus;
+    }
+
+    public void setShopGuiPlus(boolean shopGuiPlus)
+    {
+        this.shopGuiPlus = shopGuiPlus;
     }
 
     public boolean isFactions()
     {
-        return factionsHook != null;
+        return factions;
     }
 
-    public boolean isSuperiorSkyBlock()
+    public void setFactions(boolean factions)
     {
-        return superiorSkyBlockHook != null;
+        this.factions = factions;
     }
 
     public boolean isCitizens()
     {
-        return citizensHook != null;
+        return citizens;
+    }
+
+    public boolean isSuperiorSkyBlock()
+    {
+        return superiorSkyBlock;
     }
 
     public boolean isSpigot()

@@ -8,8 +8,8 @@ package com.reliableplugins.printer.exception;
 
 public class VaultException extends Exception
 {
-    public VaultException(String messsage)
+    public VaultException(String message)
     {
-        super("Vault plugin: " + messsage);
+        super("Vault plugin: " + message);
     }
 }

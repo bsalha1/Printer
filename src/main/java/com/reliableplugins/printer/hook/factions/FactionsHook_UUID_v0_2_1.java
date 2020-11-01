@@ -7,7 +7,7 @@
 package com.reliableplugins.printer.hook.factions;
 
 import com.massivecraft.factions.*;
-//import com.massivecraft.factions.struct.Relation;
+import com.massivecraft.factions.struct.Relation;
 import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.entity.Player;
 
@@ -19,8 +19,8 @@ public class FactionsHook_UUID_v0_2_1 implements FactionsHook
     {
         FPlayer fPlayer1 = getFPlayer(player1);
         FPlayer fPlayer2 = getFPlayer(player2);
-//        return fPlayer1.getRelationTo(fPlayer2).equals(Relation.ENEMY) || fPlayer1.getRelationTo(fPlayer2).equals(Relation.NEUTRAL);
-        return true;
+        return fPlayer1.getRelationTo(fPlayer2).equals(Relation.ENEMY) || fPlayer1.getRelationTo(fPlayer2).equals(Relation.NEUTRAL);
+//        return true;
     }
 
     public boolean isEnemyOrNeutralNearby(Player player)

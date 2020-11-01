@@ -10,6 +10,9 @@ import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.hook.factions.FactionsHook_MassiveCraft;
 import com.reliableplugins.printer.hook.factions.FactionsHook_UUID_v0_2_1;
 import com.reliableplugins.printer.hook.factions.FactionsScanner;
+import com.reliableplugins.printer.hook.shopguiplus.ShopGuiPlusHook_v1_3_0;
+import com.reliableplugins.printer.hook.shopguiplus.ShopGuiPlusHook_v1_4_0;
+import com.reliableplugins.printer.hook.shopguiplus.ShopGuiPlusHook_v1_5_0;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginEnableEvent;
@@ -31,9 +34,30 @@ public class ListenPluginLoad implements Listener
             {
                 Printer.INSTANCE.setFactionsHook(new FactionsHook_UUID_v0_2_1());
             }
-
             Printer.INSTANCE.setFactionScanner(new FactionsScanner(0L, 5L));
+            Printer.INSTANCE.setFactions(true);
             Printer.INSTANCE.getLogger().log(Level.INFO, "Successfully hooked into Factions");
+        }
+        else if(event.getPlugin().getName().contains("ShopGUIPlus") && Printer.INSTANCE.getMainConfig().useShopGuiPlus() && !Printer.INSTANCE.isShopGuiPlus())
+        {
+            String[] versions = event.getPlugin().getDescription().getVersion().split("\\.");
+            int major = Integer.parseInt(versions[0]);
+            int minor = Integer.parseInt(versions[1]);
+            int build = Integer.parseInt(versions[2]);
+            if(minor >= 33 && minor <= 34)
+            {
+                Printer.INSTANCE.setShopGuiPlusHook(new ShopGuiPlusHook_v1_3_0());
+            }
+            else if(minor == 35)
+            {
+                Printer.INSTANCE.setShopGuiPlusHook(new ShopGuiPlusHook_v1_4_0());
+            }
+            else
+            {
+                Printer.INSTANCE.setShopGuiPlusHook(new ShopGuiPlusHook_v1_5_0());
+            }
+            Printer.INSTANCE.setShopGuiPlus(true);
+            Printer.INSTANCE.getLogger().log(Level.INFO, "Successfully hooked into ShopGUIPlus");
         }
     }
 }

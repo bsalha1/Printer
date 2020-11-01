@@ -83,12 +83,6 @@
         <!-- Factions -->
         <dependency>
             <groupId>com.massivecraft</groupId>
-            <artifactId>FactionsUUID-0.2.1</artifactId>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/FactionsUUID-0.2.1.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.massivecraft</groupId>
             <artifactId>FactionsUUID-0.5.18</artifactId>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/FactionsUUID-0.5.18.jar</systemPath>
