@@ -70,17 +70,16 @@ public class CommandHelp extends Command
         {
             Command command = commands[i];
             String line;
-            TextComponent message;
             if(player.hasPermission(command.getPermission()) || sender.isOp())
             {
                 line =  color + "/" + baseCommand.getLabel() + " %s&r %s";
             }
             else
             {
-                line = "&4&m/" + baseCommand.getLabel() + " %s&r %s";
+                continue;
             }
 
-            message = new TextComponent(BukkitUtil.color(String.format(line, command.getLabel(), BukkitUtil.color(descriptionColor + command.getPermission()))));
+            TextComponent message = new TextComponent(BukkitUtil.color(String.format(line, command.getLabel(), BukkitUtil.color(descriptionColor + command.getPermission()))));
             message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(command.getDescription()).create()));
             player.spigot().sendMessage(message);
         }
@@ -94,7 +93,6 @@ public class CommandHelp extends Command
         for (int i = pageIndex; i < (pageIndex + 5) && i < commands.length; i++)
         {
             Command command = commands[i];
-
             String line;
             if(sender.hasPermission(command.getPermission()) || sender.isOp())
             {
@@ -102,7 +100,7 @@ public class CommandHelp extends Command
             }
             else
             {
-                line = "&4/&m" + baseCommand.getLabel() + " %s&r %s";
+                continue;
             }
 
             String message = BukkitUtil.color(String.format(line, command.getLabel(), ChatColor.GRAY + command.getPermission()));
