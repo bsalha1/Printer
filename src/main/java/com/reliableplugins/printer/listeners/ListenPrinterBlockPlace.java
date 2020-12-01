@@ -51,7 +51,7 @@ public class ListenPrinterBlockPlace implements Listener
                 {
                     price = Printer.INSTANCE.getPricesConfig().getBlockPrices().get(event.getBlockPlaced().getType());
                 }
-                else if(Printer.INSTANCE.isShopGuiPlus())
+                else if(Printer.INSTANCE.hasShopHook())
                 {
                     ItemStack toPlaceCopy = toPlace.clone();
                     toPlaceCopy.setAmount(1);
@@ -113,7 +113,7 @@ public class ListenPrinterBlockPlace implements Listener
                 {
                     price = Printer.INSTANCE.getPricesConfig().getItemPrices().get(toPlace.getType());
                 }
-                else if(Printer.INSTANCE.isShopGuiPlus())
+                else if(Printer.INSTANCE.hasShopHook())
                 {
                     ItemStack toPlaceCopy = toPlace.clone();
                     toPlaceCopy.setAmount(1);

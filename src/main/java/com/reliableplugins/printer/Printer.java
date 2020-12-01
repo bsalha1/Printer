@@ -15,10 +15,7 @@ import com.reliableplugins.printer.exception.VaultException;
 import com.reliableplugins.printer.hook.citizens.CitizensHook;
 import com.reliableplugins.printer.hook.citizens.CitizensHook_v2_0_16;
 import com.reliableplugins.printer.hook.factions.*;
-import com.reliableplugins.printer.hook.shopguiplus.ShopGuiPlusHook;
-import com.reliableplugins.printer.hook.shopguiplus.ShopGuiPlusHook_v1_3_0;
-import com.reliableplugins.printer.hook.shopguiplus.ShopGuiPlusHook_v1_4_0;
-import com.reliableplugins.printer.hook.shopguiplus.ShopGuiPlusHook_v1_5_0;
+import com.reliableplugins.printer.hook.shop.*;
 import com.reliableplugins.printer.hook.superiorskyblock.SuperiorSkyblockHook;
 import com.reliableplugins.printer.hook.superiorskyblock.SuperiorSkyblockHook_v1;
 import com.reliableplugins.printer.hook.superiorskyblock.SuperiorSkyblockScanner;
@@ -33,7 +30,6 @@ import com.reliableplugins.printer.type.PrinterPlayer;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -54,12 +50,12 @@ public class Printer extends JavaPlugin
     private SuperiorSkyblockHook superiorSkyBlockHook;
     private CitizensHook citizensHook;
     private FactionsHook factionsHook;
-    private ShopGuiPlusHook shopGuiPlusHook;
+    private ShopHook shopHook;
     private BukkitTask factionScanner;
     private BukkitTask superiorSkyBlockScanner;
     private INMSHandler nmsHandler;
 
-    private boolean shopGuiPlus;
+    private boolean shop;
     private boolean citizens;
     private boolean factions;
     private boolean superiorSkyBlock;
@@ -99,7 +95,7 @@ public class Printer extends JavaPlugin
             citizensHook = setupCitizensHook();
             factionsHook = setupFactionsHook();
             superiorSkyBlockHook = setupSuperiorSkyBlockHook();
-            shopGuiPlusHook = setupShopGuiHook();
+            shopHook = setupShopHook();
             commandHandler = setupCommands();
             setupTasks();
             setupListeners();
@@ -168,6 +164,14 @@ public class Printer extends JavaPlugin
         return fileManager;
     }
 
+    public <T> T getProvider(Class<T> clazz)
+    {
+        RegisteredServiceProvider<T> provider = getServer().getServicesManager().getRegistration(clazz);
+        if (provider == null)
+            return null;
+        return provider.getProvider() != null ? (T) provider.getProvider() : null;
+    }
+
     private INMSHandler setupNMS()
     {
         String nmsVersion = getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
@@ -224,26 +228,27 @@ public class Printer extends JavaPlugin
         return null;
     }
 
-    private ShopGuiPlusHook setupShopGuiHook()
+    private ShopHook setupShopHook()
     {
-        if(mainConfig.useShopGuiPlus())
+        ShopHook hook;
+
+        if (mainConfig.useShopGuiPlus())
         {
-            if(getServer().getPluginManager().isPluginEnabled("ShopGUIPlus"))
+            if (getServer().getPluginManager().isPluginEnabled("ShopGUIPlus"))
             {
                 Plugin shopGui = getServer().getPluginManager().getPlugin("ShopGUIPlus");
                 String[] versions = shopGui.getDescription().getVersion().split("\\.");
-                if(versions.length > 2)
+                if (versions.length > 2)
                 {
-                    ShopGuiPlusHook hook;
 
                     int major = Integer.parseInt(versions[0]);
                     int minor = Integer.parseInt(versions[1]);
                     int build = Integer.parseInt(versions[2]);
-                    if(minor >= 33 && minor <= 34)
+                    if (minor >= 33 && minor <= 34)
                     {
                         hook = new ShopGuiPlusHook_v1_3_0();
                     }
-                    else if(minor == 35)
+                    else if (minor == 35)
                     {
                         hook = new ShopGuiPlusHook_v1_4_0();
                     }
@@ -252,8 +257,8 @@ public class Printer extends JavaPlugin
                         hook = new ShopGuiPlusHook_v1_5_0();
                     }
 
-                    shopGuiPlus = true;
-                    getLogger().log(Level.INFO, "Successfully hooked into ShopGUIPlus: " + hook);
+                    shop = true;
+                    getLogger().log(Level.INFO, "Successfully hooked into ShopGUIPlus");
                     return hook;
                 }
                 getLogger().log(Level.WARNING, "Failed to parse ShopGUIPlus version!");
@@ -261,6 +266,21 @@ public class Printer extends JavaPlugin
             else
             {
                 getLogger().log(Level.WARNING, "ShopGUIPlus jar not found!");
+            }
+        }
+
+        if (mainConfig.useZShop())
+        {
+            if (getServer().getPluginManager().isPluginEnabled("zShop"))
+            {
+                hook = new ZShopHook_v_2_0_1_1();
+                getLogger().log(Level.INFO, "Successfully hooked into zShop");
+                shop = true;
+                return hook;
+            }
+            else
+            {
+                getLogger().log(Level.WARNING, "zShop jar not found!");
             }
         }
 
@@ -399,14 +419,14 @@ public class Printer extends JavaPlugin
         fileManager = setupConfigs();
     }
 
-    public ShopGuiPlusHook getShopGuiPlusHook()
+    public ShopHook getShopGuiPlusHook()
     {
-        return shopGuiPlusHook;
+        return shopHook;
     }
 
-    public void setShopGuiPlusHook(ShopGuiPlusHook shopGuiPlusHook)
+    public void setShopHook(ShopHook shopHook)
     {
-        this.shopGuiPlusHook = shopGuiPlusHook;
+        this.shopHook = shopHook;
     }
 
     public MainConfig getMainConfig()
@@ -429,14 +449,14 @@ public class Printer extends JavaPlugin
         return nmsHandler;
     }
 
-    public boolean isShopGuiPlus()
+    public boolean hasShopHook()
     {
-        return shopGuiPlus;
+        return shop;
     }
 
-    public void setShopGuiPlus(boolean shopGuiPlus)
+    public void setHasShopHook(boolean shop)
     {
-        this.shopGuiPlus = shopGuiPlus;
+        this.shop = shop;
     }
 
     public boolean isFactions()

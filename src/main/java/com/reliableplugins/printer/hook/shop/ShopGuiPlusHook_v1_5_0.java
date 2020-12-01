@@ -4,12 +4,12 @@
  * GNU GPLv3 <https://www.gnu.org/licenses/gpl-3.0.en.html>
  */
 
-package com.reliableplugins.printer.hook.shopguiplus;
+package com.reliableplugins.printer.hook.shop;
 
 import net.brcdev.shopgui.ShopGuiPlusApi;
 import org.bukkit.inventory.ItemStack;
 
-public class ShopGuiPlusHook_v1_5_0 implements ShopGuiPlusHook
+public class ShopGuiPlusHook_v1_5_0 implements ShopHook
 {
     @Override
     public double getPrice(ItemStack item)

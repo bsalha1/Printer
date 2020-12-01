@@ -285,5 +285,23 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.spigotmc............:spigot:1.16.1-R0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.spigotmc.............:spigot:1.16.3-R0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.spigotmc.................:spigot:1.8.8-R0.1-SNAPSHOT" level="project" />
+    <orderEntry type="module-library">
+      <library name="Maven: fr:zShop-API:2.0.1.1">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/zShop-API.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: fr.maxlego08:zShop-API:2.0.1.1">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/zShop-API.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

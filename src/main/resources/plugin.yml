@@ -1,12 +1,13 @@
 name: Printer
 main: com.reliableplugins.printer.Printer
-version: 1.8
+version: 1.9
 depend:
   - Vault
 softdepend:
   - Citizens
   - SuperiorSkyblock2
   - ShopGUIPlus
+  - zShop
   - Factions
 author: Reachy
 commands:

@@ -4,11 +4,11 @@
  * GNU GPLv3 <https://www.gnu.org/licenses/gpl-3.0.en.html>
  */
 
-package com.reliableplugins.printer.hook.shopguiplus;
+package com.reliableplugins.printer.hook.shop;
 
 import org.bukkit.inventory.ItemStack;
 
-public interface ShopGuiPlusHook
+public interface ShopHook
 {
     double getPrice(ItemStack item);
 }

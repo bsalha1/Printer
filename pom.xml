@@ -6,7 +6,7 @@
 
     <groupId>com.reliableplugins</groupId>
     <artifactId>Printer</artifactId>
-    <version>1.8</version>
+    <version>1.9</version>
 
     <build>
         <plugins>
@@ -61,6 +61,15 @@
             <version>1.5.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/shopgui-api-1.5.0.jar</systemPath>
+        </dependency>
+
+        <!-- zShop -->
+        <dependency>
+            <groupId>fr.maxlego08</groupId>
+            <artifactId>zShop-API</artifactId>
+            <version>2.0.1.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/zShop-API.jar</systemPath>
         </dependency>
 
         <!-- SuperiorSkyblock -->

@@ -27,6 +27,7 @@ public class MainConfig extends Config
     private boolean useFactions;
 
     private boolean useShopGuiPlus;
+    private boolean useZShop;
 
     private boolean useSuperiorSkyBlock;
     private boolean allowInNonIsland;
@@ -63,6 +64,7 @@ public class MainConfig extends Config
         allowInWilderness = getBoolean("factions.allow-in-wilderness", false);
 
         useShopGuiPlus = getBoolean("shopguiplus.support", true);
+        useZShop = getBoolean("zshop.support", false);
 
         useSuperiorSkyBlock = getBoolean("superior-skyblock.support", true);
         allowInNonIsland = getBoolean("superior-skyblock.allow-in-non-island", false);
@@ -162,6 +164,11 @@ public class MainConfig extends Config
         return useFactions;
     }
 
+    public boolean useZShop()
+    {
+        return useZShop;
+    }
+
     public boolean useSuperiorSkyBlock()
     {
         return useSuperiorSkyBlock;
@@ -226,4 +233,5 @@ public class MainConfig extends Config
     {
         return checkRadius;
     }
+
 }
