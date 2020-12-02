@@ -27,7 +27,6 @@ public class ResidenceScanner extends BukkitTask
                     // If people near who aren't in same residence
                     if(!Printer.INSTANCE.getMainConfig().allowNearNonResidentMembers() && Printer.INSTANCE.getResidenceHook().isNonResidenceMemberNearby(player))
                     {
-                        System.out.println("here");
                         printerPlayer.printerOff();
                         player.sendMessage(Message.ERROR_NON_RESIDENT_NEARBY.getMessage());
                     }
@@ -35,11 +34,9 @@ public class ResidenceScanner extends BukkitTask
                     else if(!Printer.INSTANCE.getResidenceHook().isInOwnResidence(player) &&
                             (!Printer.INSTANCE.getMainConfig().allowInNonResidence() && !Printer.INSTANCE.getResidenceHook().isInAResidence(player)))
                     {
-                        System.out.println("there");
                         printerPlayer.printerOff();
                         player.sendMessage(Message.ERROR_NOT_IN_RESIDENCE.getMessage());
                     }
-                    System.out.println("bear");
                 }
             }
         }
