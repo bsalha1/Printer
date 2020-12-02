@@ -25,7 +25,7 @@ public class CommandReload extends Command
 
         // If printer was allowed before in wilderness, but now is not
         // deactivate all printers who are in wilderness
-        if(Printer.INSTANCE.isFactions() && allowBefore && !Printer.INSTANCE.getMainConfig().allowInWilderness())
+        if(Printer.INSTANCE.hasFactionsHook() && allowBefore && !Printer.INSTANCE.getMainConfig().allowInWilderness())
         {
             for(PrinterPlayer player : Printer.INSTANCE.printerPlayers.values())
             {

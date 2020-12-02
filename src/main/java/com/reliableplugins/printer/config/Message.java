@@ -43,6 +43,10 @@ public enum Message
     ERROR_NOT_IN_ISLAND("err-not-in-island", "&cYou may only use printer if you're in your own island"),
     ERROR_NON_ISLAND_MEMBER_NEARBY("err-non-island-member-nearby", "&cNon island member nearby"),
 
+    // Residence
+    ERROR_NON_RESIDENT_NEARBY("err-non-resident-nearby", "&cSomeone who isn't from your residence is nearby"),
+    ERROR_NOT_IN_RESIDENCE("err-not-in-resident", "&cYou may only use printer if you're in your own residence"),
+
     ERROR_NON_EMPTY_INVENTORY("err-non-empty-inventory", "&cMust have empty inventory to activate printer"),
     ERROR_NOT_PLACED_IN_PRINTER("err-not-placed-in-printer", "&cCannot break blocks not placed in printer"),
     ERROR_NO_MONEY("err-not-enough-money", "&cNot enough money"),

@@ -89,6 +89,14 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- Residence -->
+        <dependency>
+            <groupId>com.residence</groupId>
+            <artifactId>Residence</artifactId>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Residence4.9.2.1.jar</systemPath>
+        </dependency>
+
         <!-- Factions -->
         <dependency>
             <groupId>com.massivecraft</groupId>

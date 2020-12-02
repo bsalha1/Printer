@@ -33,7 +33,7 @@ public class CommandOn extends Command
         }
 
         // Factions checks
-        if(Printer.INSTANCE.isFactions())
+        if(Printer.INSTANCE.hasFactionsHook())
         {
             // In territory
             if(!Printer.INSTANCE.getMainConfig().allowInWilderness() && !Printer.INSTANCE.getFactionsHook().inOwnTerritory(player))
@@ -49,8 +49,9 @@ public class CommandOn extends Command
                 return;
             }
         }
+
         // SuperiorSkyBlock checks
-        else if(Printer.INSTANCE.isSuperiorSkyBlock())
+        if(Printer.INSTANCE.hasSuperiorSkyBlockHook())
         {
             // In island
             if((Printer.INSTANCE.getMainConfig().allowInNonIsland() && !Printer.INSTANCE.getSuperiorSkyBlockHook().canPlayerBuild(player, player.getLocation()))
@@ -67,6 +68,23 @@ public class CommandOn extends Command
                 return;
             }
 
+        }
+
+        // Residence checks
+        if(Printer.INSTANCE.hasResidenceHook())
+        {
+            if(!Printer.INSTANCE.getMainConfig().allowNearNonResidentMembers() && Printer.INSTANCE.getResidenceHook().isNonResidenceMemberNearby(player))
+            {
+                player.sendMessage(Message.ERROR_NON_RESIDENT_NEARBY.getMessage());
+                return;
+            }
+            // If player isn't in their own residence and they aren't in wilderness
+            else if(!Printer.INSTANCE.getResidenceHook().isInOwnResidence(player) &&
+                    (!Printer.INSTANCE.getMainConfig().allowInNonResidence() && !Printer.INSTANCE.getResidenceHook().isInAResidence(player)))
+            {
+                player.sendMessage(Message.ERROR_NOT_IN_RESIDENCE.getMessage());
+                return;
+            }
         }
 
         if(Printer.INSTANCE.getMainConfig().requireEmptyInventory() && (!BukkitUtil.isArmorInventoryEmpty(player) || !BukkitUtil.isInventoryEmpty(player)))

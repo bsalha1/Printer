@@ -29,9 +29,15 @@ public class MainConfig extends Config
     private boolean useShopGuiPlus;
     private boolean useZShop;
 
+    private boolean useCitizens;
+
     private boolean useSuperiorSkyBlock;
     private boolean allowInNonIsland;
     private boolean allowNearNonIslandMembers;
+
+    private boolean useResidence;
+    private boolean allowInNonResidence;
+    private boolean allowNearNonResidenceMembers;
 
     private int scoreboardMargin;
     private String scoreboardTitle;
@@ -65,6 +71,12 @@ public class MainConfig extends Config
 
         useShopGuiPlus = getBoolean("shopguiplus.support", true);
         useZShop = getBoolean("zshop.support", false);
+
+        useCitizens = getBoolean("citizens.support", true);
+
+        useResidence = getBoolean("residence.support", false);
+        allowInNonResidence = getBoolean("residence.allow-in-non-residence", false);
+        allowNearNonResidenceMembers = getBoolean("residence.allow-near-non-residence-members", false);
 
         useSuperiorSkyBlock = getBoolean("superior-skyblock.support", true);
         allowInNonIsland = getBoolean("superior-skyblock.allow-in-non-island", false);
@@ -154,6 +166,16 @@ public class MainConfig extends Config
         return allowNearNonIslandMembers;
     }
 
+    public boolean allowInNonResidence()
+    {
+        return allowInNonResidence;
+    }
+
+    public boolean allowNearNonResidentMembers()
+    {
+        return allowNearNonResidenceMembers;
+    }
+
     public boolean useShopGuiPlus()
     {
         return useShopGuiPlus;
@@ -172,6 +194,16 @@ public class MainConfig extends Config
     public boolean useSuperiorSkyBlock()
     {
         return useSuperiorSkyBlock;
+    }
+
+    public boolean useCitizens()
+    {
+        return useCitizens;
+    }
+
+    public boolean useResidence()
+    {
+        return useResidence;
     }
 
     public String getScoreboardTitle()

@@ -15,6 +15,9 @@ import com.reliableplugins.printer.exception.VaultException;
 import com.reliableplugins.printer.hook.citizens.CitizensHook;
 import com.reliableplugins.printer.hook.citizens.CitizensHook_v2_0_16;
 import com.reliableplugins.printer.hook.factions.*;
+import com.reliableplugins.printer.hook.residence.ResidenceHook;
+import com.reliableplugins.printer.hook.residence.ResidenceHook_v_4_9_2_1;
+import com.reliableplugins.printer.hook.residence.ResidenceScanner;
 import com.reliableplugins.printer.hook.shop.*;
 import com.reliableplugins.printer.hook.superiorskyblock.SuperiorSkyblockHook;
 import com.reliableplugins.printer.hook.superiorskyblock.SuperiorSkyblockHook_v1;
@@ -51,15 +54,17 @@ public class Printer extends JavaPlugin
     private CitizensHook citizensHook;
     private FactionsHook factionsHook;
     private ShopHook shopHook;
+    private ResidenceHook residenceHook;
     private BukkitTask factionScanner;
     private BukkitTask superiorSkyBlockScanner;
+    private BukkitTask residenceScanner;
     private INMSHandler nmsHandler;
 
     private boolean shop;
     private boolean citizens;
     private boolean factions;
     private boolean superiorSkyBlock;
-
+    private boolean residence;
 
     private FileManager fileManager;
     private MainConfig mainConfig;
@@ -91,11 +96,12 @@ public class Printer extends JavaPlugin
         {
             fileManager = setupConfigs();
             nmsHandler = setupNMS();
-            economy = setupEconomy();
-            citizensHook = setupCitizensHook();
-            factionsHook = setupFactionsHook();
-            superiorSkyBlockHook = setupSuperiorSkyBlockHook();
-            shopHook = setupShopHook();
+            setupEconomy();
+            setupCitizensHook();
+            setupFactionsHook();
+            setupSuperiorSkyBlockHook();
+            setupResidenceHook();
+            setupShopHook();
             commandHandler = setupCommands();
             setupTasks();
             setupListeners();
@@ -130,6 +136,10 @@ public class Printer extends JavaPlugin
         if(superiorSkyBlockScanner != null)
         {
             superiorSkyBlockScanner.cancel();
+        }
+        if(residenceScanner != null)
+        {
+            residenceScanner.cancel();
         }
         getLogger().log(Level.INFO, this.getDescription().getName() + " v" + this.getDescription().getVersion() + " has been unloaded");
     }
@@ -169,7 +179,7 @@ public class Printer extends JavaPlugin
         RegisteredServiceProvider<T> provider = getServer().getServicesManager().getRegistration(clazz);
         if (provider == null)
             return null;
-        return provider.getProvider() != null ? (T) provider.getProvider() : null;
+        return provider.getProvider() != null ? provider.getProvider() : null;
     }
 
     private INMSHandler setupNMS()
@@ -207,31 +217,46 @@ public class Printer extends JavaPlugin
         }
     }
 
-    private SuperiorSkyblockHook setupSuperiorSkyBlockHook()
+    public void setupSuperiorSkyBlockHook()
     {
-        if(mainConfig.useSuperiorSkyBlock())
+        if(!mainConfig.useSuperiorSkyBlock())
         {
-            if(getServer().getPluginManager().isPluginEnabled("SuperiorSkyblock2"))
-            {
-                SuperiorSkyblockHook hook = new SuperiorSkyblockHook_v1();
-                superiorSkyBlockScanner = new SuperiorSkyblockScanner(0L, 5L);
-                superiorSkyBlock = true;
-                getLogger().log(Level.INFO, "Successfully hooked into SuperiorSkyblock2");
-                return hook;
-            }
-            else
-            {
-                getLogger().log(Level.WARNING, "SuperiorSkyblock2 jar not found!");
-            }
+            return;
         }
 
-        return null;
+        if(!getServer().getPluginManager().isPluginEnabled("SuperiorSkyblock2"))
+        {
+            getLogger().log(Level.WARNING, "SuperiorSkyblock2 jar not found!");
+            return;
+        }
+
+        superiorSkyBlockHook = new SuperiorSkyblockHook_v1();
+        superiorSkyBlockScanner = new SuperiorSkyblockScanner(0L, 5L);
+        superiorSkyBlock = true;
+        getLogger().log(Level.INFO, "Successfully hooked into SuperiorSkyblock2");
     }
 
-    private ShopHook setupShopHook()
+    public void setupResidenceHook()
     {
-        ShopHook hook;
+        if(!mainConfig.useResidence())
+        {
+            return;
+        }
 
+        if(!getServer().getPluginManager().isPluginEnabled("Residence"))
+        {
+            getLogger().log(Level.WARNING, "Residence jar not found!");
+            return;
+        }
+
+        residenceHook = new ResidenceHook_v_4_9_2_1();
+        residenceScanner = new ResidenceScanner(0L, 5L);
+        residence = true;
+        getLogger().log(Level.INFO, "Successfully hooked into Residence");
+    }
+
+    public void setupShopHook()
+    {
         if (mainConfig.useShopGuiPlus())
         {
             if (getServer().getPluginManager().isPluginEnabled("ShopGUIPlus"))
@@ -246,20 +271,20 @@ public class Printer extends JavaPlugin
                     int build = Integer.parseInt(versions[2]);
                     if (minor >= 33 && minor <= 34)
                     {
-                        hook = new ShopGuiPlusHook_v1_3_0();
+                        shopHook = new ShopGuiPlusHook_v1_3_0();
                     }
                     else if (minor == 35)
                     {
-                        hook = new ShopGuiPlusHook_v1_4_0();
+                        shopHook = new ShopGuiPlusHook_v1_4_0();
                     }
                     else
                     {
-                        hook = new ShopGuiPlusHook_v1_5_0();
+                        shopHook = new ShopGuiPlusHook_v1_5_0();
                     }
 
                     shop = true;
                     getLogger().log(Level.INFO, "Successfully hooked into ShopGUIPlus");
-                    return hook;
+                    return;
                 }
                 getLogger().log(Level.WARNING, "Failed to parse ShopGUIPlus version!");
             }
@@ -273,76 +298,69 @@ public class Printer extends JavaPlugin
         {
             if (getServer().getPluginManager().isPluginEnabled("zShop"))
             {
-                hook = new ZShopHook_v_2_0_1_1();
-                getLogger().log(Level.INFO, "Successfully hooked into zShop");
+                shopHook = new ZShopHook_v_2_0_1_1();
                 shop = true;
-                return hook;
+                getLogger().log(Level.INFO, "Successfully hooked into zShop");
             }
             else
             {
                 getLogger().log(Level.WARNING, "zShop jar not found!");
             }
         }
-
-        return null;
     }
 
-    public FactionsHook setupFactionsHook()
+    public void setupFactionsHook()
     {
-        if(mainConfig.useFactions())
+        if(!mainConfig.useFactions())
         {
-            if(getServer().getPluginManager().isPluginEnabled("Factions"))
-            {
-                FactionsHook hook;
-
-                if(getServer().getPluginManager().getPlugin("Factions").getDescription().getDepend().contains("MassiveCore"))
-                {
-                    hook = new FactionsHook_MassiveCraft();
-                }
-                else
-                {
-                    String version = getServer().getPluginManager().getPlugin("Factions").getDescription().getVersion();
-                    String build = version.split("-")[1].replaceAll("U", "");
-                    String[] buildData = build.split("[.]");
-                    int buildVersion = Integer.parseInt(buildData[1]);
-
-                    if (buildVersion >= 5)
-                    {
-                        hook = new FactionsHook_UUID_v0_5_18();
-                    }
-                    else
-                    {
-                        hook = new FactionsHook_UUID_v0_2_1();
-                    }
-                }
-
-                factionScanner = new FactionsScanner(0L, 5L);
-                factions = true;
-                getLogger().log(Level.INFO, "Successfully hooked into Factions");
-                return hook;
-            }
-            else
-            {
-                getLogger().log(Level.WARNING, "Factions jar not found!");
-            }
-        }
-        return null;
-    }
-
-    public CitizensHook setupCitizensHook()
-    {
-        if (getServer().getPluginManager().isPluginEnabled("Citizens"))
-        {
-            CitizensHook hook = new CitizensHook_v2_0_16();
-            citizens = true;
-            getLogger().log(Level.INFO, "Successfully hooked into Citizens");
-            return hook;
+            return;
         }
 
-        return null;
+        if(!getServer().getPluginManager().isPluginEnabled("Factions"))
+        {
+            getLogger().log(Level.WARNING, "Factions jar not found!");
+            return;
+        }
+
+        if(getServer().getPluginManager().getPlugin("Factions").getDescription().getDepend().contains("MassiveCore"))
+        {
+            factionsHook = new FactionsHook_MassiveCraft();
+        }
+        else
+        {
+            String version = getServer().getPluginManager().getPlugin("Factions").getDescription().getVersion();
+            String build = version.split("-")[1].replaceAll("U", "");
+            String[] buildData = build.split("[.]");
+            int buildVersion = Integer.parseInt(buildData[1]);
+
+//            if (buildVersion >= 5)
+//            {
+//                factionsHook = new FactionsHook_UUID_v0_5_18();
+//            }
+//            else
+//            {
+                factionsHook = new FactionsHook_UUID_v0_2_1();
+//            }
+        }
+
+        factionScanner = new FactionsScanner(0L, 5L);
+        factions = true;
+        getLogger().log(Level.INFO, "Successfully hooked into Factions");
     }
 
-    private Economy setupEconomy() throws VaultException
+    public void setupCitizensHook()
+    {
+        if (!getServer().getPluginManager().isPluginEnabled("Citizens"))
+        {
+            return;
+        }
+
+        citizensHook = new CitizensHook_v2_0_16();
+        citizens = true;
+        getLogger().log(Level.INFO, "Successfully hooked into Citizens");
+    }
+
+    private void setupEconomy() throws VaultException
     {
         if(Bukkit.getPluginManager().getPlugin("Vault") == null)
         {
@@ -359,7 +377,6 @@ public class Printer extends JavaPlugin
         {
             throw new VaultException("no economy service provider");
         }
-        return economy;
     }
 
     private void setupListeners()
@@ -403,12 +420,6 @@ public class Printer extends JavaPlugin
         return economy.getBalance(player);
     }
 
-
-    public void setFactionScanner(BukkitTask factionScanner)
-    {
-        this.factionScanner = factionScanner;
-    }
-
     public String getVersion()
     {
         return version;
@@ -422,11 +433,6 @@ public class Printer extends JavaPlugin
     public ShopHook getShopGuiPlusHook()
     {
         return shopHook;
-    }
-
-    public void setShopHook(ShopHook shopHook)
-    {
-        this.shopHook = shopHook;
     }
 
     public MainConfig getMainConfig()
@@ -454,27 +460,22 @@ public class Printer extends JavaPlugin
         return shop;
     }
 
-    public void setHasShopHook(boolean shop)
-    {
-        this.shop = shop;
-    }
-
-    public boolean isFactions()
+    public boolean hasFactionsHook()
     {
         return factions;
     }
 
-    public void setFactions(boolean factions)
-    {
-        this.factions = factions;
-    }
-
-    public boolean isCitizens()
+    public boolean hasCitizensHook()
     {
         return citizens;
     }
 
-    public boolean isSuperiorSkyBlock()
+    public boolean hasResidenceHook()
+    {
+        return residence;
+    }
+
+    public boolean hasSuperiorSkyBlockHook()
     {
         return superiorSkyBlock;
     }
@@ -499,8 +500,8 @@ public class Printer extends JavaPlugin
         return superiorSkyBlockHook;
     }
 
-    public void setFactionsHook(FactionsHook factionsHook)
+    public ResidenceHook getResidenceHook()
     {
-        this.factionsHook = factionsHook;
+        return residenceHook;
     }
 }

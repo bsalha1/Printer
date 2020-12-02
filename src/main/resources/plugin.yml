@@ -8,6 +8,7 @@ softdepend:
   - SuperiorSkyblock2
   - ShopGUIPlus
   - zShop
+  - Residence
   - Factions
 author: Reachy
 commands:

@@ -100,7 +100,7 @@ public class BukkitUtil
             if(entity instanceof Player)
             {
                 // Citizens shouldn't count as nearby players
-                if(Printer.INSTANCE.isCitizens() && Printer.INSTANCE.getCitizensHook().isCitizen(entity))
+                if(Printer.INSTANCE.hasCitizensHook() && Printer.INSTANCE.getCitizensHook().isCitizen(entity))
                 {
                     continue;
                 }
