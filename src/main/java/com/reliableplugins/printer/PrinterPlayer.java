@@ -36,7 +36,8 @@ public class PrinterPlayer
     private volatile boolean printing = false;
     private double totalCost;
     private int totalBlocks;
-    private long printerOffTimestamp;
+    private long printerOffTimestamp = 0;
+    private long lastPickupTimestamp = 0;
 
     // Scoreboard values
     private Objective objective;
@@ -245,5 +246,15 @@ public class PrinterPlayer
     public long getPrinterOffTimestamp()
     {
         return printerOffTimestamp;
+    }
+
+    public void setLastPickupTimestamp(long lastPickupTimestamp)
+    {
+        this.lastPickupTimestamp = lastPickupTimestamp;
+    }
+
+    public long getLastPickupTimestamp()
+    {
+        return lastPickupTimestamp;
     }
 }
