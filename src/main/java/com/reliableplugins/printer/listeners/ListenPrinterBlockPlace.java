@@ -9,7 +9,7 @@ package com.reliableplugins.printer.listeners;
 import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.type.ColoredMaterial;
-import com.reliableplugins.printer.type.PrinterPlayer;
+import com.reliableplugins.printer.PrinterPlayer;
 import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,67 +23,66 @@ public class ListenPrinterBlockPlace implements Listener
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event)
     {
-        if(Printer.INSTANCE.printerPlayers.containsKey(event.getPlayer()))
+        PrinterPlayer player = PrinterPlayer.fromPlayer(event.getPlayer());
+        if(player == null || !player.isPrinting())
         {
-            PrinterPlayer player = Printer.INSTANCE.printerPlayers.get(event.getPlayer());
-            if(player.isPrinting())
-            {
-                // Check if Unplaceable
-                if(Printer.INSTANCE.getMainConfig().isUnplaceable(event.getBlockPlaced().getType()))
-                {
-                    event.setCancelled(true);
-                    event.getPlayer().sendMessage(Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.getMessage());
-                    return;
-                }
+            return;
+        }
 
-                // Get Price
-                // - Prioritize colored price, then uncolored price, then shopgui price
-                //   . We want to sell the blue wool for price of blue wool not for the price of uncolored wool
-                //   . We want our prices.yml to overwrite ShopGUIPlus
-                Double price = null;
-                ItemStack toPlace = event.getItemInHand();
-                ColoredMaterial coloredMaterial = ColoredMaterial.fromItemstack(toPlace);
-                if(coloredMaterial != null && Printer.INSTANCE.getPricesConfig().getColoredPrices().containsKey(coloredMaterial))
-                {
-                    price = Printer.INSTANCE.getPricesConfig().getColoredPrices().get(coloredMaterial);
-                }
-                else if(Printer.INSTANCE.getPricesConfig().getBlockPrices().containsKey(event.getBlockPlaced().getType()))
-                {
-                    price = Printer.INSTANCE.getPricesConfig().getBlockPrices().get(event.getBlockPlaced().getType());
-                }
-                else if(Printer.INSTANCE.hasShopHook())
-                {
-                    ItemStack toPlaceCopy = toPlace.clone();
-                    toPlaceCopy.setAmount(1);
-                    price = Printer.INSTANCE.getShopGuiPlusHook().getPrice(toPlaceCopy);
-                    price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
-                }
+        // Check if Unplaceable
+        if(Printer.INSTANCE.getMainConfig().isUnplaceable(event.getBlockPlaced().getType()))
+        {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.getMessage());
+            return;
+        }
 
-                // Clear inventory from inventory block before placement
-                if(event.getBlock().getState() instanceof InventoryHolder)
-                {
-                    ((InventoryHolder) event.getBlock().getState()).getInventory().clear();
-                }
+        // Get Price
+        // - Prioritize colored price, then uncolored price, then shopgui price
+        //   . We want to sell the blue wool for price of blue wool not for the price of uncolored wool
+        //   . We want our prices.yml to overwrite ShopGUIPlus
+        Double price = null;
+        ItemStack toPlace = event.getItemInHand();
+        ColoredMaterial coloredMaterial = ColoredMaterial.fromItemstack(toPlace);
+        if(coloredMaterial != null && Printer.INSTANCE.getPricesConfig().getColoredPrices().containsKey(coloredMaterial))
+        {
+            price = Printer.INSTANCE.getPricesConfig().getColoredPrices().get(coloredMaterial);
+        }
+        else if(Printer.INSTANCE.getPricesConfig().getBlockPrices().containsKey(event.getBlockPlaced().getType()))
+        {
+            price = Printer.INSTANCE.getPricesConfig().getBlockPrices().get(event.getBlockPlaced().getType());
+        }
+        else if(Printer.INSTANCE.hasShopHook())
+        {
+            ItemStack toPlaceCopy = toPlace.clone();
+            toPlaceCopy.setAmount(1);
+            price = Printer.INSTANCE.getShopGuiPlusHook().getPrice(toPlaceCopy);
+            price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
+        }
 
-                if(price == null)
-                {
-                    event.setCancelled(true);
-                    event.getPlayer().sendMessage(Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.getMessage());
-                    return;
-                }
-                else if(!Printer.INSTANCE.withdrawMoney(player.getPlayer(), price))
-                {
-                    Printer.INSTANCE.getNmsHandler().sendToolTipText(player.getPlayer(), Message.ERROR_NO_MONEY.getMessage());
-                    event.setCancelled(true);
-                    return;
-                }
+        // Clear inventory from inventory block before placement
+        if(event.getBlock().getState() instanceof InventoryHolder)
+        {
+            ((InventoryHolder) event.getBlock().getState()).getInventory().clear();
+        }
 
-                player.incrementCost(price);
-                if(Printer.INSTANCE.getMainConfig().onlyBreakPlaced())
-                {
-                    player.addPlacedBlock(event.getBlock());
-                }
-            }
+        if(price == null)
+        {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.getMessage());
+            return;
+        }
+        else if(!Printer.INSTANCE.withdrawMoney(player.getPlayer(), price))
+        {
+            Printer.INSTANCE.getNmsHandler().sendToolTipText(player.getPlayer(), Message.ERROR_NO_MONEY.getMessage());
+            event.setCancelled(true);
+            return;
+        }
+
+        player.incrementCost(price);
+        if(Printer.INSTANCE.getMainConfig().onlyBreakPlaced())
+        {
+            player.addPlacedBlock(event.getBlock());
         }
     }
 
@@ -91,64 +90,66 @@ public class ListenPrinterBlockPlace implements Listener
     public void onPlayerInteract(PlayerInteractEvent event)
     {
         // Allow itemblocks like DIODE, COMPARATOR, etc...
-        if(event.getItem() != null && !event.getItem().getType().isBlock()
-                && Printer.INSTANCE.printerPlayers.containsKey(event.getPlayer()))
+        if(event.getItem() == null || event.getItem().getType().isBlock())
         {
-            PrinterPlayer player = Printer.INSTANCE.printerPlayers.get(event.getPlayer());
+            return;
+        }
 
-            if (player.isPrinting())
+        PrinterPlayer player = PrinterPlayer.fromPlayer(event.getPlayer());
+        if (player == null || !player.isPrinting())
+        {
+            return;
+        }
+
+        // Check if Unplaceable
+        if(Printer.INSTANCE.getMainConfig().isUnplaceable(event.getItem().getType()))
+        {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.getMessage());
+            return;
+        }
+
+        // Get Price
+        Double price = null;
+        ItemStack toPlace = event.getItem();
+        if(Printer.INSTANCE.getPricesConfig().getItemPrices().containsKey(toPlace.getType()))
+        {
+            price = Printer.INSTANCE.getPricesConfig().getItemPrices().get(toPlace.getType());
+        }
+        else if(Printer.INSTANCE.hasShopHook())
+        {
+            ItemStack toPlaceCopy = toPlace.clone();
+            toPlaceCopy.setAmount(1);
+            price = Printer.INSTANCE.getShopGuiPlusHook().getPrice(toPlaceCopy);
+            price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
+        }
+
+        // Charge Player
+        if(price == null)
+        {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.getMessage());
+        }
+        else if(BukkitUtil.isNoBlockPlaceItem(toPlace.getType()))
+        {
+            if(!Printer.INSTANCE.withdrawMoney(player.getPlayer(), price))
             {
-                // Check if Unplaceable
-                if(Printer.INSTANCE.getMainConfig().isUnplaceable(event.getItem().getType()))
-                {
-                    event.setCancelled(true);
-                    event.getPlayer().sendMessage(Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.getMessage());
-                    return;
-                }
-
-                // Get Price
-                Double price = null;
-                ItemStack toPlace = event.getItem();
-                if(Printer.INSTANCE.getPricesConfig().getItemPrices().containsKey(toPlace.getType()))
-                {
-                    price = Printer.INSTANCE.getPricesConfig().getItemPrices().get(toPlace.getType());
-                }
-                else if(Printer.INSTANCE.hasShopHook())
-                {
-                    ItemStack toPlaceCopy = toPlace.clone();
-                    toPlaceCopy.setAmount(1);
-                    price = Printer.INSTANCE.getShopGuiPlusHook().getPrice(toPlaceCopy);
-                    price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
-                }
-
-                // Charge Player
-                if(price == null)
-                {
-                    event.setCancelled(true);
-                    event.getPlayer().sendMessage(Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.getMessage());
-                }
-                else if(BukkitUtil.isNoBlockPlaceItem(toPlace.getType()))
-                {
-                    if(!Printer.INSTANCE.withdrawMoney(player.getPlayer(), price))
-                    {
-                        Printer.INSTANCE.getNmsHandler().sendToolTipText(player.getPlayer(), Message.ERROR_NO_MONEY.getMessage());
-                        event.setCancelled(true);
-                    }
-                    else
-                    {
-                        player.incrementCost(price);
-                    }
-                }
-                else if(BukkitUtil.isItemBlock(toPlace.getType()))
-                {
-
-                }
-                else // Bow shoot, snowball, egg, etc..
-                {
-                    event.setCancelled(true);
-                    event.getPlayer().sendMessage(Message.ERROR_ITEM_PLACE_NOT_ALLOWED.getMessage());
-                }
+                Printer.INSTANCE.getNmsHandler().sendToolTipText(player.getPlayer(), Message.ERROR_NO_MONEY.getMessage());
+                event.setCancelled(true);
             }
+            else
+            {
+                player.incrementCost(price);
+            }
+        }
+        else if(BukkitUtil.isItemBlock(toPlace.getType()))
+        {
+
+        }
+        else // Bow shoot, snowball, egg, etc..
+        {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(Message.ERROR_ITEM_PLACE_NOT_ALLOWED.getMessage());
         }
     }
 }

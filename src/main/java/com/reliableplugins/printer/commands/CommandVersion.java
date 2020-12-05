@@ -19,4 +19,10 @@ public class CommandVersion extends Command
     {
         executor.sendMessage(Message.VERSION_MESSAGE.getMessage().replace("{NUM}", Printer.INSTANCE.getVersion()));
     }
+
+    @Override
+    public String getDescription()
+    {
+        return Message.HELP_PRINTER_VERSION.getWithoutHeader();
+    }
 }

@@ -9,7 +9,7 @@ package com.reliableplugins.printer.commands;
 import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.annotation.CommandBuilder;
 import com.reliableplugins.printer.config.Message;
-import com.reliableplugins.printer.type.PrinterPlayer;
+import com.reliableplugins.printer.PrinterPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -21,7 +21,7 @@ public class CommandOff extends Command
     {
         Player player = (Player) executor;
 
-        PrinterPlayer printerPlayer = Printer.INSTANCE.printerPlayers.get(player);
+        PrinterPlayer printerPlayer = PrinterPlayer.fromPlayer(player);
         if(printerPlayer == null || !printerPlayer.isPrinting())
         {
             player.sendMessage(Message.ERROR_PRINTER_NOT_ON.getMessage());
@@ -30,5 +30,11 @@ public class CommandOff extends Command
 
         printerPlayer.printerOff();
         player.sendMessage(Message.PRINTER_OFF.getMessage());
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return Message.HELP_PRINTER_OFF.getWithoutHeader();
     }
 }

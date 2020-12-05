@@ -9,7 +9,7 @@ package com.reliableplugins.printer.commands;
 import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.annotation.CommandBuilder;
 import com.reliableplugins.printer.config.Message;
-import com.reliableplugins.printer.type.PrinterPlayer;
+import com.reliableplugins.printer.PrinterPlayer;
 import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -21,10 +21,11 @@ public class CommandOn extends Command
     public void execute(CommandSender executor, String[] args)
     {
         Player player = (Player) executor;
-        PrinterPlayer printerPlayer = Printer.INSTANCE.printerPlayers.get(player);
+        PrinterPlayer printerPlayer = PrinterPlayer.fromPlayer(player);
         if(printerPlayer == null)
         {
-            Printer.INSTANCE.printerPlayers.put(player, printerPlayer = new PrinterPlayer(player));
+            PrinterPlayer.addPlayer(player);
+            printerPlayer = PrinterPlayer.fromPlayer(player);
         }
         else if(printerPlayer.isPrinting())
         {
@@ -95,5 +96,11 @@ public class CommandOn extends Command
 
         printerPlayer.printerOn();
         player.sendMessage(Message.PRINTER_ON.getMessage());
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return Message.HELP_PRINTER_ON.getWithoutHeader();
     }
 }

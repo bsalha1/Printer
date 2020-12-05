@@ -29,7 +29,6 @@ import com.reliableplugins.printer.listeners.ListenPrinterExploit;
 import com.reliableplugins.printer.nms.*;
 import com.reliableplugins.printer.task.BukkitTask;
 import com.reliableplugins.printer.task.InventoryScanner;
-import com.reliableplugins.printer.type.PrinterPlayer;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -47,9 +46,8 @@ public class Printer extends JavaPlugin
     private String version;
 
     private CommandHandler commandHandler;
-    private Economy economy;
 
-    // Cross/Backwards Compatibility
+    // Hooks
     private SuperiorSkyblockHook superiorSkyBlockHook;
     private CitizensHook citizensHook;
     private FactionsHook factionsHook;
@@ -59,22 +57,22 @@ public class Printer extends JavaPlugin
     private BukkitTask superiorSkyBlockScanner;
     private BukkitTask residenceScanner;
     private INMSHandler nmsHandler;
+    private Economy economy;
+    private boolean hasShopHook;
+    private boolean hasCitizensHook;
+    private boolean hasFactionsHook;
+    private boolean hasSuperiorSkyBlockHook;
+    private boolean hasResidenceHook;
+    private boolean hasSpigot;
 
-    private boolean shop;
-    private boolean citizens;
-    private boolean factions;
-    private boolean superiorSkyBlock;
-    private boolean residence;
-
+    // Configs
     private FileManager fileManager;
     private MainConfig mainConfig;
     private MessageConfig messageConfig;
     private PricesConfig pricesConfig;
 
-    private boolean spigot;
-
     // Database
-    public HashMap<Player, PrinterPlayer> printerPlayers = new HashMap<>();
+    HashMap<Player, PrinterPlayer> printerPlayers = new HashMap<>();
 
     @Override
     public void onEnable()
@@ -82,14 +80,14 @@ public class Printer extends JavaPlugin
         Printer.INSTANCE = this;
         version = getDescription().getVersion();
 
-        spigot = true;
+        hasSpigot = true;
         try
         {
             Bukkit.class.getMethod("spigot");
         }
         catch (NoSuchMethodException e)
         {
-            spigot = false;
+            hasSpigot = false;
         }
 
         try
@@ -232,7 +230,7 @@ public class Printer extends JavaPlugin
 
         superiorSkyBlockHook = new SuperiorSkyblockHook_v1();
         superiorSkyBlockScanner = new SuperiorSkyblockScanner(0L, 5L);
-        superiorSkyBlock = true;
+        hasSuperiorSkyBlockHook = true;
         getLogger().log(Level.INFO, "Successfully hooked into SuperiorSkyblock2");
     }
 
@@ -251,7 +249,7 @@ public class Printer extends JavaPlugin
 
         residenceHook = new ResidenceHook_v_4_9_2_1();
         residenceScanner = new ResidenceScanner(0L, 5L);
-        residence = true;
+        hasResidenceHook = true;
         getLogger().log(Level.INFO, "Successfully hooked into Residence");
     }
 
@@ -282,7 +280,7 @@ public class Printer extends JavaPlugin
                         shopHook = new ShopGuiPlusHook_v1_5_0();
                     }
 
-                    shop = true;
+                    hasShopHook = true;
                     getLogger().log(Level.INFO, "Successfully hooked into ShopGUIPlus");
                     return;
                 }
@@ -299,7 +297,7 @@ public class Printer extends JavaPlugin
             if (getServer().getPluginManager().isPluginEnabled("zShop"))
             {
                 shopHook = new ZShopHook_v_2_0_1_1();
-                shop = true;
+                hasShopHook = true;
                 getLogger().log(Level.INFO, "Successfully hooked into zShop");
             }
             else
@@ -344,7 +342,7 @@ public class Printer extends JavaPlugin
         }
 
         factionScanner = new FactionsScanner(0L, 5L);
-        factions = true;
+        hasFactionsHook = true;
         getLogger().log(Level.INFO, "Successfully hooked into Factions");
     }
 
@@ -356,7 +354,7 @@ public class Printer extends JavaPlugin
         }
 
         citizensHook = new CitizensHook_v2_0_16();
-        citizens = true;
+        hasCitizensHook = true;
         getLogger().log(Level.INFO, "Successfully hooked into Citizens");
     }
 
@@ -457,32 +455,32 @@ public class Printer extends JavaPlugin
 
     public boolean hasShopHook()
     {
-        return shop;
+        return hasShopHook;
     }
 
     public boolean hasFactionsHook()
     {
-        return factions;
+        return hasFactionsHook;
     }
 
     public boolean hasCitizensHook()
     {
-        return citizens;
+        return hasCitizensHook;
     }
 
     public boolean hasResidenceHook()
     {
-        return residence;
+        return hasResidenceHook;
     }
 
     public boolean hasSuperiorSkyBlockHook()
     {
-        return superiorSkyBlock;
+        return hasSuperiorSkyBlockHook;
     }
 
     public boolean isSpigot()
     {
-        return spigot;
+        return hasSpigot;
     }
 
     public FactionsHook getFactionsHook()

@@ -17,6 +17,12 @@ public enum Message
     VERSION_MESSAGE("version-message", "&7Printer v{NUM}"),
     RELOAD("reload", "&7Printer reloaded"),
 
+    HELP_PRINTER_HEADER("help-printer-header", "&7&m----------&7[ &dPrinter &r&f{PAGE}&7/&f{NUM_PAGES}&7]&m----------"),
+    HELP_PRINTER_ON("help-printer-on", "&d/printer on &7Turns printer on"),
+    HELP_PRINTER_OFF("help-printer-off", "&d/printer off &7Turns printer off"),
+    HELP_PRINTER_RELOAD("help-printer-reload", "&d/printer reload &7Reloads printer configs"),
+    HELP_PRINTER_VERSION("help-printer-version", "&d/printer version &7Display printer version"),
+
     // Exploits
     ERROR_INVENTORY_OPEN_EXPLOIT("err-inventory-open-exploit", "&cOpening an inventory is not allowed while printer is on"),
     ERROR_DROP_ITEM_EXPLOIT("err-drop-item-exploit", "&cDropping items is not allowed while printer is on"),
@@ -81,6 +87,11 @@ public enum Message
     public String getMessage()
     {
         return BukkitUtil.color(header + message);
+    }
+
+    public String getWithoutHeader()
+    {
+        return BukkitUtil.color(message);
     }
 
     public void setMessage(String message)

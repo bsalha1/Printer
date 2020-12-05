@@ -1,7 +1,7 @@
 package com.reliableplugins.printer.task;
 
 import com.reliableplugins.printer.Printer;
-import com.reliableplugins.printer.type.PrinterPlayer;
+import com.reliableplugins.printer.PrinterPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -19,18 +19,17 @@ public class InventoryScanner extends BukkitTask
         // Removes externally added items
         for(Player player : Bukkit.getOnlinePlayers())
         {
-            if(Printer.INSTANCE.printerPlayers.containsKey(player))
+            PrinterPlayer printerPlayer = PrinterPlayer.fromPlayer(player);
+            if(printerPlayer == null || !printerPlayer.isPrinting())
             {
-                PrinterPlayer printerPlayer = Printer.INSTANCE.printerPlayers.get(player);
-                if(printerPlayer.isPrinting())
+                continue;
+            }
+
+            for(ItemStack item : player.getInventory().getContents())
+            {
+                if(item != null && !printerPlayer.isInternalItem(item))
                 {
-                    for(ItemStack item : player.getInventory().getContents())
-                    {
-                        if(item != null && !printerPlayer.isInternalItem(item))
-                        {
-                            player.getInventory().remove(item);
-                        }
-                    }
+                    player.getInventory().remove(item);
                 }
             }
         }

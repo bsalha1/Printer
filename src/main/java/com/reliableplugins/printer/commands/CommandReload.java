@@ -9,7 +9,7 @@ package com.reliableplugins.printer.commands;
 import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.annotation.CommandBuilder;
 import com.reliableplugins.printer.config.Message;
-import com.reliableplugins.printer.type.PrinterPlayer;
+import com.reliableplugins.printer.PrinterPlayer;
 import org.bukkit.command.CommandSender;
 
 @CommandBuilder(label = "reload", permission = "printer.reload", description = "Reloads the printer configs")
@@ -27,7 +27,7 @@ public class CommandReload extends Command
         // deactivate all printers who are in wilderness
         if(Printer.INSTANCE.hasFactionsHook() && allowBefore && !Printer.INSTANCE.getMainConfig().allowInWilderness())
         {
-            for(PrinterPlayer player : Printer.INSTANCE.printerPlayers.values())
+            for(PrinterPlayer player : PrinterPlayer.getPlayers())
             {
                 if(player.isPrinting() && Printer.INSTANCE.getFactionsHook().inWilderness(player.getPlayer()))
                 {
@@ -36,5 +36,11 @@ public class CommandReload extends Command
                 }
             }
         }
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return Message.HELP_PRINTER_RELOAD.getWithoutHeader();
     }
 }

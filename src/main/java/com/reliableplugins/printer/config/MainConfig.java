@@ -14,7 +14,8 @@ import java.util.List;
 public class MainConfig extends Config
 {
     private boolean scoreboard;
-    private int costNotificationTime;
+    private boolean tooltipNotification;
+    private int tooltipNotificationTime;
     private boolean onlyBreakPlaced;
     private boolean requireEmptyInventory;
     private int noFallDamageSeconds;
@@ -56,9 +57,7 @@ public class MainConfig extends Config
     @Override
     public void load()
     {
-        costNotificationTime = getInt("cost-notification-seconds", 5);
         noFallDamageSeconds = getInt("no-fall-damage-seconds", 5);
-        scoreboard = getBoolean("scoreboard-enabled", true);
         onlyBreakPlaced = getBoolean("only-break-placed", true);
         requireEmptyInventory = getBoolean("require-empty-inventory", false);
         checkRadius = getInt("player-check-radius", 64);
@@ -82,6 +81,10 @@ public class MainConfig extends Config
         allowInNonIsland = getBoolean("superior-skyblock.allow-in-non-island", false);
         allowNearNonIslandMembers = getBoolean("superior-skyblock.allow-near-non-island-members", false);
 
+        tooltipNotification = getBoolean("tooltip-notification.enabled", true);
+        tooltipNotificationTime = getInt("tooltip-notification.seconds", 5);
+
+        scoreboard = getBoolean("scoreboard.enabled", true);
         scoreboardMargin = getInt("scoreboard.margin", 32);
         scoreboardTitle = getColoredString("scoreboard.title", "&d&lPrinter");
         costScoreTitle = getColoredString("scoreboard.cost-score-title", "&7Cost&f:");
@@ -94,14 +97,19 @@ public class MainConfig extends Config
         save();
     }
 
-    public int getCostNotificationTime()
+    public int getTooltipNotificationTime()
     {
-        return costNotificationTime;
+        return tooltipNotificationTime;
     }
 
     public boolean isScoreboardEnabled()
     {
         return scoreboard;
+    }
+
+    public boolean isTooltipNotificationEnabled()
+    {
+        return tooltipNotification;
     }
 
     public boolean isUnbreakable(Material material)
@@ -250,6 +258,7 @@ public class MainConfig extends Config
     {
         return onlyBreakPlaced;
     }
+
 
     public boolean requireEmptyInventory()
     {

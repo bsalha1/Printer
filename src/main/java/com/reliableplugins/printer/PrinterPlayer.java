@@ -4,10 +4,10 @@
  * GNU GPLv3 <https://www.gnu.org/licenses/gpl-3.0.en.html>
  */
 
-package com.reliableplugins.printer.type;
+package com.reliableplugins.printer;
 
-import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.config.Message;
+import com.reliableplugins.printer.utils.MathUtil;
 import com.reliableplugins.printer.utils.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -19,7 +19,9 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Executors;
 
 public class PrinterPlayer
@@ -28,7 +30,7 @@ public class PrinterPlayer
     private ItemStack[] initialInventory;
     private ItemStack[] initialArmor;
     private HashSet<Block> placedBlocks;
-    private HashSet<ItemStack> internalItems;
+    private HashSet<ItemStack> internalItems; // items obtained from creative inventory
 
     private final Player player;
     private volatile boolean printing = false;
@@ -52,59 +54,86 @@ public class PrinterPlayer
         this.internalItems = new HashSet<>();
     }
 
+    public static PrinterPlayer fromPlayer(Player player)
+    {
+        return Printer.INSTANCE.printerPlayers.get(player);
+    }
+
+    public static void addPlayer(Player player)
+    {
+        PrinterPlayer printerPlayer = fromPlayer(player);
+        if(printerPlayer == null)
+        {
+            Printer.INSTANCE.printerPlayers.put(player, new PrinterPlayer(player));
+        }
+    }
+
+    public static Collection<PrinterPlayer> getPlayers()
+    {
+        return Printer.INSTANCE.printerPlayers.values();
+    }
+
     public void printerOn()
     {
-        if(!printing)
+        if(printing)
         {
-            // Initialize scoreboard
-            if(Printer.INSTANCE.getMainConfig().isScoreboardEnabled())
-            {
-                initializeScoreboard();
-            }
+            return;
+        }
 
-            totalBlocks = 0;
-            totalCost = 0;
+        // Initialize scoreboard
+        if(Printer.INSTANCE.getMainConfig().isScoreboardEnabled())
+        {
+            initializeScoreboard();
+        }
 
-            // Cache initial values
-            initialGamemode = player.getGameMode();
-            initialInventory = player.getInventory().getContents();
-            initialArmor = player.getInventory().getArmorContents();
-            placedBlocks = new HashSet<>();
-            internalItems = new HashSet<>();
+        totalBlocks = 0;
+        totalCost = 0;
+        placedBlocks = new HashSet<>();
+        internalItems = new HashSet<>();
 
-            if(player.getOpenInventory() != null)
-            {
-                player.getOpenInventory().close();
-            }
+        // Cache initial values
+        initialGamemode = player.getGameMode();
+        initialInventory = player.getInventory().getContents();
+        initialArmor = player.getInventory().getArmorContents();
 
-            player.getInventory().clear();
-            player.getInventory().setArmorContents(new ItemStack[player.getInventory().getArmorContents().length]);
-            player.setGameMode(GameMode.CREATIVE);
-            printing = true;
+        if(player.getOpenInventory() != null)
+        {
+            player.getOpenInventory().close();
+        }
+
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(new ItemStack[player.getInventory().getArmorContents().length]);
+        player.setGameMode(GameMode.CREATIVE);
+        printing = true;
+
+        if(Printer.INSTANCE.getMainConfig().isTooltipNotificationEnabled())
+        {
             Executors.newSingleThreadExecutor().submit(this::showCost);
         }
     }
 
     public void printerOff()
     {
-        if(printing)
+        if(!printing)
         {
-            // Reset scoreboard
-            if(Printer.INSTANCE.getMainConfig().isScoreboardEnabled())
-            {
-                player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
-            }
-
-            // Set gamemode and inventory back to initials
-            player.setGameMode(initialGamemode);
-            player.getInventory().setContents(initialInventory);
-            player.getInventory().setArmorContents(initialArmor);
-            placedBlocks.clear();
-            internalItems.clear();
-
-            printing = false;
-            printerOffTimestamp = System.currentTimeMillis();
+            return;
         }
+
+        // Reset scoreboard
+        if(Printer.INSTANCE.getMainConfig().isScoreboardEnabled())
+        {
+            player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
+        }
+
+        // Set gamemode and inventory back to initials
+        player.setGameMode(initialGamemode);
+        player.getInventory().setContents(initialInventory);
+        player.getInventory().setArmorContents(initialArmor);
+        placedBlocks.clear();
+        internalItems.clear();
+
+        printing = false;
+        printerOffTimestamp = System.currentTimeMillis(); // for fall-damage timer
     }
 
     public void showCost()
@@ -114,7 +143,7 @@ public class PrinterPlayer
             Printer.INSTANCE.getNmsHandler().sendToolTipText(player, Message.WITHDRAW_MONEY.getMessage().replace("{NUM}", Double.toString(totalCost)));
             try
             {
-                Thread.sleep(Printer.INSTANCE.getMainConfig().getCostNotificationTime() * 1000);
+                Thread.sleep(Printer.INSTANCE.getMainConfig().getTooltipNotificationTime() * 1000);
             }
             catch (InterruptedException e)
             {
@@ -132,22 +161,20 @@ public class PrinterPlayer
 
         objective.getScore(Printer.INSTANCE.getMainConfig().getCostScoreTitle()).setScore(16);
         cost = objective.getScore(
-                Printer.INSTANCE.getMainConfig().getCostFormat().replace("{NUM}", Double.toString(0.0d))
-        );
+                Printer.INSTANCE.getMainConfig().getCostFormat().replace("{NUM}", Double.toString(0.0d)));
         cost.setScore(15);
 
         objective.getScore("").setScore(14); // Margin
         objective.getScore(Printer.INSTANCE.getMainConfig().getBlocksScoreTitle()).setScore(13);
         blocks = objective.getScore(
-                Printer.INSTANCE.getMainConfig().getBlocksFormat().replace("{NUM}", Integer.toString(0))
-        );
+                Printer.INSTANCE.getMainConfig().getBlocksFormat().replace("{NUM}", Integer.toString(0)));
         blocks.setScore(12);
 
+        String price = Double.toString(MathUtil.round(Printer.INSTANCE.getBalance(player), 2)); // round off
         objective.getScore(StringUtil.getSpaces(Printer.INSTANCE.getMainConfig().getScoreboardMargin())).setScore(11); // Margin
         objective.getScore(Printer.INSTANCE.getMainConfig().getBalanceScoreTitle()).setScore(10);
         balance = objective.getScore(
-                Printer.INSTANCE.getMainConfig().getBalanceFormat().replace("{NUM}", Double.toString(Printer.INSTANCE.getBalance(player)))
-        );
+                Printer.INSTANCE.getMainConfig().getBalanceFormat().replace("{NUM}", price));
         balance.setScore(9);
 
         player.setScoreboard(board);
@@ -161,22 +188,21 @@ public class PrinterPlayer
         // Update cost on scoreboard
         if(Printer.INSTANCE.getMainConfig().isScoreboardEnabled())
         {
+            String totalCost = Double.toString(MathUtil.round(this.totalCost, 2));
             objective.getScoreboard().resetScores(this.cost.getEntry());
             this.cost = objective.getScore(
-                    Printer.INSTANCE.getMainConfig().getCostFormat().replace("{NUM}", Double.toString(this.totalCost))
-            );
+                    Printer.INSTANCE.getMainConfig().getCostFormat().replace("{NUM}", totalCost));
             this.cost.setScore(15);
 
             objective.getScoreboard().resetScores(this.blocks.getEntry());
             this.blocks = objective.getScore(
-                    Printer.INSTANCE.getMainConfig().getBlocksFormat().replace("{NUM}", Integer.toString(this.totalBlocks))
-            );
+                    Printer.INSTANCE.getMainConfig().getBlocksFormat().replace("{NUM}", Integer.toString(this.totalBlocks)));
             this.blocks.setScore(12);
 
+            String price = Double.toString(MathUtil.round(Printer.INSTANCE.getBalance(player), 2)); // round off
             objective.getScoreboard().resetScores(this.balance.getEntry());
             this.balance = objective.getScore(
-                    Printer.INSTANCE.getMainConfig().getBalanceFormat().replace("{NUM}", Double.toString(Printer.INSTANCE.getBalance(player)))
-            );
+                    Printer.INSTANCE.getMainConfig().getBalanceFormat().replace("{NUM}", price));
             this.balance.setScore(9);
         }
     }
