@@ -136,11 +136,12 @@ public class PrinterPlayer
         printerOffTimestamp = System.currentTimeMillis(); // for fall-damage timer
     }
 
-    public void showCost()
+    private void showCost()
     {
         while(printing)
         {
-            Printer.INSTANCE.getNmsHandler().sendToolTipText(player, Message.WITHDRAW_MONEY.getMessage().replace("{NUM}", Double.toString(totalCost)));
+            String money = Double.toString(MathUtil.round(totalCost, 2));
+            Printer.INSTANCE.getNmsHandler().sendToolTipText(player, Message.WITHDRAW_MONEY.getMessage().replace("{NUM}", money));
             try
             {
                 Thread.sleep(Printer.INSTANCE.getMainConfig().getTooltipNotificationTime() * 1000);
