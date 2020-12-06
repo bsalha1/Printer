@@ -12,10 +12,13 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import java.util.*;
+
 
 public class BukkitUtil
 {
@@ -107,7 +110,38 @@ public class BukkitUtil
                 nearbyPlayers.add((Player)entity);
             }
         }
+
         return nearbyPlayers;
+    }
+
+    public static List<Entity> getLookingAt(Player player)
+    {
+        ArrayList<Entity> entities = new ArrayList<>();
+        for(Entity entity : player.getNearbyEntities(MinecraftUtil.getPlayerLoadDistance(player.getWorld()), 256, MinecraftUtil.getPlayerLoadDistance(player.getWorld())))
+        {
+            Location eye = player.getEyeLocation();
+            Vector toEntity = entity.getLocation().toVector().subtract(eye.toVector());
+            double dot = toEntity.normalize().dot(eye.getDirection());
+            if(dot > 0.96D)
+            {
+                entities.add(entity);
+            }
+        }
+
+        return entities;
+    }
+
+    public static boolean isNearby(Player player, EntityType entityType, int radius)
+    {
+        for(Entity entity : player.getNearbyEntities(radius, 256, radius))
+        {
+            if(entity.getType().equals(entityType))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static String color(String text)
