@@ -17,29 +17,30 @@ public class ListenPluginLoad implements Listener
     @EventHandler
     public void onPluginLoad(PluginEnableEvent event)
     {
-        if(event.getPlugin().getName().contains("Factions") && !Printer.INSTANCE.hasFactionsHook())
+        String name = event.getPlugin().getName();
+        if(name.contains("Factions") && !Printer.INSTANCE.hasFactionsHook())
         {
             Printer.INSTANCE.setupFactionsHook();
         }
-        else if(event.getPlugin().getName().contains("ShopGUIPlus") && !Printer.INSTANCE.hasShopHook())
+        else if(name.contains("ShopGUIPlus") && !Printer.INSTANCE.hasShopHook())
         {
             Printer.INSTANCE.setupShopHook();
         }
-        else if(event.getPlugin().getName().contains("zShop") && !Printer.INSTANCE.hasShopHook())
+        else if(name.contains("zShop") && !Printer.INSTANCE.hasShopHook())
         {
             Printer.INSTANCE.setupShopHook();
         }
-        else if(event.getPlugin().getName().contains("Citizens") && !Printer.INSTANCE.hasCitizensHook())
+        else if(name.contains("Citizens") && !Printer.INSTANCE.hasCitizensHook())
         {
             Printer.INSTANCE.setupCitizensHook();
         }
-        else if(event.getPlugin().getName().contains("Residence") && !Printer.INSTANCE.hasResidenceHook())
+        else if(name.contains("Residence") && !Printer.INSTANCE.hasResidenceHook())
         {
             Printer.INSTANCE.setupResidenceHook();
         }
-        else if(event.getPlugin().getName().contains("SuperiorSkyblock") && !Printer.INSTANCE.hasSuperiorSkyBlockHook())
+        else if((name.contains("SuperiorSkyblock") || name.contains("BentoBox")) && !Printer.INSTANCE.hasSkyblockHook())
         {
-            Printer.INSTANCE.setupSuperiorSkyBlockHook();
+            Printer.INSTANCE.setupSkyblockHook();
         }
     }
 }

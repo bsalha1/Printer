@@ -1,4 +1,4 @@
-package com.reliableplugins.printer.hook.superiorskyblock;
+package com.reliableplugins.printer.hook.territory.skyblock;
 
 import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.config.Message;
@@ -7,9 +7,9 @@ import com.reliableplugins.printer.PrinterPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class SuperiorSkyblockScanner extends BukkitTask
+public class SkyblockScanner extends BukkitTask
 {
-    public SuperiorSkyblockScanner(long delay, long period)
+    public SkyblockScanner(long delay, long period)
     {
         super(delay, period);
     }
@@ -27,13 +27,13 @@ public class SuperiorSkyblockScanner extends BukkitTask
 
             // If printing is allowed on a non island and the player cannot build
             // Or if that player is not on their own island, turn printer off
-            if((Printer.INSTANCE.getMainConfig().allowInNonIsland() && !Printer.INSTANCE.getSuperiorSkyBlockHook().canPlayerBuild(player, player.getLocation()))
-                    || !Printer.INSTANCE.getSuperiorSkyBlockHook().isOnOwnIsland(player))
+            if(!Printer.INSTANCE.getSkyblockHook().isInOwnTerritory(player) &&
+                    (!Printer.INSTANCE.getMainConfig().allowInNonIsland() && !Printer.INSTANCE.getSkyblockHook().isInATerritory(player)))
             {
                 printerPlayer.printerOff();
                 player.sendMessage(Message.ERROR_NOT_IN_ISLAND.getMessage());
             }
-            else if(Printer.INSTANCE.getMainConfig().allowNearNonIslandMembers() && Printer.INSTANCE.getSuperiorSkyBlockHook().isNonIslandMemberNearby(player))
+            else if(Printer.INSTANCE.getMainConfig().allowNearNonIslandMembers() && Printer.INSTANCE.getSkyblockHook().isNonTerritoryMemberNearby(player))
             {
                 printerPlayer.printerOff();
                 player.sendMessage(Message.ERROR_NON_ISLAND_MEMBER_NEARBY.getMessage());

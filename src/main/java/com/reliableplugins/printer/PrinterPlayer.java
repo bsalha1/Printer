@@ -62,8 +62,7 @@ public class PrinterPlayer
 
     public static void addPlayer(Player player)
     {
-        PrinterPlayer printerPlayer = fromPlayer(player);
-        if(printerPlayer == null)
+        if(!Printer.INSTANCE.printerPlayers.containsKey(player))
         {
             Printer.INSTANCE.printerPlayers.put(player, new PrinterPlayer(player));
         }
@@ -171,7 +170,7 @@ public class PrinterPlayer
                 Printer.INSTANCE.getMainConfig().getBlocksFormat().replace("{NUM}", Integer.toString(0)));
         blocks.setScore(12);
 
-        String price = Double.toString(MathUtil.round(Printer.INSTANCE.getBalance(player), 2)); // round off
+        String price = Double.toString(MathUtil.round(Printer.INSTANCE.getEconomyHook().getBalance(player), 2)); // round off
         objective.getScore(StringUtil.getSpaces(Printer.INSTANCE.getMainConfig().getScoreboardMargin())).setScore(11); // Margin
         objective.getScore(Printer.INSTANCE.getMainConfig().getBalanceScoreTitle()).setScore(10);
         balance = objective.getScore(
@@ -200,7 +199,7 @@ public class PrinterPlayer
                     Printer.INSTANCE.getMainConfig().getBlocksFormat().replace("{NUM}", Integer.toString(this.totalBlocks)));
             this.blocks.setScore(12);
 
-            String price = Double.toString(MathUtil.round(Printer.INSTANCE.getBalance(player), 2)); // round off
+            String price = Double.toString(MathUtil.round(Printer.INSTANCE.getEconomyHook().getBalance(player), 2)); // round off
             objective.getScoreboard().resetScores(this.balance.getEntry());
             this.balance = objective.getScore(
                     Printer.INSTANCE.getMainConfig().getBalanceFormat().replace("{NUM}", price));

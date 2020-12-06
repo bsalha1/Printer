@@ -36,34 +36,34 @@ public class CommandOn extends Command
         // Factions checks
         if(Printer.INSTANCE.hasFactionsHook())
         {
-            // In territory
-            if(!Printer.INSTANCE.getMainConfig().allowInWilderness() && !Printer.INSTANCE.getFactionsHook().inOwnTerritory(player))
+            // If player isn't in their own faction and they aren't in wilderness (if they're allowed)
+            if(!Printer.INSTANCE.getFactionsHook().isInOwnTerritory(player) &&
+                    (Printer.INSTANCE.getFactionsHook().isInATerritory(player) || !Printer.INSTANCE.getMainConfig().allowInNonFaction()))
             {
                 player.sendMessage(Message.ERROR_NOT_IN_TERRITORY.getMessage());
                 return;
             }
-
-            // Enemies/neutral nearby
-            else if(Printer.INSTANCE.getFactionsHook().isEnemyOrNeutralNearby(player))
+            else if(!Printer.INSTANCE.getMainConfig().allowNearNonFactionMembers() &&
+                    Printer.INSTANCE.getFactionsHook().isNonTerritoryMemberNearby(player, Printer.INSTANCE.getMainConfig().allowNearAllies()))
             {
-                player.sendMessage(Message.ERROR_ENEMY_NEARBY.getMessage());
+                player.sendMessage(Message.ERROR_NON_FACTION_MEMBER_NEARBY.getMessage());
                 return;
             }
         }
 
-        // SuperiorSkyBlock checks
-        if(Printer.INSTANCE.hasSuperiorSkyBlockHook())
+        // Skyblock checks
+        if(Printer.INSTANCE.hasSkyblockHook())
         {
             // In island
-            if((Printer.INSTANCE.getMainConfig().allowInNonIsland() && !Printer.INSTANCE.getSuperiorSkyBlockHook().canPlayerBuild(player, player.getLocation()))
-                    || !Printer.INSTANCE.getSuperiorSkyBlockHook().isOnOwnIsland(player))
+            if(!Printer.INSTANCE.getSkyblockHook().isInOwnTerritory(player) &&
+                    (Printer.INSTANCE.getSkyblockHook().isInATerritory(player) || !Printer.INSTANCE.getMainConfig().allowInNonIsland()))
             {
                 player.sendMessage(Message.ERROR_NOT_IN_ISLAND.getMessage());
                 return;
             }
 
             // Non-island members nearby
-            else if(Printer.INSTANCE.getMainConfig().allowNearNonIslandMembers() && Printer.INSTANCE.getSuperiorSkyBlockHook().isNonIslandMemberNearby(player))
+            else if(Printer.INSTANCE.getMainConfig().allowNearNonIslandMembers() && Printer.INSTANCE.getSkyblockHook().isNonTerritoryMemberNearby(player))
             {
                 player.sendMessage(Message.ERROR_NON_ISLAND_MEMBER_NEARBY.getMessage());
                 return;
@@ -74,16 +74,16 @@ public class CommandOn extends Command
         // Residence checks
         if(Printer.INSTANCE.hasResidenceHook())
         {
-            if(!Printer.INSTANCE.getMainConfig().allowNearNonResidentMembers() && Printer.INSTANCE.getResidenceHook().isNonResidenceMemberNearby(player))
-            {
-                player.sendMessage(Message.ERROR_NON_RESIDENT_NEARBY.getMessage());
-                return;
-            }
             // If player isn't in their own residence and they aren't in wilderness
-            else if(!Printer.INSTANCE.getResidenceHook().isInOwnResidence(player) &&
-                    (!Printer.INSTANCE.getMainConfig().allowInNonResidence() && !Printer.INSTANCE.getResidenceHook().isInAResidence(player)))
+            if(!Printer.INSTANCE.getResidenceHook().isInOwnTerritory(player) &&
+                    (Printer.INSTANCE.getResidenceHook().isInATerritory(player) || !Printer.INSTANCE.getMainConfig().allowInNonResidence()))
             {
                 player.sendMessage(Message.ERROR_NOT_IN_RESIDENCE.getMessage());
+                return;
+            }
+            else if(!Printer.INSTANCE.getMainConfig().allowNearNonResidentMembers() && Printer.INSTANCE.getResidenceHook().isNonTerritoryMemberNearby(player))
+            {
+                player.sendMessage(Message.ERROR_NON_RESIDENT_NEARBY.getMessage());
                 return;
             }
         }

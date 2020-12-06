@@ -1,6 +1,7 @@
-package com.reliableplugins.printer.hook.shop;
+package com.reliableplugins.printer.hook.shop.zshop;
 
 import com.reliableplugins.printer.Printer;
+import com.reliableplugins.printer.hook.shop.ShopHook;
 import fr.maxlego08.shop.api.ShopManager;
 import org.bukkit.inventory.ItemStack;
 

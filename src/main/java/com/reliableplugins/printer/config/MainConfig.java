@@ -24,14 +24,17 @@ public class MainConfig extends Config
     private List<Material> unplaceables;
     private List<String> allowedCommands;
 
-    private boolean allowInWilderness;
     private boolean useFactions;
+    private boolean allowInNonFaction;
+    private boolean allowNearAllies;
+    private boolean allowNearNonFactionMembers;
 
     private boolean useShopGuiPlus;
     private boolean useZShop;
 
     private boolean useCitizens;
 
+    private boolean useBentoBox;
     private boolean useSuperiorSkyBlock;
     private boolean allowInNonIsland;
     private boolean allowNearNonIslandMembers;
@@ -66,10 +69,12 @@ public class MainConfig extends Config
         allowedCommands = getStringList("allowed-commands", Arrays.asList("f*", "printer*", "bal*", "tp*", "etp*", "msg % %"));
 
         useFactions = getBoolean("factions.support", true);
-        allowInWilderness = getBoolean("factions.allow-in-wilderness", false);
+        allowInNonFaction = getBoolean("factions.allow-in-non-faction", false);
+        allowNearAllies = getBoolean("factions.allow-near-allies", true);
+        allowNearNonFactionMembers = getBoolean("factions.allow-near-non-faction-members", false);
 
-        useShopGuiPlus = getBoolean("shopguiplus.support", true);
-        useZShop = getBoolean("zshop.support", false);
+        useShopGuiPlus = getBoolean("shop.shopguiplus-support", true);
+        useZShop = getBoolean("shop.zshop-support", false);
 
         useCitizens = getBoolean("citizens.support", true);
 
@@ -77,9 +82,10 @@ public class MainConfig extends Config
         allowInNonResidence = getBoolean("residence.allow-in-non-residence", false);
         allowNearNonResidenceMembers = getBoolean("residence.allow-near-non-residence-members", false);
 
-        useSuperiorSkyBlock = getBoolean("superior-skyblock.support", true);
-        allowInNonIsland = getBoolean("superior-skyblock.allow-in-non-island", false);
-        allowNearNonIslandMembers = getBoolean("superior-skyblock.allow-near-non-island-members", false);
+        useSuperiorSkyBlock = getBoolean("skyblock.superior-skyblock-support", false);
+        useBentoBox = getBoolean("skyblock.bento-box-support", false);
+        allowInNonIsland = getBoolean("skyblock.allow-in-non-island", false);
+        allowNearNonIslandMembers = getBoolean("skyblock.allow-near-non-island-members", false);
 
         tooltipNotification = getBoolean("tooltip-notification.enabled", true);
         tooltipNotificationTime = getInt("tooltip-notification.seconds", 5);
@@ -159,9 +165,19 @@ public class MainConfig extends Config
         return false;
     }
 
-    public boolean allowInWilderness()
+    public boolean allowInNonFaction()
     {
-        return allowInWilderness;
+        return allowInNonFaction;
+    }
+
+    public boolean allowNearAllies()
+    {
+        return allowNearAllies;
+    }
+
+    public boolean allowNearNonFactionMembers()
+    {
+        return allowNearNonFactionMembers;
     }
 
     public boolean allowInNonIsland()
@@ -202,6 +218,11 @@ public class MainConfig extends Config
     public boolean useSuperiorSkyBlock()
     {
         return useSuperiorSkyBlock;
+    }
+
+    public boolean useBentoBox()
+    {
+        return useBentoBox;
     }
 
     public boolean useCitizens()

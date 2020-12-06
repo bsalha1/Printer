@@ -72,7 +72,7 @@ public class ListenPrinterBlockPlace implements Listener
             event.getPlayer().sendMessage(Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.getMessage());
             return;
         }
-        else if(!Printer.INSTANCE.withdrawMoney(player.getPlayer(), price))
+        else if(!Printer.INSTANCE.getEconomyHook().withdraw(player.getPlayer(), price))
         {
             Printer.INSTANCE.getNmsHandler().sendToolTipText(player.getPlayer(), Message.ERROR_NO_MONEY.getMessage());
             event.setCancelled(true);
@@ -132,7 +132,7 @@ public class ListenPrinterBlockPlace implements Listener
         }
         else if(BukkitUtil.isNoBlockPlaceItem(toPlace.getType()))
         {
-            if(!Printer.INSTANCE.withdrawMoney(player.getPlayer(), price))
+            if(!Printer.INSTANCE.getEconomyHook().withdraw(player.getPlayer(), price))
             {
                 Printer.INSTANCE.getNmsHandler().sendToolTipText(player.getPlayer(), Message.ERROR_NO_MONEY.getMessage());
                 event.setCancelled(true);

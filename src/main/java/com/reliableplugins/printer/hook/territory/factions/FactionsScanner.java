@@ -4,7 +4,7 @@
  * GNU GPLv3 <https://www.gnu.org/licenses/gpl-3.0.en.html>
  */
 
-package com.reliableplugins.printer.hook.factions;
+package com.reliableplugins.printer.hook.territory.factions;
 
 import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.config.Message;
@@ -31,18 +31,19 @@ public class FactionsScanner extends BukkitTask
                 continue;
             }
 
-            // If player is not allowed to print in wilderness and they're in wilderness, cancel printer
-            // Or if player is not allowed to build at their current location, cancel printer
-            if((!Printer.INSTANCE.getMainConfig().allowInWilderness() && Printer.INSTANCE.getFactionsHook().inWilderness(player))
-                    || !Printer.INSTANCE.getFactionsHook().canBuild(player))
+            // If player isn't in their own faction and they aren't in wilderness (if they're allowed)
+            if(!Printer.INSTANCE.getFactionsHook().isInOwnTerritory(player) &&
+                    (Printer.INSTANCE.getFactionsHook().isInATerritory(player) || !Printer.INSTANCE.getMainConfig().allowInNonFaction()))
             {
                 printerPlayer.printerOff();
                 player.sendMessage(Message.ERROR_NOT_IN_TERRITORY.getMessage());
             }
-            else if(Printer.INSTANCE.getFactionsHook().isEnemyOrNeutralNearby(player))
+            // If not allowed to print near non-faction members
+            if(!Printer.INSTANCE.getMainConfig().allowNearNonFactionMembers() &&
+                    Printer.INSTANCE.getFactionsHook().isNonTerritoryMemberNearby(player, Printer.INSTANCE.getMainConfig().allowNearAllies()))
             {
                 printerPlayer.printerOff();
-                player.sendMessage(Message.ERROR_ENEMY_NEARBY.getMessage());
+                player.sendMessage(Message.ERROR_NON_FACTION_MEMBER_NEARBY.getMessage());
             }
         }
     }

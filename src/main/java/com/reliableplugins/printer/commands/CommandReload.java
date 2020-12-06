@@ -18,24 +18,8 @@ public class CommandReload extends Command
     @Override
     public void execute(CommandSender executor, String[] args)
     {
-        boolean allowBefore = Printer.INSTANCE.getMainConfig().allowInWilderness();
-
         Printer.INSTANCE.reloadConfigs();
         executor.sendMessage(Message.RELOAD.getMessage());
-
-        // If printer was allowed before in wilderness, but now is not
-        // deactivate all printers who are in wilderness
-        if(Printer.INSTANCE.hasFactionsHook() && allowBefore && !Printer.INSTANCE.getMainConfig().allowInWilderness())
-        {
-            for(PrinterPlayer player : PrinterPlayer.getPlayers())
-            {
-                if(player.isPrinting() && Printer.INSTANCE.getFactionsHook().inWilderness(player.getPlayer()))
-                {
-                    player.printerOff();
-                    player.getPlayer().sendMessage(Message.ERROR_NOT_IN_TERRITORY.getMessage());
-                }
-            }
-        }
     }
 
     @Override

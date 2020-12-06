@@ -1,16 +1,17 @@
-package com.reliableplugins.printer.hook.residence;
+package com.reliableplugins.printer.hook.territory.residence;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.reliableplugins.printer.hook.territory.TerritoryHook;
 import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.entity.Player;
 
-public class ResidenceHook_v_4_9_2_1 implements ResidenceHook
+public class ResidenceHook_v_4_9_2_1 implements TerritoryHook
 {
 
     @Override
-    public boolean isNonResidenceMemberNearby(Player player)
+    public boolean isNonTerritoryMemberNearby(Player player)
     {
         ResidencePlayer rPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
         for(Player nearbyPlayer : BukkitUtil.getNearbyPlayers(player))
@@ -28,21 +29,14 @@ public class ResidenceHook_v_4_9_2_1 implements ResidenceHook
     }
 
     @Override
-    public boolean hasResidence(Player player)
-    {
-        ResidencePlayer rPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
-        return rPlayer.getMainResidence() != null;
-    }
-
-    @Override
-    public boolean isInAResidence(Player player)
+    public boolean isInATerritory(Player player)
     {
         ClaimedResidence currentResidence = Residence.getInstance().getResidenceManager().getByLoc(player);
         return currentResidence != null;
     }
 
     @Override
-    public boolean isInOwnResidence(Player player)
+    public boolean isInOwnTerritory(Player player)
     {
         ResidencePlayer rPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
         ClaimedResidence currentResidence = Residence.getInstance().getResidenceManager().getByLoc(player);

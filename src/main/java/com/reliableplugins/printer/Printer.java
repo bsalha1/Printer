@@ -14,14 +14,23 @@ import com.reliableplugins.printer.config.PricesConfig;
 import com.reliableplugins.printer.exception.VaultException;
 import com.reliableplugins.printer.hook.citizens.CitizensHook;
 import com.reliableplugins.printer.hook.citizens.CitizensHook_v2_0_16;
-import com.reliableplugins.printer.hook.factions.*;
-import com.reliableplugins.printer.hook.residence.ResidenceHook;
-import com.reliableplugins.printer.hook.residence.ResidenceHook_v_4_9_2_1;
-import com.reliableplugins.printer.hook.residence.ResidenceScanner;
+import com.reliableplugins.printer.hook.economy.EconomyHook;
+import com.reliableplugins.printer.hook.economy.VaultHook;
+import com.reliableplugins.printer.hook.shop.shopgui.ShopGuiPlusHook_v1_3_0;
+import com.reliableplugins.printer.hook.shop.shopgui.ShopGuiPlusHook_v1_4_0;
+import com.reliableplugins.printer.hook.shop.shopgui.ShopGuiPlusHook_v1_5_0;
+import com.reliableplugins.printer.hook.shop.zshop.ZShopHook_v_2_0_1_1;
+import com.reliableplugins.printer.hook.territory.TerritoryHook;
+import com.reliableplugins.printer.hook.territory.factions.FactionsHook;
+import com.reliableplugins.printer.hook.territory.residence.ResidenceHook_v_4_9_2_1;
+import com.reliableplugins.printer.hook.territory.residence.ResidenceScanner;
 import com.reliableplugins.printer.hook.shop.*;
-import com.reliableplugins.printer.hook.superiorskyblock.SuperiorSkyblockHook;
-import com.reliableplugins.printer.hook.superiorskyblock.SuperiorSkyblockHook_v1;
-import com.reliableplugins.printer.hook.superiorskyblock.SuperiorSkyblockScanner;
+import com.reliableplugins.printer.hook.territory.factions.FactionsHook_MassiveCraft;
+import com.reliableplugins.printer.hook.territory.factions.FactionsHook_UUID_v0_2_1;
+import com.reliableplugins.printer.hook.territory.factions.FactionsScanner;
+import com.reliableplugins.printer.hook.territory.skyblock.BentoBoxHook;
+import com.reliableplugins.printer.hook.territory.skyblock.SuperiorSkyblockHook_v1;
+import com.reliableplugins.printer.hook.territory.skyblock.SkyblockScanner;
 import com.reliableplugins.printer.listeners.ListenPlayerQuit;
 import com.reliableplugins.printer.listeners.ListenPluginLoad;
 import com.reliableplugins.printer.listeners.ListenPrinterBlockPlace;
@@ -48,20 +57,20 @@ public class Printer extends JavaPlugin
     private CommandHandler commandHandler;
 
     // Hooks
-    private SuperiorSkyblockHook superiorSkyBlockHook;
+    private TerritoryHook skyBlockHook;
+    private TerritoryHook residenceHook;
     private CitizensHook citizensHook;
     private FactionsHook factionsHook;
     private ShopHook shopHook;
-    private ResidenceHook residenceHook;
+    private EconomyHook economyHook;
     private BukkitTask factionScanner;
-    private BukkitTask superiorSkyBlockScanner;
+    private BukkitTask skyblockScanner;
     private BukkitTask residenceScanner;
     private INMSHandler nmsHandler;
-    private Economy economy;
     private boolean hasShopHook;
     private boolean hasCitizensHook;
     private boolean hasFactionsHook;
-    private boolean hasSuperiorSkyBlockHook;
+    private boolean hasSkyblockHook;
     private boolean hasResidenceHook;
     private boolean hasSpigot;
 
@@ -94,13 +103,13 @@ public class Printer extends JavaPlugin
         {
             fileManager = setupConfigs();
             nmsHandler = setupNMS();
-            setupEconomy();
+            setupEconomyHook();
             setupCitizensHook();
             setupFactionsHook();
-            setupSuperiorSkyBlockHook();
+            setupSkyblockHook();
             setupResidenceHook();
             setupShopHook();
-            commandHandler = setupCommands();
+            setupCommands();
             setupTasks();
             setupListeners();
         }
@@ -131,9 +140,9 @@ public class Printer extends JavaPlugin
         {
             factionScanner.cancel();
         }
-        if(superiorSkyBlockScanner != null)
+        if(skyblockScanner != null)
         {
-            superiorSkyBlockScanner.cancel();
+            skyblockScanner.cancel();
         }
         if(residenceScanner != null)
         {
@@ -215,23 +224,39 @@ public class Printer extends JavaPlugin
         }
     }
 
-    public void setupSuperiorSkyBlockHook()
+    public void setupSkyblockHook()
     {
-        if(!mainConfig.useSuperiorSkyBlock())
+        if(mainConfig.useSuperiorSkyBlock())
         {
-            return;
+            if(getServer().getPluginManager().isPluginEnabled("SuperiorSkyblock2"))
+            {
+                skyBlockHook = new SuperiorSkyblockHook_v1();
+                skyblockScanner = new SkyblockScanner(0L, 5L);
+                hasSkyblockHook = true;
+                getLogger().log(Level.INFO, "Successfully hooked into SuperiorSkyblock2");
+                return;
+            }
+            else
+            {
+                getLogger().log(Level.WARNING, "SuperiorSkyblock2 jar not found!");
+            }
         }
 
-        if(!getServer().getPluginManager().isPluginEnabled("SuperiorSkyblock2"))
+        if(mainConfig.useBentoBox())
         {
-            getLogger().log(Level.WARNING, "SuperiorSkyblock2 jar not found!");
-            return;
+            if(getServer().getPluginManager().isPluginEnabled("BentoBox"))
+            {
+                skyBlockHook = new BentoBoxHook();
+                skyblockScanner = new SkyblockScanner(0L, 5L);
+                hasSkyblockHook = true;
+                getLogger().log(Level.INFO, "Successfully hooked into BentoBox");
+            }
+            else
+            {
+                getLogger().log(Level.WARNING, "BentoBox jar not found!");
+            }
         }
 
-        superiorSkyBlockHook = new SuperiorSkyblockHook_v1();
-        superiorSkyBlockScanner = new SuperiorSkyblockScanner(0L, 5L);
-        hasSuperiorSkyBlockHook = true;
-        getLogger().log(Level.INFO, "Successfully hooked into SuperiorSkyblock2");
     }
 
     public void setupResidenceHook()
@@ -348,17 +373,22 @@ public class Printer extends JavaPlugin
 
     public void setupCitizensHook()
     {
-        if (!getServer().getPluginManager().isPluginEnabled("Citizens"))
+        if(Printer.INSTANCE.mainConfig.useCitizens())
         {
-            return;
+            if (getServer().getPluginManager().isPluginEnabled("Citizens"))
+            {
+                citizensHook = new CitizensHook_v2_0_16();
+                hasCitizensHook = true;
+                getLogger().log(Level.INFO, "Successfully hooked into Citizens");
+            }
+            else
+            {
+                getLogger().log(Level.WARNING, "Citizens jar not found!");
+            }
         }
-
-        citizensHook = new CitizensHook_v2_0_16();
-        hasCitizensHook = true;
-        getLogger().log(Level.INFO, "Successfully hooked into Citizens");
     }
 
-    private void setupEconomy() throws VaultException
+    private void setupEconomyHook() throws VaultException
     {
         if(Bukkit.getPluginManager().getPlugin("Vault") == null)
         {
@@ -370,11 +400,14 @@ public class Printer extends JavaPlugin
         {
             throw new VaultException("no economy service");
         }
-        economy = economyRegistration.getProvider();
+
+        Economy economy = economyRegistration.getProvider();
         if(economy == null)
         {
             throw new VaultException("no economy service provider");
         }
+
+        economyHook = new VaultHook(economy);
     }
 
     private void setupListeners()
@@ -390,32 +423,13 @@ public class Printer extends JavaPlugin
         new InventoryScanner(0L, 1L);
     }
 
-    private CommandHandler setupCommands()
+    private void setupCommands()
     {
-        CommandHandler commandHandler = new CommandHandler("printer");
+        commandHandler = new CommandHandler("printer");
         commandHandler.addCommand(new CommandOn());
         commandHandler.addCommand(new CommandOff());
         commandHandler.addCommand(new CommandReload());
         commandHandler.addCommand(new CommandVersion());
-        return commandHandler;
-    }
-
-    public boolean withdrawMoney(Player player, double amount)
-    {
-        if(economy.getBalance(player) - amount >= 0)
-        {
-            economy.withdrawPlayer(player, amount);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public double getBalance(Player player)
-    {
-        return economy.getBalance(player);
     }
 
     public String getVersion()
@@ -473,9 +487,9 @@ public class Printer extends JavaPlugin
         return hasResidenceHook;
     }
 
-    public boolean hasSuperiorSkyBlockHook()
+    public boolean hasSkyblockHook()
     {
-        return hasSuperiorSkyBlockHook;
+        return hasSkyblockHook;
     }
 
     public boolean isSpigot()
@@ -493,12 +507,17 @@ public class Printer extends JavaPlugin
         return citizensHook;
     }
 
-    public SuperiorSkyblockHook getSuperiorSkyBlockHook()
+    public TerritoryHook getSkyblockHook()
     {
-        return superiorSkyBlockHook;
+        return skyBlockHook;
     }
 
-    public ResidenceHook getResidenceHook()
+    public EconomyHook getEconomyHook()
+    {
+        return economyHook;
+    }
+
+    public TerritoryHook getResidenceHook()
     {
         return residenceHook;
     }
