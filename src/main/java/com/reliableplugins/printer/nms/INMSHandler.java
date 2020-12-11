@@ -6,6 +6,7 @@
 
 package com.reliableplugins.printer.nms;
 
+import io.netty.channel.Channel;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -14,4 +15,8 @@ public interface INMSHandler
     void sendToolTipText(Player player, String message);
 
     boolean isArmor(ItemStack itemStack);
+
+    Channel getSocketChannel(Player player);
+
+    Player processPacket(Player player, Object packet);
 }

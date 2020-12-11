@@ -31,10 +31,7 @@ import com.reliableplugins.printer.hook.territory.factions.FactionsScanner;
 import com.reliableplugins.printer.hook.territory.skyblock.BentoBoxHook;
 import com.reliableplugins.printer.hook.territory.skyblock.SuperiorSkyblockHook_v1;
 import com.reliableplugins.printer.hook.territory.skyblock.SkyblockScanner;
-import com.reliableplugins.printer.listeners.ListenPlayerQuit;
-import com.reliableplugins.printer.listeners.ListenPluginLoad;
-import com.reliableplugins.printer.listeners.ListenPrinterBlockPlace;
-import com.reliableplugins.printer.listeners.ListenPrinterExploit;
+import com.reliableplugins.printer.listeners.*;
 import com.reliableplugins.printer.nms.*;
 import com.reliableplugins.printer.task.BukkitTask;
 import com.reliableplugins.printer.task.InventoryScanner;
@@ -55,6 +52,7 @@ public class Printer extends JavaPlugin
     private String version;
 
     private CommandHandler commandHandler;
+    private PacketListenerManager packetListenerManager;
 
     // Hooks
     private TerritoryHook skyBlockHook;
@@ -133,6 +131,11 @@ public class Printer extends JavaPlugin
             {
                 player.printerOff();
             }
+        }
+
+        for(Player player : Bukkit.getOnlinePlayers())
+        {
+            packetListenerManager.removePlayer(player);
         }
 
         // Shut off scanners
@@ -412,6 +415,10 @@ public class Printer extends JavaPlugin
 
     private void setupListeners()
     {
+        packetListenerManager = new PacketListenerManager();
+        Bukkit.getPluginManager().registerEvents(packetListenerManager, this);
+        packetListenerManager.addAllOnline();
+
         Bukkit.getPluginManager().registerEvents(new ListenPluginLoad(), this);
         Bukkit.getPluginManager().registerEvents(new ListenPrinterBlockPlace(), this);
         Bukkit.getPluginManager().registerEvents(new ListenPrinterExploit(), this);
@@ -465,6 +472,11 @@ public class Printer extends JavaPlugin
     public INMSHandler getNmsHandler()
     {
         return nmsHandler;
+    }
+
+    public PacketListenerManager getPacketListenerManager()
+    {
+        return packetListenerManager;
     }
 
     public boolean hasShopHook()

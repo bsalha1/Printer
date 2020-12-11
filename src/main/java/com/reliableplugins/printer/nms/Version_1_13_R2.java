@@ -6,10 +6,9 @@
 
 package com.reliableplugins.printer.nms;
 
-import net.minecraft.server.v1_13_R2.ChatMessageType;
-import net.minecraft.server.v1_13_R2.IChatBaseComponent;
-import net.minecraft.server.v1_13_R2.ItemArmor;
-import net.minecraft.server.v1_13_R2.PacketPlayOutChat;
+import io.netty.channel.Channel;
+import net.minecraft.server.v1_13_R2.*;
+import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
@@ -23,6 +22,29 @@ public class Version_1_13_R2 implements INMSHandler
         IChatBaseComponent chatComponent = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + message + "\"}");
         PacketPlayOutChat packet = new PacketPlayOutChat(chatComponent, ChatMessageType.GAME_INFO);
         p.getHandle().playerConnection.sendPacket(packet);
+    }
+
+    public Channel getSocketChannel(Player player)
+    {
+        CraftPlayer p = (CraftPlayer) player;
+        return p.getHandle().playerConnection.a().channel;
+    }
+
+    public Player processPacket(Player player, Object packet)
+    {
+        if(packet instanceof PacketPlayInUseEntity)
+        {
+            PacketPlayInUseEntity pack = (PacketPlayInUseEntity) packet;
+            if(pack.b().equals(PacketPlayInUseEntity.EnumEntityUseAction.ATTACK))
+            {
+                Entity damaged = pack.a(((CraftWorld) player.getWorld()).getHandle());
+                if(damaged instanceof EntityPlayer)
+                {
+                    return ((EntityPlayer) damaged).getBukkitEntity();
+                }
+            }
+        }
+        return null;
     }
 
     @Override

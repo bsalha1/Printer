@@ -6,7 +6,6 @@
 
 package com.reliableplugins.printer.listeners;
 
-import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.PrinterPlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
