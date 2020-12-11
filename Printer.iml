@@ -326,5 +326,41 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.mongodb:bson:3.8.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.mongodb:mongodb-driver-core:3.8.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.eclipse.jdt:org.eclipse.jdt.annotation:2.2.200" level="project" />
+    <orderEntry type="module-library">
+      <library name="Maven: test:DynamicShop:2.11.8">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/DynamicShop.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: me.sat7.dynamicshop:DynamicShop:2.11.8">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/DynamicShop.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: fr.maxlego08:zShop-API:2.6.1">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/IridiumSkyblock.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.iridium.iridiumskyblock:zShop-API:2.6.1">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

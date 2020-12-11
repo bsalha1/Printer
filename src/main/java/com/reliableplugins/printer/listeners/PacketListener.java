@@ -27,6 +27,7 @@ public class PacketListener extends ChannelDuplexHandler
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object packet) throws Exception
     {
+        // Catch when player attacks someone who is printing
         Player damagedPlayer = Printer.INSTANCE.getNmsHandler().processPacket(player, packet);
         if(damagedPlayer != null)
         {

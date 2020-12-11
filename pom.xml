@@ -42,6 +42,12 @@
             <id>codemc-repo</id>
             <url>https://repo.codemc.org/repository/maven-public/</url>
         </repository>
+
+        <repository>
+            <id>savagelabs</id>
+            <url>https://nexus.savagelabs.net</url>
+            <layout>default</layout>
+        </repository>
     </repositories>
 
 
@@ -71,6 +77,15 @@
             <systemPath>${project.basedir}/lib/shopgui-api-1.5.0.jar</systemPath>
         </dependency>
 
+        <!-- DynamicShop -->
+        <dependency>
+            <groupId>me.sat7.dynamicshop</groupId>
+            <artifactId>DynamicShop</artifactId>
+            <version>2.11.8</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/DynamicShop.jar</systemPath>
+        </dependency>
+
         <!-- zShop -->
         <dependency>
             <groupId>fr.maxlego08</groupId>
@@ -80,6 +95,16 @@
             <systemPath>${project.basedir}/lib/zShop-API.jar</systemPath>
         </dependency>
 
+        <!-- IridiumSkyblock -->
+        <dependency>
+            <groupId>com.iridium.iridiumskyblock</groupId>
+            <artifactId>zShop-API</artifactId>
+            <version>2.6.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/IridiumSkyblock.jar</systemPath>
+        </dependency>
+
+        <!-- BentoBox -->
         <dependency>
             <groupId>world.bentobox</groupId>
             <artifactId>bentobox</artifactId>

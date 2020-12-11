@@ -1,11 +1,11 @@
-package com.reliableplugins.printer.hook.shop.zshop;
+package com.reliableplugins.printer.hook.shop;
 
 import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.hook.shop.ShopHook;
 import fr.maxlego08.shop.api.ShopManager;
 import org.bukkit.inventory.ItemStack;
 
-public class ZShopHook_v_2_0_1_1 implements ShopHook
+public class ZShopHook implements ShopHook
 {
     @Override
     public double getPrice(ItemStack item)

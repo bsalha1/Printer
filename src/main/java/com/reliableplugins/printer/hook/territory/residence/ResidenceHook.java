@@ -7,7 +7,7 @@ import com.reliableplugins.printer.hook.territory.TerritoryHook;
 import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.entity.Player;
 
-public class ResidenceHook_v_4_9_2_1 implements TerritoryHook
+public class ResidenceHook implements TerritoryHook
 {
 
     @Override

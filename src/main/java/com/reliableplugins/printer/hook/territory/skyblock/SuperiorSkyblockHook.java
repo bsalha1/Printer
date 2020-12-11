@@ -15,27 +15,23 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class SuperiorSkyblockHook_v1 implements TerritoryHook
+public class SuperiorSkyblockHook implements TerritoryHook
 {
-
-    public boolean isMemberOfIsland(Player player, Island island)
-    {
-        SuperiorPlayer superiorPlayer = SuperiorSkyblockAPI.getPlayer(player);
-        if(superiorPlayer == null)
-        {
-            return false;
-        }
-        return superiorPlayer.getIsland().equals(island);
-    }
-
     @Override
     public boolean isNonTerritoryMemberNearby(Player player)
     {
-        Island playerIsland = SuperiorSkyblockAPI.getPlayer(player).getIsland();
+        SuperiorPlayer sPlayer = SuperiorSkyblockAPI.getPlayer(player);
         List<Player> nearbyPlayers = BukkitUtil.getNearbyPlayers(player);
+
+        if(nearbyPlayers.size() > 0 && (sPlayer == null || sPlayer.getIsland() == null))
+        {
+            return true;
+        }
+
         for(Player nearbyPlayer : nearbyPlayers)
         {
-            if(!isMemberOfIsland(nearbyPlayer, playerIsland))
+            SuperiorPlayer nearbySPlayer = SuperiorSkyblockAPI.getPlayer(nearbyPlayer);
+            if(nearbySPlayer == null || nearbySPlayer.getIsland() == null || !nearbySPlayer.getIsland().equals(sPlayer.getIsland()))
             {
                 return true;
             }
@@ -61,7 +57,7 @@ public class SuperiorSkyblockHook_v1 implements TerritoryHook
         {
             return false;
         }
-        return superiorPlayer.getIsland().equals(currentIsland);
+        return currentIsland.equals(superiorPlayer.getIsland());
     }
 }
 

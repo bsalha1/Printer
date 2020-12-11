@@ -22,11 +22,8 @@ public class ListenPluginLoad implements Listener
         {
             Printer.INSTANCE.setupFactionsHook();
         }
-        else if(name.contains("ShopGUIPlus") && !Printer.INSTANCE.hasShopHook())
-        {
-            Printer.INSTANCE.setupShopHook();
-        }
-        else if(name.contains("zShop") && !Printer.INSTANCE.hasShopHook())
+        else if(!Printer.INSTANCE.hasShopHook() &&
+                (name.contains("ShopGUIPlus") || name.contains("zShop") || name.contains("DynamicShop")))
         {
             Printer.INSTANCE.setupShopHook();
         }
@@ -38,7 +35,8 @@ public class ListenPluginLoad implements Listener
         {
             Printer.INSTANCE.setupResidenceHook();
         }
-        else if((name.contains("SuperiorSkyblock") || name.contains("BentoBox")) && !Printer.INSTANCE.hasSkyblockHook())
+        else if(Printer.INSTANCE.hasSkyblockHook() &&
+                (name.contains("SuperiorSkyblock") || name.contains("BentoBox") || name.contains("IridiumSkyblock")))
         {
             Printer.INSTANCE.setupSkyblockHook();
         }

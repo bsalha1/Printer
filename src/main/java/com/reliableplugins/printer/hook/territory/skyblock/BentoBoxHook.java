@@ -18,8 +18,7 @@ public class BentoBoxHook implements TerritoryHook
         for(Player nearbyPlayer : BukkitUtil.getNearbyPlayers(player))
         {
             Island nearbyPlayerIsland = BentoBox.getInstance().getIslands().getIsland(nearbyPlayer.getWorld(), nearbyPlayer.getUniqueId());
-            if(playerIsland == null || nearbyPlayerIsland == null ||
-                    !playerIsland.equals(nearbyPlayerIsland))
+            if(playerIsland == null || nearbyPlayerIsland == null || !playerIsland.equals(nearbyPlayerIsland))
             {
                 return false;
             }

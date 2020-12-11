@@ -9,6 +9,7 @@ softdepend:
   - BentoBox
   - ShopGUIPlus
   - zShop
+  - DynamicShop
   - Residence
   - Factions
 author: Reachy

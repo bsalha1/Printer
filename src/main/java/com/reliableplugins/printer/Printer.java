@@ -19,17 +19,18 @@ import com.reliableplugins.printer.hook.economy.VaultHook;
 import com.reliableplugins.printer.hook.shop.shopgui.ShopGuiPlusHook_v1_3_0;
 import com.reliableplugins.printer.hook.shop.shopgui.ShopGuiPlusHook_v1_4_0;
 import com.reliableplugins.printer.hook.shop.shopgui.ShopGuiPlusHook_v1_5_0;
-import com.reliableplugins.printer.hook.shop.zshop.ZShopHook_v_2_0_1_1;
+import com.reliableplugins.printer.hook.shop.ZShopHook;
 import com.reliableplugins.printer.hook.territory.TerritoryHook;
 import com.reliableplugins.printer.hook.territory.factions.FactionsHook;
-import com.reliableplugins.printer.hook.territory.residence.ResidenceHook_v_4_9_2_1;
+import com.reliableplugins.printer.hook.territory.residence.ResidenceHook;
 import com.reliableplugins.printer.hook.territory.residence.ResidenceScanner;
 import com.reliableplugins.printer.hook.shop.*;
 import com.reliableplugins.printer.hook.territory.factions.FactionsHook_MassiveCraft;
 import com.reliableplugins.printer.hook.territory.factions.FactionsHook_UUID_v0_2_1;
 import com.reliableplugins.printer.hook.territory.factions.FactionsScanner;
 import com.reliableplugins.printer.hook.territory.skyblock.BentoBoxHook;
-import com.reliableplugins.printer.hook.territory.skyblock.SuperiorSkyblockHook_v1;
+import com.reliableplugins.printer.hook.territory.skyblock.IridiumSkyblockHook;
+import com.reliableplugins.printer.hook.territory.skyblock.SuperiorSkyblockHook;
 import com.reliableplugins.printer.hook.territory.skyblock.SkyblockScanner;
 import com.reliableplugins.printer.listeners.*;
 import com.reliableplugins.printer.nms.*;
@@ -233,7 +234,7 @@ public class Printer extends JavaPlugin
         {
             if(getServer().getPluginManager().isPluginEnabled("SuperiorSkyblock2"))
             {
-                skyBlockHook = new SuperiorSkyblockHook_v1();
+                skyBlockHook = new SuperiorSkyblockHook();
                 skyblockScanner = new SkyblockScanner(0L, 5L);
                 hasSkyblockHook = true;
                 getLogger().log(Level.INFO, "Successfully hooked into SuperiorSkyblock2");
@@ -260,6 +261,21 @@ public class Printer extends JavaPlugin
             }
         }
 
+        if(mainConfig.useIridiumSkyblock())
+        {
+            if(getServer().getPluginManager().isPluginEnabled("IridiumSkyblock"))
+            {
+                skyBlockHook = new IridiumSkyblockHook();
+                skyblockScanner = new SkyblockScanner(0L, 5L);
+                hasSkyblockHook = true;
+                getLogger().log(Level.INFO, "Successfully hooked into IridiumSkyblock");
+            }
+            else
+            {
+                getLogger().log(Level.WARNING, "IridiumSkyblock jar not found!");
+            }
+        }
+
     }
 
     public void setupResidenceHook()
@@ -275,7 +291,7 @@ public class Printer extends JavaPlugin
             return;
         }
 
-        residenceHook = new ResidenceHook_v_4_9_2_1();
+        residenceHook = new ResidenceHook();
         residenceScanner = new ResidenceScanner(0L, 5L);
         hasResidenceHook = true;
         getLogger().log(Level.INFO, "Successfully hooked into Residence");
@@ -283,6 +299,7 @@ public class Printer extends JavaPlugin
 
     public void setupShopHook()
     {
+        // ShopGUIPlus
         if (mainConfig.useShopGuiPlus())
         {
             if (getServer().getPluginManager().isPluginEnabled("ShopGUIPlus"))
@@ -320,17 +337,33 @@ public class Printer extends JavaPlugin
             }
         }
 
+        // ZShop
         if (mainConfig.useZShop())
         {
             if (getServer().getPluginManager().isPluginEnabled("zShop"))
             {
-                shopHook = new ZShopHook_v_2_0_1_1();
+                shopHook = new ZShopHook();
                 hasShopHook = true;
                 getLogger().log(Level.INFO, "Successfully hooked into zShop");
             }
             else
             {
                 getLogger().log(Level.WARNING, "zShop jar not found!");
+            }
+        }
+
+        // DynamicShop
+        if(mainConfig.useDynamicShop())
+        {
+            if(getServer().getPluginManager().isPluginEnabled("DynamicShop"))
+            {
+                shopHook = new DynamicShopHook();
+                hasShopHook = true;
+                getLogger().log(Level.INFO, "Successfully hooked into DynamicShop");
+            }
+            else
+            {
+                getLogger().log(Level.WARNING, "DynamicShop jar not found!");
             }
         }
     }
