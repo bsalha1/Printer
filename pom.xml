@@ -6,7 +6,7 @@
 
     <groupId>com.reliableplugins</groupId>
     <artifactId>Printer</artifactId>
-    <version>2.0</version>
+    <version>2.0.1</version>
 
     <build>
         <plugins>
@@ -235,6 +235,18 @@
             <artifactId>spigot1_16_R1</artifactId>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot1_16_R1.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot1_16_R2</artifactId>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/spigot1_16_R2.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot1_16_R3</artifactId>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/spigot1_16_R3.jar</systemPath>
         </dependency>
         <!-- End Spigot Jars -->
 

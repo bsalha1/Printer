@@ -1,12 +1,13 @@
 name: Printer
 main: com.reliableplugins.printer.Printer
-version: 2.0
+version: 2.0.1
 depend:
   - Vault
 softdepend:
   - Citizens
   - SuperiorSkyblock2
   - BentoBox
+  - IridiumSkyblock
   - ShopGUIPlus
   - zShop
   - DynamicShop
