@@ -6,9 +6,6 @@
 
 package com.reliableplugins.printer.nms;
 
-import com.reliableplugins.printer.PrinterPlayer;
-import com.reliableplugins.printer.config.Message;
-import com.reliableplugins.printer.task.BukkitTask;
 import io.netty.channel.Channel;
 import net.minecraft.server.v1_8_R2.*;
 import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;

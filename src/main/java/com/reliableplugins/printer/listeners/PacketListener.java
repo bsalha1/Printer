@@ -40,7 +40,7 @@ public class PacketListener extends ChannelDuplexHandler
                     public void run()
                     {
                         printerPlayer.printerOff();
-                        printerPlayer.getPlayer().sendMessage(Message.PRINTER_OFF.getMessage());
+                        Message.PRINTER_OFF.sendColoredMessage(printerPlayer.getPlayer());
                     }
                 };
             }

@@ -9,7 +9,6 @@ package com.reliableplugins.printer.commands;
 import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.annotation.CommandBuilder;
 import com.reliableplugins.printer.config.Message;
-import com.reliableplugins.printer.PrinterPlayer;
 import org.bukkit.command.CommandSender;
 
 @CommandBuilder(label = "reload", permission = "printer.reload", description = "Reloads the printer configs")
@@ -19,12 +18,12 @@ public class CommandReload extends Command
     public void execute(CommandSender executor, String[] args)
     {
         Printer.INSTANCE.reloadConfigs();
-        executor.sendMessage(Message.RELOAD.getMessage());
+        Message.RELOAD.sendColoredMessage(executor);
     }
 
     @Override
     public String getDescription()
     {
-        return Message.HELP_PRINTER_RELOAD.getWithoutHeader();
+        return Message.HELP_PRINTER_RELOAD.getColoredMessageWithoutHeader();
     }
 }

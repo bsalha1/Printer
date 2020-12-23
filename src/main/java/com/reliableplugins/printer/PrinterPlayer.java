@@ -21,7 +21,6 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.Executors;
 
 public class PrinterPlayer
@@ -141,7 +140,8 @@ public class PrinterPlayer
         while(printing)
         {
             String money = Double.toString(MathUtil.round(totalCost, 2));
-            Printer.INSTANCE.getNmsHandler().sendToolTipText(player, Message.WITHDRAW_MONEY.getMessage().replace("{NUM}", money));
+            Printer.INSTANCE.getNmsHandler().sendToolTipText(player, Message.WITHDRAW_MONEY.getColoredMessage()
+                    .replace("{NUM}", money));
             try
             {
                 Thread.sleep(Printer.INSTANCE.getMainConfig().getTooltipNotificationTime() * 1000);

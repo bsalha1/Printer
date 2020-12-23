@@ -6,10 +6,9 @@
 
 package com.reliableplugins.printer.commands;
 
-import com.reliableplugins.printer.Printer;
+import com.reliableplugins.printer.PrinterPlayer;
 import com.reliableplugins.printer.annotation.CommandBuilder;
 import com.reliableplugins.printer.config.Message;
-import com.reliableplugins.printer.PrinterPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -24,17 +23,17 @@ public class CommandOff extends Command
         PrinterPlayer printerPlayer = PrinterPlayer.fromPlayer(player);
         if(printerPlayer == null || !printerPlayer.isPrinting())
         {
-            player.sendMessage(Message.ERROR_PRINTER_NOT_ON.getMessage());
+            Message.ERROR_PRINTER_NOT_ON.sendColoredMessage(executor);
             return;
         }
 
         printerPlayer.printerOff();
-        player.sendMessage(Message.PRINTER_OFF.getMessage());
+        Message.PRINTER_OFF.sendColoredMessage(executor);
     }
 
     @Override
     public String getDescription()
     {
-        return Message.HELP_PRINTER_OFF.getWithoutHeader();
+        return Message.HELP_PRINTER_OFF.getColoredMessageWithoutHeader();
     }
 }

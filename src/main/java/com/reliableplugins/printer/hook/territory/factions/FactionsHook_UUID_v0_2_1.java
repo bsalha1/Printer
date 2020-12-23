@@ -6,11 +6,7 @@
 
 package com.reliableplugins.printer.hook.territory.factions;
 
-import com.massivecraft.factions.Faction;
-import com.massivecraft.factions.Board;
-import com.massivecraft.factions.FLocation;
-import com.massivecraft.factions.FPlayer;
-import com.massivecraft.factions.FPlayers;
+import com.massivecraft.factions.*;
 import com.massivecraft.factions.struct.Relation;
 import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.entity.Player;

@@ -6,23 +6,15 @@
 
 package com.reliableplugins.printer.commands;
 
-import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.annotation.CommandBuilder;
 import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.utils.BukkitUtil;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 @CommandBuilder(label = "help", alias = {"h"})
 public class CommandHelp extends Command
 {
     private final CommandHandler baseCommand;
-    private static final String color = "&d";
-    private static final String descriptionColor = "&7";
 
     public CommandHelp(CommandHandler baseCommand)
     {
@@ -51,10 +43,10 @@ public class CommandHelp extends Command
             pageNum = maxPage;
         }
 
-        String header = Message.HELP_PRINTER_HEADER.getWithoutHeader()
+        String header = Message.HELP_PRINTER_HEADER.getColoredMessageWithoutHeader()
                 .replace("{PAGE}", Integer.toString(pageNum))
                 .replace("{NUM_PAGES}", Integer.toString(maxPage));
-        sender.sendMessage(BukkitUtil.color(header));
+        Message.sendMultilineMessage(sender, BukkitUtil.color(header));
         int pageIndex = (pageNum - 1) * commandPerPage;
 
         for (int i = pageIndex; i < (pageIndex + 5) && i < commands.length; i++)

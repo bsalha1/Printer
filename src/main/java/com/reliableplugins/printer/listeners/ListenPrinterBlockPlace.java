@@ -7,9 +7,9 @@
 package com.reliableplugins.printer.listeners;
 
 import com.reliableplugins.printer.Printer;
+import com.reliableplugins.printer.PrinterPlayer;
 import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.type.ColoredMaterial;
-import com.reliableplugins.printer.PrinterPlayer;
 import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,7 +33,7 @@ public class ListenPrinterBlockPlace implements Listener
         if(Printer.INSTANCE.getMainConfig().isUnplaceable(event.getBlockPlaced().getType()))
         {
             event.setCancelled(true);
-            event.getPlayer().sendMessage(Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.getMessage());
+            Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.sendColoredMessage(event.getPlayer());
             return;
         }
 
@@ -69,12 +69,12 @@ public class ListenPrinterBlockPlace implements Listener
         if(price == null)
         {
             event.setCancelled(true);
-            event.getPlayer().sendMessage(Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.getMessage());
+            Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.sendColoredMessage(event.getPlayer());
             return;
         }
         else if(!Printer.INSTANCE.getEconomyHook().withdraw(player.getPlayer(), price))
         {
-            Printer.INSTANCE.getNmsHandler().sendToolTipText(player.getPlayer(), Message.ERROR_NO_MONEY.getMessage());
+            Printer.INSTANCE.getNmsHandler().sendToolTipText(player.getPlayer(), Message.ERROR_NO_MONEY.getColoredMessage());
             event.setCancelled(true);
             return;
         }
@@ -105,7 +105,7 @@ public class ListenPrinterBlockPlace implements Listener
         if(Printer.INSTANCE.getMainConfig().isUnplaceable(event.getItem().getType()))
         {
             event.setCancelled(true);
-            event.getPlayer().sendMessage(Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.getMessage());
+            Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.sendColoredMessage(player.getPlayer());
             return;
         }
 
@@ -128,13 +128,13 @@ public class ListenPrinterBlockPlace implements Listener
         if(price == null)
         {
             event.setCancelled(true);
-            event.getPlayer().sendMessage(Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.getMessage());
+            Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.sendColoredMessage(player.getPlayer());
         }
         else if(BukkitUtil.isNoBlockPlaceItem(toPlace.getType()))
         {
             if(!Printer.INSTANCE.getEconomyHook().withdraw(player.getPlayer(), price))
             {
-                Printer.INSTANCE.getNmsHandler().sendToolTipText(player.getPlayer(), Message.ERROR_NO_MONEY.getMessage());
+                Printer.INSTANCE.getNmsHandler().sendToolTipText(player.getPlayer(), Message.ERROR_NO_MONEY.getColoredMessage());
                 event.setCancelled(true);
             }
             else
@@ -149,7 +149,7 @@ public class ListenPrinterBlockPlace implements Listener
         else // Bow shoot, snowball, egg, etc..
         {
             event.setCancelled(true);
-            event.getPlayer().sendMessage(Message.ERROR_ITEM_PLACE_NOT_ALLOWED.getMessage());
+            Message.ERROR_ITEM_PLACE_NOT_ALLOWED.sendColoredMessage(player.getPlayer());
         }
     }
 }

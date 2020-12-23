@@ -14,11 +14,11 @@ import java.util.Set;
 
 public abstract class Command
 {
-    private String label;
-    private String[] alias;
-    private String permission;
-    private String description;
-    private boolean playerRequired;
+    private final String label;
+    private final String[] alias;
+    private final String permission;
+    private final String description;
+    private final boolean playerRequired;
 
     public Command()
     {

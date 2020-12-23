@@ -17,12 +17,12 @@ public class CommandVersion extends Command
     @Override
     public void execute(CommandSender executor, String[] args)
     {
-        executor.sendMessage(Message.VERSION_MESSAGE.getMessage().replace("{NUM}", Printer.INSTANCE.getVersion()));
+        executor.sendMessage(Message.VERSION_MESSAGE.getColoredMessage().replace("{NUM}", Printer.INSTANCE.getVersion()));
     }
 
     @Override
     public String getDescription()
     {
-        return Message.HELP_PRINTER_VERSION.getWithoutHeader();
+        return Message.HELP_PRINTER_VERSION.getColoredMessageWithoutHeader();
     }
 }

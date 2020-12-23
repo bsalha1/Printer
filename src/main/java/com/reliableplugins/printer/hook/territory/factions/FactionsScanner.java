@@ -7,9 +7,9 @@
 package com.reliableplugins.printer.hook.territory.factions;
 
 import com.reliableplugins.printer.Printer;
+import com.reliableplugins.printer.PrinterPlayer;
 import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.task.BukkitTask;
-import com.reliableplugins.printer.PrinterPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -36,14 +36,14 @@ public class FactionsScanner extends BukkitTask
                     (Printer.INSTANCE.getFactionsHook().isInATerritory(player) || !Printer.INSTANCE.getMainConfig().allowInNonFaction()))
             {
                 printerPlayer.printerOff();
-                player.sendMessage(Message.ERROR_NOT_IN_TERRITORY.getMessage());
+                Message.ERROR_NOT_IN_TERRITORY.sendColoredMessage(player);
             }
             // If not allowed to print near non-faction members
             if(!Printer.INSTANCE.getMainConfig().allowNearNonFactionMembers() &&
                     Printer.INSTANCE.getFactionsHook().isNonTerritoryMemberNearby(player, Printer.INSTANCE.getMainConfig().allowNearAllies()))
             {
                 printerPlayer.printerOff();
-                player.sendMessage(Message.ERROR_NON_FACTION_MEMBER_NEARBY.getMessage());
+                Message.ERROR_NON_FACTION_MEMBER_NEARBY.sendColoredMessage(player);
             }
         }
     }

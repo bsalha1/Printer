@@ -1,9 +1,9 @@
 package com.reliableplugins.printer.hook.territory.residence;
 
 import com.reliableplugins.printer.Printer;
+import com.reliableplugins.printer.PrinterPlayer;
 import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.task.BukkitTask;
-import com.reliableplugins.printer.PrinterPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -29,14 +29,14 @@ public class ResidenceScanner extends BukkitTask
             if(!Printer.INSTANCE.getMainConfig().allowNearNonResidentMembers() && Printer.INSTANCE.getResidenceHook().isNonTerritoryMemberNearby(player))
             {
                 printerPlayer.printerOff();
-                player.sendMessage(Message.ERROR_NON_RESIDENT_NEARBY.getMessage());
+                Message.ERROR_NON_RESIDENT_NEARBY.sendColoredMessage(player);
             }
             // If player isn't in their own residence and they aren't in wilderness
             else if(!Printer.INSTANCE.getResidenceHook().isInOwnTerritory(player) &&
                     (!Printer.INSTANCE.getMainConfig().allowInNonResidence() && !Printer.INSTANCE.getResidenceHook().isInATerritory(player)))
             {
                 printerPlayer.printerOff();
-                player.sendMessage(Message.ERROR_NOT_IN_RESIDENCE.getMessage());
+                Message.ERROR_NOT_IN_RESIDENCE.sendColoredMessage(player);
             }
         }
     }

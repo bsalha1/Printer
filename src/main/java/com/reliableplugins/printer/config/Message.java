@@ -8,6 +8,7 @@ package com.reliableplugins.printer.config;
 
 import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.utils.BukkitUtil;
+import org.bukkit.command.CommandSender;
 
 public enum Message
 {
@@ -75,24 +76,45 @@ public enum Message
         this.message = message;
     }
 
-    public String getLoneMessage()
+    public String getMessage()
     {
         return message;
     }
 
-    public String getRawMessage()
-    {
-        return header + message;
-    }
-
-    public String getMessage()
+    public String getColoredMessage()
     {
         return BukkitUtil.color(header + message);
     }
 
-    public String getWithoutHeader()
+    public String getColoredMessageWithoutHeader()
     {
         return BukkitUtil.color(message);
+    }
+
+    public static void sendMultilineMessage(CommandSender sender, String message)
+    {
+        while(message.contains("\\n"))
+        {
+            String temp = message.substring(0, message.indexOf("\\n"));
+            sender.sendMessage(temp);
+            message = message.substring(message.indexOf("\\n") + 2);
+        }
+        sender.sendMessage(message);
+    }
+
+    public void sendColoredMessage(CommandSender sender)
+    {
+        sendMultilineMessage(sender, getColoredMessage());
+    }
+
+    public void sendMessage(CommandSender sender)
+    {
+        sendMultilineMessage(sender, getMessage());
+    }
+
+    public void sendWithoutHeader(CommandSender sender)
+    {
+        sendMultilineMessage(sender, getColoredMessageWithoutHeader());
     }
 
     public void setMessage(String message)

@@ -38,7 +38,7 @@ public class CommandHandler implements CommandExecutor
             }
             else
             {
-                commandSender.sendMessage(Message.ERROR_NO_PERMS.getMessage());
+                Message.ERROR_NO_PERMS.sendColoredMessage(commandSender);
             }
             return true;
         }
@@ -51,7 +51,7 @@ public class CommandHandler implements CommandExecutor
             // If player is required and they're not a player, throw error
             if(subcommand.isPlayerRequired() && !(commandSender instanceof Player))
             {
-                commandSender.sendMessage(Message.ERROR_NOT_PLAYER.getMessage());
+                Message.ERROR_NOT_PLAYER.sendColoredMessage(commandSender);
                 return true;
             }
 
@@ -65,7 +65,7 @@ public class CommandHandler implements CommandExecutor
                 }
                 else
                 {
-                    commandSender.sendMessage(Message.ERROR_NO_PERMS.getMessage());
+                    Message.ERROR_NO_PERMS.sendColoredMessage(commandSender);
                 }
                 return true;
             }

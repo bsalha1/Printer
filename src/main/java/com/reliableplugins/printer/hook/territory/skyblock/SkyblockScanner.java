@@ -1,9 +1,9 @@
 package com.reliableplugins.printer.hook.territory.skyblock;
 
 import com.reliableplugins.printer.Printer;
+import com.reliableplugins.printer.PrinterPlayer;
 import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.task.BukkitTask;
-import com.reliableplugins.printer.PrinterPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -31,12 +31,12 @@ public class SkyblockScanner extends BukkitTask
                     (!Printer.INSTANCE.getMainConfig().allowInNonIsland() && !Printer.INSTANCE.getSkyblockHook().isInATerritory(player)))
             {
                 printerPlayer.printerOff();
-                player.sendMessage(Message.ERROR_NOT_IN_ISLAND.getMessage());
+                Message.ERROR_NOT_IN_ISLAND.sendColoredMessage(player);
             }
             else if(Printer.INSTANCE.getMainConfig().allowNearNonIslandMembers() && Printer.INSTANCE.getSkyblockHook().isNonTerritoryMemberNearby(player))
             {
                 printerPlayer.printerOff();
-                player.sendMessage(Message.ERROR_NON_ISLAND_MEMBER_NEARBY.getMessage());
+                Message.ERROR_NON_ISLAND_MEMBER_NEARBY.sendColoredMessage(player);
             }
         }
     }

@@ -7,9 +7,9 @@
 package com.reliableplugins.printer.commands;
 
 import com.reliableplugins.printer.Printer;
+import com.reliableplugins.printer.PrinterPlayer;
 import com.reliableplugins.printer.annotation.CommandBuilder;
 import com.reliableplugins.printer.config.Message;
-import com.reliableplugins.printer.PrinterPlayer;
 import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -29,7 +29,7 @@ public class CommandOn extends Command
         }
         else if(printerPlayer.isPrinting())
         {
-            player.sendMessage(Message.ERROR_PRINTER_ALREADY_ON.getMessage());
+            Message.ERROR_PRINTER_ALREADY_ON.sendColoredMessage(player);
             return;
         }
 
@@ -40,13 +40,13 @@ public class CommandOn extends Command
             if(!Printer.INSTANCE.getFactionsHook().isInOwnTerritory(player) &&
                     (Printer.INSTANCE.getFactionsHook().isInATerritory(player) || !Printer.INSTANCE.getMainConfig().allowInNonFaction()))
             {
-                player.sendMessage(Message.ERROR_NOT_IN_TERRITORY.getMessage());
+                Message.ERROR_NOT_IN_TERRITORY.sendColoredMessage(player);
                 return;
             }
             else if(!Printer.INSTANCE.getMainConfig().allowNearNonFactionMembers() &&
                     Printer.INSTANCE.getFactionsHook().isNonTerritoryMemberNearby(player, Printer.INSTANCE.getMainConfig().allowNearAllies()))
             {
-                player.sendMessage(Message.ERROR_NON_FACTION_MEMBER_NEARBY.getMessage());
+                Message.ERROR_NON_FACTION_MEMBER_NEARBY.sendColoredMessage(player);
                 return;
             }
         }
@@ -58,14 +58,14 @@ public class CommandOn extends Command
             if(!Printer.INSTANCE.getSkyblockHook().isInOwnTerritory(player) &&
                     (Printer.INSTANCE.getSkyblockHook().isInATerritory(player) || !Printer.INSTANCE.getMainConfig().allowInNonIsland()))
             {
-                player.sendMessage(Message.ERROR_NOT_IN_ISLAND.getMessage());
+                Message.ERROR_NOT_IN_ISLAND.sendColoredMessage(player);
                 return;
             }
 
             // Non-island members nearby
             else if(Printer.INSTANCE.getMainConfig().allowNearNonIslandMembers() && Printer.INSTANCE.getSkyblockHook().isNonTerritoryMemberNearby(player))
             {
-                player.sendMessage(Message.ERROR_NON_ISLAND_MEMBER_NEARBY.getMessage());
+                Message.ERROR_NON_ISLAND_MEMBER_NEARBY.sendColoredMessage(player);
                 return;
             }
 
@@ -78,29 +78,29 @@ public class CommandOn extends Command
             if(!Printer.INSTANCE.getResidenceHook().isInOwnTerritory(player) &&
                     (Printer.INSTANCE.getResidenceHook().isInATerritory(player) || !Printer.INSTANCE.getMainConfig().allowInNonResidence()))
             {
-                player.sendMessage(Message.ERROR_NOT_IN_RESIDENCE.getMessage());
+                Message.ERROR_NOT_IN_RESIDENCE.sendColoredMessage(player);
                 return;
             }
             else if(!Printer.INSTANCE.getMainConfig().allowNearNonResidentMembers() && Printer.INSTANCE.getResidenceHook().isNonTerritoryMemberNearby(player))
             {
-                player.sendMessage(Message.ERROR_NON_RESIDENT_NEARBY.getMessage());
+                Message.ERROR_NON_RESIDENT_NEARBY.sendColoredMessage(player);
                 return;
             }
         }
 
         if(Printer.INSTANCE.getMainConfig().requireEmptyInventory() && (!BukkitUtil.isArmorInventoryEmpty(player) || !BukkitUtil.isInventoryEmpty(player)))
         {
-            player.sendMessage(Message.ERROR_NON_EMPTY_INVENTORY.getMessage());
+            Message.ERROR_NON_EMPTY_INVENTORY.sendColoredMessage(player);
             return;
         }
 
         printerPlayer.printerOn();
-        player.sendMessage(Message.PRINTER_ON.getMessage());
+        Message.PRINTER_ON.sendColoredMessage(player);
     }
 
     @Override
     public String getDescription()
     {
-        return Message.HELP_PRINTER_ON.getWithoutHeader();
+        return Message.HELP_PRINTER_ON.getColoredMessageWithoutHeader();
     }
 }
