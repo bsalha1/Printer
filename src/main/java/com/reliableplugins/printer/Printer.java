@@ -16,6 +16,7 @@ import com.reliableplugins.printer.hook.citizens.CitizensHook;
 import com.reliableplugins.printer.hook.citizens.CitizensHook_v2_0_16;
 import com.reliableplugins.printer.hook.economy.EconomyHook;
 import com.reliableplugins.printer.hook.economy.VaultHook;
+import com.reliableplugins.printer.hook.packets.ProtocolLibHook;
 import com.reliableplugins.printer.hook.shop.DynamicShopHook;
 import com.reliableplugins.printer.hook.shop.ShopHook;
 import com.reliableplugins.printer.hook.shop.ZShopHook;
@@ -29,10 +30,7 @@ import com.reliableplugins.printer.hook.territory.factions.FactionsHook_UUID_v0_
 import com.reliableplugins.printer.hook.territory.factions.FactionsScanner;
 import com.reliableplugins.printer.hook.territory.residence.ResidenceHook;
 import com.reliableplugins.printer.hook.territory.residence.ResidenceScanner;
-import com.reliableplugins.printer.hook.territory.skyblock.BentoBoxHook;
-import com.reliableplugins.printer.hook.territory.skyblock.IridiumSkyblockHook;
-import com.reliableplugins.printer.hook.territory.skyblock.SkyblockScanner;
-import com.reliableplugins.printer.hook.territory.skyblock.SuperiorSkyblockHook;
+import com.reliableplugins.printer.hook.territory.skyblock.*;
 import com.reliableplugins.printer.listeners.*;
 import com.reliableplugins.printer.nms.*;
 import com.reliableplugins.printer.task.BukkitTask;
@@ -61,6 +59,7 @@ public class Printer extends JavaPlugin
     private TerritoryHook residenceHook;
     private CitizensHook citizensHook;
     private FactionsHook factionsHook;
+    private ProtocolLibHook protocolLibHook;
     private ShopHook shopHook;
     private EconomyHook economyHook;
     private BukkitTask factionScanner;
@@ -70,6 +69,7 @@ public class Printer extends JavaPlugin
     private boolean hasShopHook;
     private boolean hasCitizensHook;
     private boolean hasFactionsHook;
+    private boolean hasProtocolLibHook;
     private boolean hasSkyblockHook;
     private boolean hasResidenceHook;
     private boolean hasSpigot;
@@ -87,22 +87,22 @@ public class Printer extends JavaPlugin
     public void onEnable()
     {
         Printer.INSTANCE = this;
-        version = getDescription().getVersion();
+        this.version = getDescription().getVersion();
 
-        hasSpigot = true;
+        this.hasSpigot = true;
         try
         {
             Bukkit.class.getMethod("spigot");
         }
         catch (NoSuchMethodException e)
         {
-            hasSpigot = false;
+            this.hasSpigot = false;
         }
 
         try
         {
-            fileManager = setupConfigs();
-            nmsHandler = setupNMS();
+            this.fileManager = setupConfigs();
+            this.nmsHandler = setupNMS();
             setupEconomyHook();
             setupCitizensHook();
             setupFactionsHook();
@@ -112,6 +112,7 @@ public class Printer extends JavaPlugin
             setupCommands();
             setupTasks();
             setupListeners();
+            setupPacketListeners();
         }
         catch (Exception e)
         {
@@ -120,14 +121,14 @@ public class Printer extends JavaPlugin
             return;
         }
 
-        getLogger().log(Level.INFO, this.getDescription().getName() + " v" + version + " has been loaded");
+        getLogger().log(Level.INFO, this.getDescription().getName() + " v" + this.version + " has been loaded");
     }
 
     @Override
     public void onDisable()
     {
         getLogger().log(Level.INFO, "Deactivating all printing users");
-        for(PrinterPlayer player : printerPlayers.values())
+        for(PrinterPlayer player : this.printerPlayers.values())
         {
             if(player.isPrinting())
             {
@@ -137,21 +138,21 @@ public class Printer extends JavaPlugin
 
         for(Player player : Bukkit.getOnlinePlayers())
         {
-            packetListenerManager.removePlayer(player);
+            this.packetListenerManager.removePlayer(player);
         }
 
         // Shut off scanners
-        if(factionScanner != null)
+        if(this.factionScanner != null)
         {
-            factionScanner.cancel();
+            this.factionScanner.cancel();
         }
-        if(skyblockScanner != null)
+        if(this.skyblockScanner != null)
         {
-            skyblockScanner.cancel();
+            this.skyblockScanner.cancel();
         }
-        if(residenceScanner != null)
+        if(this.residenceScanner != null)
         {
-            residenceScanner.cancel();
+            this.residenceScanner.cancel();
         }
         getLogger().log(Level.INFO, this.getDescription().getName() + " v" + this.getDescription().getVersion() + " has been unloaded");
     }
@@ -177,21 +178,13 @@ public class Printer extends JavaPlugin
     private FileManager setupConfigs()
     {
         FileManager fileManager = new FileManager();
-        fileManager.addFile(mainConfig = new MainConfig());
-        fileManager.addFile(messageConfig = new MessageConfig());
-        fileManager.addFile(pricesConfig = new PricesConfig());
+        fileManager.addFile(this.mainConfig = new MainConfig());
+        fileManager.addFile(this.messageConfig = new MessageConfig());
+        fileManager.addFile(this.pricesConfig = new PricesConfig());
 
         downloadResources();
 
         return fileManager;
-    }
-
-    public <T> T getProvider(Class<T> clazz)
-    {
-        RegisteredServiceProvider<T> provider = getServer().getServicesManager().getRegistration(clazz);
-        if (provider == null)
-            return null;
-        return provider.getProvider() != null ? provider.getProvider() : null;
     }
 
     private INMSHandler setupNMS()
@@ -233,13 +226,13 @@ public class Printer extends JavaPlugin
 
     public void setupSkyblockHook()
     {
-        if(mainConfig.useSuperiorSkyBlock())
+        if(this.mainConfig.useSuperiorSkyBlock())
         {
             if(getServer().getPluginManager().isPluginEnabled("SuperiorSkyblock2"))
             {
-                skyBlockHook = new SuperiorSkyblockHook();
-                skyblockScanner = new SkyblockScanner(0L, 5L);
-                hasSkyblockHook = true;
+                this.skyBlockHook = new SuperiorSkyblockHook();
+                this.skyblockScanner = new SkyblockScanner(0L, 5L);
+                this.hasSkyblockHook = true;
                 getLogger().log(Level.INFO, "Successfully hooked into SuperiorSkyblock2");
                 return;
             }
@@ -249,13 +242,13 @@ public class Printer extends JavaPlugin
             }
         }
 
-        if(mainConfig.useBentoBox())
+        if(this.mainConfig.useBentoBox())
         {
             if(getServer().getPluginManager().isPluginEnabled("BentoBox"))
             {
-                skyBlockHook = new BentoBoxHook();
-                skyblockScanner = new SkyblockScanner(0L, 5L);
-                hasSkyblockHook = true;
+                this.skyBlockHook = new BentoBoxHook();
+                this.skyblockScanner = new SkyblockScanner(0L, 5L);
+                this.hasSkyblockHook = true;
                 getLogger().log(Level.INFO, "Successfully hooked into BentoBox");
             }
             else
@@ -264,13 +257,13 @@ public class Printer extends JavaPlugin
             }
         }
 
-        if(mainConfig.useIridiumSkyblock())
+        if(this.mainConfig.useIridiumSkyblock())
         {
             if(getServer().getPluginManager().isPluginEnabled("IridiumSkyblock"))
             {
-                skyBlockHook = new IridiumSkyblockHook();
-                skyblockScanner = new SkyblockScanner(0L, 5L);
-                hasSkyblockHook = true;
+                this.skyBlockHook = new IridiumSkyblockHook();
+                this.skyblockScanner = new SkyblockScanner(0L, 5L);
+                this.hasSkyblockHook = true;
                 getLogger().log(Level.INFO, "Successfully hooked into IridiumSkyblock");
             }
             else
@@ -279,11 +272,26 @@ public class Printer extends JavaPlugin
             }
         }
 
+        if(this.mainConfig.useASkyBlock())
+        {
+            if(getServer().getPluginManager().isPluginEnabled("ASkyBlock"))
+            {
+                this.skyBlockHook = new ASkyBlockHook();
+                this.skyblockScanner = new SkyblockScanner(0L, 5L);
+                this.hasSkyblockHook = true;
+                getLogger().log(Level.INFO, "Successfully hooked into ASkyBlock");
+            }
+            else
+            {
+                getLogger().log(Level.WARNING, "ASkyBlock jar not found!");
+            }
+        }
+
     }
 
     public void setupResidenceHook()
     {
-        if(!mainConfig.useResidence())
+        if(!this.mainConfig.useResidence())
         {
             return;
         }
@@ -294,16 +302,16 @@ public class Printer extends JavaPlugin
             return;
         }
 
-        residenceHook = new ResidenceHook();
-        residenceScanner = new ResidenceScanner(0L, 5L);
-        hasResidenceHook = true;
+        this.residenceHook = new ResidenceHook();
+        this.residenceScanner = new ResidenceScanner(0L, 5L);
+        this.hasResidenceHook = true;
         getLogger().log(Level.INFO, "Successfully hooked into Residence");
     }
 
     public void setupShopHook()
     {
         // ShopGUIPlus
-        if (mainConfig.useShopGuiPlus())
+        if (this.mainConfig.useShopGuiPlus())
         {
             if (getServer().getPluginManager().isPluginEnabled("ShopGUIPlus"))
             {
@@ -317,18 +325,18 @@ public class Printer extends JavaPlugin
                     int build = Integer.parseInt(versions[2]);
                     if (minor >= 33 && minor <= 34)
                     {
-                        shopHook = new ShopGuiPlusHook_v1_3_0();
+                        this.shopHook = new ShopGuiPlusHook_v1_3_0();
                     }
                     else if (minor == 35)
                     {
-                        shopHook = new ShopGuiPlusHook_v1_4_0();
+                        this.shopHook = new ShopGuiPlusHook_v1_4_0();
                     }
                     else
                     {
-                        shopHook = new ShopGuiPlusHook_v1_5_0();
+                        this.shopHook = new ShopGuiPlusHook_v1_5_0();
                     }
 
-                    hasShopHook = true;
+                    this.hasShopHook = true;
                     getLogger().log(Level.INFO, "Successfully hooked into ShopGUIPlus");
                     return;
                 }
@@ -341,12 +349,12 @@ public class Printer extends JavaPlugin
         }
 
         // ZShop
-        if (mainConfig.useZShop())
+        if (this.mainConfig.useZShop())
         {
             if (getServer().getPluginManager().isPluginEnabled("zShop"))
             {
-                shopHook = new ZShopHook();
-                hasShopHook = true;
+                this.shopHook = new ZShopHook();
+                this.hasShopHook = true;
                 getLogger().log(Level.INFO, "Successfully hooked into zShop");
             }
             else
@@ -356,12 +364,12 @@ public class Printer extends JavaPlugin
         }
 
         // DynamicShop
-        if(mainConfig.useDynamicShop())
+        if(this.mainConfig.useDynamicShop())
         {
             if(getServer().getPluginManager().isPluginEnabled("DynamicShop"))
             {
-                shopHook = new DynamicShopHook();
-                hasShopHook = true;
+                this.shopHook = new DynamicShopHook();
+                this.hasShopHook = true;
                 getLogger().log(Level.INFO, "Successfully hooked into DynamicShop");
             }
             else
@@ -371,9 +379,27 @@ public class Printer extends JavaPlugin
         }
     }
 
+    public void setupPacketListeners()
+    {
+        if(getServer().getPluginManager().isPluginEnabled("ProtocolLib"))
+        {
+            this.protocolLibHook = new ProtocolLibHook();
+            this.protocolLibHook.registerListeners();
+            this.hasProtocolLibHook = true;
+            getLogger().log(Level.INFO, "Successfully hooked packet listeners into ProtocolLib");
+        }
+        else
+        {
+            this.packetListenerManager = new PacketListenerManager();
+            this.packetListenerManager.addAllOnline();
+            Bukkit.getPluginManager().registerEvents(this.packetListenerManager, this);
+            getLogger().log(Level.INFO, "NMS packet listeners initialized");
+        }
+    }
+
     public void setupFactionsHook()
     {
-        if(!mainConfig.useFactions())
+        if(!this.mainConfig.useFactions())
         {
             return;
         }
@@ -386,7 +412,7 @@ public class Printer extends JavaPlugin
 
         if(getServer().getPluginManager().getPlugin("Factions").getDescription().getDepend().contains("MassiveCore"))
         {
-            factionsHook = new FactionsHook_MassiveCraft();
+            this.factionsHook = new FactionsHook_MassiveCraft();
         }
         else
         {
@@ -401,30 +427,25 @@ public class Printer extends JavaPlugin
 //            }
 //            else
 //            {
-                factionsHook = new FactionsHook_UUID_v0_2_1();
+            this.factionsHook = new FactionsHook_UUID_v0_2_1();
 //            }
         }
 
-        factionScanner = new FactionsScanner(0L, 5L);
-        hasFactionsHook = true;
+        this.factionScanner = new FactionsScanner(0L, 5L);
+        this.hasFactionsHook = true;
         getLogger().log(Level.INFO, "Successfully hooked into Factions");
     }
 
     public void setupCitizensHook()
     {
-        if(Printer.INSTANCE.mainConfig.useCitizens())
+        if (!getServer().getPluginManager().isPluginEnabled("Citizens"))
         {
-            if (getServer().getPluginManager().isPluginEnabled("Citizens"))
-            {
-                citizensHook = new CitizensHook_v2_0_16();
-                hasCitizensHook = true;
-                getLogger().log(Level.INFO, "Successfully hooked into Citizens");
-            }
-            else
-            {
-                getLogger().log(Level.WARNING, "Citizens jar not found!");
-            }
+            return;
         }
+
+        this.citizensHook = new CitizensHook_v2_0_16();
+        this.hasCitizensHook = true;
+        getLogger().log(Level.INFO, "Successfully hooked into Citizens");
     }
 
     private void setupEconomyHook() throws VaultException
@@ -446,15 +467,11 @@ public class Printer extends JavaPlugin
             throw new VaultException("no economy service provider");
         }
 
-        economyHook = new VaultHook(economy);
+        this.economyHook = new VaultHook(economy);
     }
 
     private void setupListeners()
     {
-        packetListenerManager = new PacketListenerManager();
-        Bukkit.getPluginManager().registerEvents(packetListenerManager, this);
-        packetListenerManager.addAllOnline();
-
         Bukkit.getPluginManager().registerEvents(new ListenPluginLoad(), this);
         Bukkit.getPluginManager().registerEvents(new ListenPrinterBlockPlace(), this);
         Bukkit.getPluginManager().registerEvents(new ListenPrinterExploit(), this);
@@ -468,105 +485,100 @@ public class Printer extends JavaPlugin
 
     private void setupCommands()
     {
-        commandHandler = new CommandHandler("printer");
-        commandHandler.addCommand(new CommandOn());
-        commandHandler.addCommand(new CommandOff());
-        commandHandler.addCommand(new CommandReload());
-        commandHandler.addCommand(new CommandVersion());
+        this.commandHandler = new CommandHandler("printer");
+        this.commandHandler.addCommand(new CommandOn());
+        this.commandHandler.addCommand(new CommandOff());
+        this.commandHandler.addCommand(new CommandReload());
+        this.commandHandler.addCommand(new CommandVersion());
     }
 
     public String getVersion()
     {
-        return version;
+        return this.version;
     }
 
     public void reloadConfigs()
     {
-        fileManager = setupConfigs();
+        this.fileManager = setupConfigs();
     }
 
     public ShopHook getShopGuiPlusHook()
     {
-        return shopHook;
+        return this.shopHook;
     }
 
     public MainConfig getMainConfig()
     {
-        return mainConfig;
+        return this.mainConfig;
     }
 
     public PricesConfig getPricesConfig()
     {
-        return pricesConfig;
+        return this.pricesConfig;
     }
 
     public MessageConfig getMessageConfig()
     {
-        return messageConfig;
+        return this.messageConfig;
     }
 
     public INMSHandler getNmsHandler()
     {
-        return nmsHandler;
-    }
-
-    public PacketListenerManager getPacketListenerManager()
-    {
-        return packetListenerManager;
+        return this.nmsHandler;
     }
 
     public boolean hasShopHook()
     {
-        return hasShopHook;
+        return this.hasShopHook;
     }
 
     public boolean hasFactionsHook()
     {
-        return hasFactionsHook;
+        return this.hasFactionsHook;
     }
 
     public boolean hasCitizensHook()
     {
-        return hasCitizensHook;
+        return this.hasCitizensHook;
     }
 
     public boolean hasResidenceHook()
     {
-        return hasResidenceHook;
+        return this.hasResidenceHook;
     }
 
     public boolean hasSkyblockHook()
     {
-        return hasSkyblockHook;
+        return this.hasSkyblockHook;
     }
 
     public boolean isSpigot()
     {
-        return hasSpigot;
+        return this.hasSpigot;
     }
 
     public FactionsHook getFactionsHook()
     {
-        return factionsHook;
+        return this.factionsHook;
     }
 
     public CitizensHook getCitizensHook()
     {
-        return citizensHook;
+        return this.citizensHook;
     }
 
     public TerritoryHook getSkyblockHook()
     {
-        return skyBlockHook;
+        return this.skyBlockHook;
     }
 
     public EconomyHook getEconomyHook()
     {
-        return economyHook;
+        return this.economyHook;
     }
 
     public TerritoryHook getResidenceHook()
     {
-        return residenceHook;
+        return this.residenceHook;
     }
 }

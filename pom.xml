@@ -6,7 +6,7 @@
 
     <groupId>com.reliableplugins</groupId>
     <artifactId>Printer</artifactId>
-    <version>2.0.2</version>
+    <version>2.1</version>
 
     <build>
         <plugins>
@@ -48,11 +48,22 @@
             <url>https://nexus.savagelabs.net</url>
             <layout>default</layout>
         </repository>
+
+        <repository>
+            <id>dmulloy2-repo</id>
+            <url>https://repo.dmulloy2.net/nexus/repository/public/</url>
+        </repository>
     </repositories>
 
 
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>4.5.0</version>
+        </dependency>
 
         <!-- ShopGui -->
         <dependency>
@@ -98,10 +109,19 @@
         <!-- IridiumSkyblock -->
         <dependency>
             <groupId>com.iridium.iridiumskyblock</groupId>
-            <artifactId>zShop-API</artifactId>
+            <artifactId>IridiumSkyBlock</artifactId>
             <version>2.6.1</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/IridiumSkyblock.jar</systemPath>
+        </dependency>
+
+        <!-- ASkyBlock -->
+        <dependency>
+            <groupId>com.wasteofplastic.askyblock</groupId>
+            <artifactId>ASkyBlock</artifactId>
+            <version>3.0.9.4</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/ASkyBlock.jar</systemPath>
         </dependency>
 
         <!-- BentoBox -->

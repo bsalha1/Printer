@@ -56,7 +56,7 @@ public class CommandHelp extends Command
             {
                 continue;
             }
-            sender.sendMessage(command.getDescription());
+            Message.sendMultilineMessage(sender, command.getDescription());
         }
     }
 

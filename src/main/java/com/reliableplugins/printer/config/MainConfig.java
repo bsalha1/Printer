@@ -33,11 +33,10 @@ public class MainConfig extends Config
     private boolean useZShop;
     private boolean useDynamicShop;
 
-    private boolean useCitizens;
-
     private boolean useBentoBox;
     private boolean useSuperiorSkyBlock;
     private boolean useIridiumSkyblock;
+    private boolean useASkyBlock;
     private boolean allowInNonIsland;
     private boolean allowNearNonIslandMembers;
 
@@ -79,8 +78,6 @@ public class MainConfig extends Config
         useZShop = getBoolean("shop.zshop-support", false);
         useDynamicShop = getBoolean("shop.dynamicshop-support", false);
 
-        useCitizens = getBoolean("citizens.support", true);
-
         useResidence = getBoolean("residence.support", false);
         allowInNonResidence = getBoolean("residence.allow-in-non-residence", false);
         allowNearNonResidenceMembers = getBoolean("residence.allow-near-non-residence-members", false);
@@ -88,6 +85,7 @@ public class MainConfig extends Config
         useSuperiorSkyBlock = getBoolean("skyblock.superior-skyblock-support", false);
         useBentoBox = getBoolean("skyblock.bento-box-support", false);
         useIridiumSkyblock = getBoolean("skyblock.iridiumskyblock-support", false);
+        useASkyBlock = getBoolean("skyblock.askybock-support", false);
         allowInNonIsland = getBoolean("skyblock.allow-in-non-island", false);
         allowNearNonIslandMembers = getBoolean("skyblock.allow-near-non-island-members", false);
 
@@ -239,9 +237,9 @@ public class MainConfig extends Config
         return useIridiumSkyblock;
     }
 
-    public boolean useCitizens()
+    public boolean useASkyBlock()
     {
-        return useCitizens;
+        return useASkyBlock;
     }
 
     public boolean useResidence()

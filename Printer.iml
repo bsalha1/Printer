@@ -371,5 +371,26 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.iridium.iridiumskyblock:IridiumSkyBlock:2.6.1">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/IridiumSkyblock.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.wasteofplastic.askyblock:ASkyBlock:3.0.9.4">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/ASkyBlock.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="Maven: com.comphenix.protocol:ProtocolLib:4.5.0" level="project" />
+    <orderEntry type="library" name="Maven: cglib:cglib-nodep:3.2.5" level="project" />
+    <orderEntry type="library" name="Maven: com.comphenix.executors:BukkitExecutors:1.1-SNAPSHOT" level="project" />
   </component>
 </module>

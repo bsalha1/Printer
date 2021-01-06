@@ -18,7 +18,7 @@ public class ListenPluginLoad implements Listener
     public void onPluginLoad(PluginEnableEvent event)
     {
         String name = event.getPlugin().getName();
-        if(name.contains("Factions") && !Printer.INSTANCE.hasFactionsHook())
+        if(!Printer.INSTANCE.hasFactionsHook() && name.contains("Factions"))
         {
             Printer.INSTANCE.setupFactionsHook();
         }
@@ -27,16 +27,17 @@ public class ListenPluginLoad implements Listener
         {
             Printer.INSTANCE.setupShopHook();
         }
-        else if(name.contains("Citizens") && !Printer.INSTANCE.hasCitizensHook())
+        else if(!Printer.INSTANCE.hasCitizensHook() && name.contains("Citizens"))
         {
             Printer.INSTANCE.setupCitizensHook();
         }
-        else if(name.contains("Residence") && !Printer.INSTANCE.hasResidenceHook())
+        else if(!Printer.INSTANCE.hasResidenceHook() && name.contains("Residence"))
         {
             Printer.INSTANCE.setupResidenceHook();
         }
-        else if(Printer.INSTANCE.hasSkyblockHook() &&
-                (name.contains("SuperiorSkyblock") || name.contains("BentoBox") || name.contains("IridiumSkyblock")))
+        else if(!Printer.INSTANCE.hasSkyblockHook() &&
+                (name.contains("SuperiorSkyblock") || name.contains("BentoBox") || name.contains("IridiumSkyblock") ||
+                 name.contains("ASkyBlock")))
         {
             Printer.INSTANCE.setupSkyblockHook();
         }

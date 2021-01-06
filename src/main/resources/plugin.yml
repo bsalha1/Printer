@@ -1,6 +1,6 @@
 name: Printer
 main: com.reliableplugins.printer.Printer
-version: 2.0.2
+version: 2.1
 depend:
   - Vault
 softdepend:
@@ -13,6 +13,8 @@ softdepend:
   - DynamicShop
   - Residence
   - Factions
+  - ASkyBlock
+  - ProtocolLib
 author: Reachy
 commands:
   printer:
