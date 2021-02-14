@@ -4,13 +4,11 @@
  * GNU GPLv3 <https://www.gnu.org/licenses/gpl-3.0.en.html>
  */
 
-package com.reliableplugins.printer.task;
+package com.reliableplugins.printer.hook.economy;
 
 import com.reliableplugins.printer.Printer;
 import org.bukkit.entity.Player;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class EconomyManager implements Runnable

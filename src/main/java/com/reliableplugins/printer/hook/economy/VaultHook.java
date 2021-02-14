@@ -1,6 +1,5 @@
 package com.reliableplugins.printer.hook.economy;
 
-import com.reliableplugins.printer.task.EconomyManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 
