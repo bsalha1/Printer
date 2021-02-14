@@ -7,7 +7,7 @@
 package com.reliableplugins.printer.hook.territory.factions;
 
 import com.massivecraft.factions.*;
-import com.massivecraft.factions.struct.Relation;
+import com.massivecraft.factions.perms.Relation;
 import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.entity.Player;
 
