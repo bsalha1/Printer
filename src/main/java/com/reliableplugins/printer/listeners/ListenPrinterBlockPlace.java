@@ -56,7 +56,7 @@ public class ListenPrinterBlockPlace implements Listener
         {
             ItemStack toPlaceCopy = toPlace.clone();
             toPlaceCopy.setAmount(1);
-            price = Printer.INSTANCE.getShopGuiPlusHook().getPrice(toPlaceCopy);
+            price = Printer.INSTANCE.getShopHook().getCachedPrice(toPlaceCopy);
             price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
         }
 
@@ -120,7 +120,7 @@ public class ListenPrinterBlockPlace implements Listener
         {
             ItemStack toPlaceCopy = toPlace.clone();
             toPlaceCopy.setAmount(1);
-            price = Printer.INSTANCE.getShopGuiPlusHook().getPrice(toPlaceCopy);
+            price = Printer.INSTANCE.getShopHook().getCachedPrice(toPlaceCopy);
             price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
         }
 

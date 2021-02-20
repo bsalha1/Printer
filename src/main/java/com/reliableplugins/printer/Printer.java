@@ -14,15 +14,14 @@ import com.reliableplugins.printer.config.PricesConfig;
 import com.reliableplugins.printer.exception.VaultException;
 import com.reliableplugins.printer.hook.citizens.CitizensHook;
 import com.reliableplugins.printer.hook.citizens.CitizensHook_v2_0_16;
+import com.reliableplugins.printer.task.AsyncTaskManager;
 import com.reliableplugins.printer.hook.economy.EconomyHook;
 import com.reliableplugins.printer.hook.economy.VaultHook;
 import com.reliableplugins.printer.hook.packets.ProtocolLibHook;
-import com.reliableplugins.printer.hook.shop.DynamicShopHook;
 import com.reliableplugins.printer.hook.shop.ShopHook;
+import com.reliableplugins.printer.hook.shop.DynamicShopHook;
 import com.reliableplugins.printer.hook.shop.ZShopHook;
-import com.reliableplugins.printer.hook.shop.shopgui.ShopGuiPlusHook_v1_3_0;
-import com.reliableplugins.printer.hook.shop.shopgui.ShopGuiPlusHook_v1_4_0;
-import com.reliableplugins.printer.hook.shop.shopgui.ShopGuiPlusHook_v1_5_0;
+import com.reliableplugins.printer.hook.shop.shopgui.ShopGuiPlusHook_1_3_to_1_5;
 import com.reliableplugins.printer.hook.territory.TerritoryHook;
 import com.reliableplugins.printer.hook.territory.factions.FactionsHook;
 import com.reliableplugins.printer.hook.territory.factions.FactionsHook_MassiveCraft;
@@ -44,6 +43,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 
 public class Printer extends JavaPlugin
@@ -65,6 +65,7 @@ public class Printer extends JavaPlugin
     private BukkitTask factionScanner;
     private BukkitTask skyblockScanner;
     private BukkitTask residenceScanner;
+    private AsyncTaskManager asyncTaskManager;
     private INMSHandler nmsHandler;
     private boolean hasShopHook;
     private boolean hasCitizensHook;
@@ -323,19 +324,7 @@ public class Printer extends JavaPlugin
                     int major = Integer.parseInt(versions[0]);
                     int minor = Integer.parseInt(versions[1]);
                     int build = Integer.parseInt(versions[2]);
-                    if (minor >= 33 && minor <= 34)
-                    {
-                        this.shopHook = new ShopGuiPlusHook_v1_3_0();
-                    }
-                    else if (minor == 35)
-                    {
-                        this.shopHook = new ShopGuiPlusHook_v1_4_0();
-                    }
-                    else
-                    {
-                        this.shopHook = new ShopGuiPlusHook_v1_5_0();
-                    }
-
+                    this.shopHook = new ShopGuiPlusHook_1_3_to_1_5();
                     this.hasShopHook = true;
                     getLogger().log(Level.INFO, "Successfully hooked into ShopGUIPlus");
                     return;
@@ -480,6 +469,9 @@ public class Printer extends JavaPlugin
 
     private void setupTasks()
     {
+        this.asyncTaskManager = new AsyncTaskManager();
+        Executors.newSingleThreadExecutor().submit(this.asyncTaskManager);
+
         new InventoryScanner(0L, 1L);
     }
 
@@ -502,7 +494,7 @@ public class Printer extends JavaPlugin
         this.fileManager = setupConfigs();
     }
 
-    public ShopHook getShopGuiPlusHook()
+    public ShopHook getShopHook()
     {
         return this.shopHook;
     }
@@ -580,5 +572,10 @@ public class Printer extends JavaPlugin
     public TerritoryHook getResidenceHook()
     {
         return this.residenceHook;
+    }
+
+    public AsyncTaskManager getAsyncTaskManager()
+    {
+        return asyncTaskManager;
     }
 }

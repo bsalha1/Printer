@@ -7,7 +7,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 
 import java.util.logging.Level;
 
-public class ZShopHook implements ShopHook
+public class ZShopHook extends ShopHook
 {
     private <T> T getProvider(Class<T> clazz)
     {

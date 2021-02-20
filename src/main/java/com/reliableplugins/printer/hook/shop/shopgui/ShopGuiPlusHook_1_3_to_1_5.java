@@ -4,27 +4,30 @@
  * GNU GPLv3 <https://www.gnu.org/licenses/gpl-3.0.en.html>
  */
 
-package com.reliableplugins.printer.hook.shop;
+package com.reliableplugins.printer.hook.shop.shopgui;
 
+import com.reliableplugins.printer.hook.shop.ShopHook;
+import net.brcdev.shopgui.ShopGuiPlusApi;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 
-public abstract class ShopHook implements IShopHook
+public class ShopGuiPlusHook_1_3_to_1_5 extends ShopHook
 {
     private final HashMap<ItemStack, Double> priceCache;
 
-    protected ShopHook()
+    public ShopGuiPlusHook_1_3_to_1_5()
     {
         this.priceCache = new HashMap<>();
     }
 
-    public final double getCachedPrice(ItemStack item)
+    @Override
+    public double getPrice(ItemStack item)
     {
         Double price = this.priceCache.get(item);
         if(price == null)
         {
-            price = this.getPrice(item);
+            price = ShopGuiPlusApi.getItemStackPriceBuy(item);
             this.priceCache.put(item, price);
         }
         return price;

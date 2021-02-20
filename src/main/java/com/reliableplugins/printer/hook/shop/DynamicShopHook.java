@@ -3,7 +3,7 @@ package com.reliableplugins.printer.hook.shop;
 import me.sat7.dynamicshop.DynaShopAPI;
 import org.bukkit.inventory.ItemStack;
 
-public class DynamicShopHook implements ShopHook
+public class DynamicShopHook extends ShopHook
 {
     @Override
     public double getPrice(ItemStack item)
