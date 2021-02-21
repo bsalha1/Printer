@@ -13,7 +13,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.5.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -23,6 +23,11 @@
     </build>
 
     <repositories>
+        <repository>
+            <id>dmulloy2-repo</id>
+            <url>https://repo.dmulloy2.net/repository/public/</url>
+        </repository>
+
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
@@ -47,11 +52,6 @@
             <id>savagelabs</id>
             <url>https://nexus.savagelabs.net</url>
             <layout>default</layout>
-        </repository>
-
-        <repository>
-            <id>dmulloy2-repo</id>
-            <url>https://repo.dmulloy2.net/nexus/repository/public/</url>
         </repository>
     </repositories>
 
@@ -136,6 +136,7 @@
         <dependency>
             <groupId>com.bgsoftware.superiorskyblock.api</groupId>
             <artifactId>SuperiorSkyblock</artifactId>
+            <version>1.0.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/SuperiorSkyblockAPI.jar</systemPath>
         </dependency>
@@ -153,6 +154,7 @@
         <dependency>
             <groupId>com.residence</groupId>
             <artifactId>Residence</artifactId>
+            <version>4.9.2.1</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/Residence4.9.2.1.jar</systemPath>
         </dependency>
@@ -161,6 +163,7 @@
         <dependency>
             <groupId>com.massivecraft</groupId>
             <artifactId>FactionsUUID-0.5.18</artifactId>
+            <version>0.5.18</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/FactionsUUID-0.5.18.jar</systemPath>
         </dependency>
@@ -168,18 +171,28 @@
             <groupId>com.massivecraft</groupId>
             <artifactId>FactionsMassiveCraft</artifactId>
             <scope>system</scope>
+            <version>1.0.0</version>
             <systemPath>${project.basedir}/lib/FactionsMassiveCraft.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.massivecraft</groupId>
             <artifactId>MassiveCore</artifactId>
+            <version>1.0.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/MassiveCore.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.massivecraft</groupId>
+            <artifactId>FactionsX</artifactId>
+            <version>1.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/FactionsX-1.1-STABLE.jar</systemPath>
         </dependency>
 
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>ReliableSpigot</artifactId>
+            <version>2.2</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/ReliableSpigot-Server-v2.2.jar</systemPath>
         </dependency>
@@ -188,18 +201,21 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot1_8_R1</artifactId>
+            <version>1.8</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot1_8_R1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot1_8_R2</artifactId>
+            <version>1.8.1</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot1_8_R2.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot1_8_R3</artifactId>
+            <version>1.8.3</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot1_8_R3.jar</systemPath>
         </dependency>
@@ -207,71 +223,83 @@
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot1_9_R1</artifactId>
             <scope>system</scope>
+            <version>1.9</version>
             <systemPath>${project.basedir}/lib/spigot1_9_R1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot1_9_R2</artifactId>
+            <version>1.9.1</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot1_9_R2.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot1_10_R1</artifactId>
+            <version>1.10.1</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot1_10_R1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot1_11_R1</artifactId>
+            <version>1.11</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot1_11_R1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot1_12_R1</artifactId>
+            <version>1.12</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot1_12_R1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot1_13_R1</artifactId>
+            <version>1.13</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot1_13_R1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot1_13_R2</artifactId>
+            <version>1.13.1</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot1_13_R2.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot1_14_R1</artifactId>
+            <version>1.14.2</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot1_14_R1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot1_15_R1</artifactId>
+            <version>1.15.1</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot1_15_R1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot1_16_R1</artifactId>
+            <version>1.16.1</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot1_16_R1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot1_16_R2</artifactId>
+            <version>1.16.2</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot1_16_R2.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot1_16_R3</artifactId>
+            <version>1.16.3</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot1_16_R3.jar</systemPath>
         </dependency>

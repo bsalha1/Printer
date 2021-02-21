@@ -14,6 +14,7 @@ import com.reliableplugins.printer.config.PricesConfig;
 import com.reliableplugins.printer.exception.VaultException;
 import com.reliableplugins.printer.hook.citizens.CitizensHook;
 import com.reliableplugins.printer.hook.citizens.CitizensHook_v2_0_16;
+import com.reliableplugins.printer.hook.territory.factions.*;
 import com.reliableplugins.printer.task.AsyncTaskManager;
 import com.reliableplugins.printer.hook.economy.EconomyHook;
 import com.reliableplugins.printer.hook.economy.VaultHook;
@@ -23,10 +24,6 @@ import com.reliableplugins.printer.hook.shop.DynamicShopHook;
 import com.reliableplugins.printer.hook.shop.ZShopHook;
 import com.reliableplugins.printer.hook.shop.shopgui.ShopGuiPlusHook_1_3_to_1_5;
 import com.reliableplugins.printer.hook.territory.TerritoryHook;
-import com.reliableplugins.printer.hook.territory.factions.FactionsHook;
-import com.reliableplugins.printer.hook.territory.factions.FactionsHook_MassiveCraft;
-import com.reliableplugins.printer.hook.territory.factions.FactionsHook_UUID_v0_2_1;
-import com.reliableplugins.printer.hook.territory.factions.FactionsScanner;
 import com.reliableplugins.printer.hook.territory.residence.ResidenceHook;
 import com.reliableplugins.printer.hook.territory.residence.ResidenceScanner;
 import com.reliableplugins.printer.hook.territory.skyblock.*;
@@ -390,6 +387,11 @@ public class Printer extends JavaPlugin
     {
         if(!this.mainConfig.useFactions())
         {
+            return;
+        }
+
+        if (getServer().getPluginManager().isPluginEnabled("FactionsX")) {
+            this.factionsHook = new FactionsHook_X();
             return;
         }
 
