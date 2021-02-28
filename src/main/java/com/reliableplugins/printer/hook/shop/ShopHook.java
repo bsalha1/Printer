@@ -29,4 +29,9 @@ public abstract class ShopHook implements IShopHook
         }
         return price;
     }
+
+    public final void clearCache()
+    {
+        this.priceCache.clear();
+    }
 }

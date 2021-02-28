@@ -18,6 +18,7 @@ public class CommandReload extends Command
     public void execute(CommandSender executor, String[] args)
     {
         Printer.INSTANCE.reloadConfigs();
+        Printer.INSTANCE.getShopHook().clearCache();
         Message.RELOAD.sendColoredMessage(executor);
     }
 
