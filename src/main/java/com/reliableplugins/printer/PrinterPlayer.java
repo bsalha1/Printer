@@ -6,6 +6,8 @@
 
 package com.reliableplugins.printer;
 
+import com.reliableplugins.printer.api.PrinterOffEvent;
+import com.reliableplugins.printer.api.PrinterOnEvent;
 import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.utils.MathUtil;
 import com.reliableplugins.printer.utils.StringUtil;
@@ -79,6 +81,13 @@ public class PrinterPlayer
             return;
         }
 
+        PrinterOnEvent event = new PrinterOnEvent(this);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        if(event.isCancelled())
+        {
+            return;
+        }
+
         // Initialize scoreboard
         if(Printer.INSTANCE.getMainConfig().isScoreboardEnabled())
         {
@@ -114,6 +123,13 @@ public class PrinterPlayer
     public void printerOff()
     {
         if(!printing)
+        {
+            return;
+        }
+
+        PrinterOffEvent event = new PrinterOffEvent(this);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        if(event.isCancelled())
         {
             return;
         }

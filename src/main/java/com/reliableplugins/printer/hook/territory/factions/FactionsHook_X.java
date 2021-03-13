@@ -1,6 +1,5 @@
 package com.reliableplugins.printer.hook.territory.factions;
 
-import com.massivecraft.factions.FPlayers;
 import com.reliableplugins.printer.utils.BukkitUtil;
 import net.prosavage.factionsx.core.FPlayer;
 import net.prosavage.factionsx.core.Faction;
