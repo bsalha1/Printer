@@ -6,7 +6,5 @@ public interface EconomyHook
 {
     double getBalance(Player player);
 
-    boolean queueWithdraw(Player player, double amount);
-
     void withdraw(Player player, double amount);
 }

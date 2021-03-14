@@ -200,15 +200,6 @@ public enum ColoredMaterial
     private final Material material;
     private final int id;
 
-    private static final HashSet<Material> COLORABLE = new HashSet<>();
-    static
-    {
-        for(ColoredMaterial coloredMaterial : ColoredMaterial.values())
-        {
-            COLORABLE.add(coloredMaterial.getMaterial());
-        }
-    }
-
     ColoredMaterial(Material material, int id)
     {
         this.material = material;
@@ -250,11 +241,6 @@ public enum ColoredMaterial
         }
 
         return null;
-    }
-
-    public static boolean isColorable(Material material)
-    {
-        return COLORABLE.contains(material);
     }
 
     public Material getMaterial()

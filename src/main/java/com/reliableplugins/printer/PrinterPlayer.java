@@ -134,6 +134,9 @@ public class PrinterPlayer
             return;
         }
 
+        // Withdraw
+        Printer.INSTANCE.getEconomyHook().withdraw(this.player, this.totalCost);
+
         // Reset scoreboard
         if(Printer.INSTANCE.getMainConfig().isScoreboardEnabled())
         {
@@ -216,7 +219,7 @@ public class PrinterPlayer
                     Printer.INSTANCE.getMainConfig().getBlocksFormat().replace("{NUM}", Integer.toString(this.totalBlocks)));
             this.blocks.setScore(12);
 
-            String price = Double.toString(MathUtil.round(Printer.INSTANCE.getEconomyHook().getBalance(player), 2)); // round off
+            String price = Double.toString(MathUtil.round(getRemainingBalance(), 2)); // round off
             objective.getScoreboard().resetScores(this.balance.getEntry());
             this.balance = objective.getScore(
                     Printer.INSTANCE.getMainConfig().getBalanceFormat().replace("{NUM}", price));
@@ -247,6 +250,16 @@ public class PrinterPlayer
     public boolean isInternalItem(ItemStack itemStack)
     {
         return internalItems.contains(itemStack);
+    }
+
+    public double getRemainingBalance()
+    {
+        return Printer.INSTANCE.getEconomyHook().getBalance(this.player) - this.totalCost;
+    }
+
+    public boolean hasEnoughMoney(double transaction)
+    {
+        return (getRemainingBalance() - transaction) > 0.0d;
     }
 
     public Player getPlayer()

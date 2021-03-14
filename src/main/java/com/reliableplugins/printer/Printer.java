@@ -15,7 +15,6 @@ import com.reliableplugins.printer.exception.VaultException;
 import com.reliableplugins.printer.hook.citizens.CitizensHook;
 import com.reliableplugins.printer.hook.citizens.CitizensHook_v2_0_16;
 import com.reliableplugins.printer.hook.territory.factions.*;
-import com.reliableplugins.printer.task.AsyncTaskManager;
 import com.reliableplugins.printer.hook.economy.EconomyHook;
 import com.reliableplugins.printer.hook.economy.VaultHook;
 import com.reliableplugins.printer.hook.packets.ProtocolLibHook;
@@ -62,7 +61,6 @@ public class Printer extends JavaPlugin
     private BukkitTask factionScanner;
     private BukkitTask skyblockScanner;
     private BukkitTask residenceScanner;
-    private AsyncTaskManager asyncTaskManager;
     private INMSHandler nmsHandler;
     private boolean hasShopHook;
     private boolean hasCitizensHook;
@@ -471,9 +469,6 @@ public class Printer extends JavaPlugin
 
     private void setupTasks()
     {
-        this.asyncTaskManager = new AsyncTaskManager();
-        Executors.newSingleThreadExecutor().submit(this.asyncTaskManager);
-
         new InventoryScanner(0L, 1L);
     }
 
@@ -574,10 +569,5 @@ public class Printer extends JavaPlugin
     public TerritoryHook getResidenceHook()
     {
         return this.residenceHook;
-    }
-
-    public AsyncTaskManager getAsyncTaskManager()
-    {
-        return asyncTaskManager;
     }
 }

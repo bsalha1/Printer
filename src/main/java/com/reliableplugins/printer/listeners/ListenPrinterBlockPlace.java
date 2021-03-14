@@ -14,6 +14,7 @@ import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -72,7 +73,7 @@ public class ListenPrinterBlockPlace implements Listener
             Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.sendColoredMessage(event.getPlayer());
             return;
         }
-        else if(!Printer.INSTANCE.getEconomyHook().queueWithdraw(player.getPlayer(), price))
+        else if(!player.hasEnoughMoney(price))
         {
             Printer.INSTANCE.getNmsHandler().sendToolTipText(player.getPlayer(), Message.ERROR_NO_MONEY.getColoredMessage());
             event.setCancelled(true);
@@ -132,7 +133,7 @@ public class ListenPrinterBlockPlace implements Listener
         }
         else if(BukkitUtil.isNoBlockPlaceItem(toPlace.getType()))
         {
-            if(!Printer.INSTANCE.getEconomyHook().queueWithdraw(player.getPlayer(), price))
+            if(!player.hasEnoughMoney(price))
             {
                 Printer.INSTANCE.getNmsHandler().sendToolTipText(player.getPlayer(), Message.ERROR_NO_MONEY.getColoredMessage());
                 event.setCancelled(true);
