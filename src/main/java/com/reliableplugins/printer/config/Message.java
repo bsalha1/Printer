@@ -50,6 +50,10 @@ public enum Message
     ERROR_NOT_IN_RESIDENCE("err-not-in-residence", "&cYou may only use printer if you're in your own residence"),
     ERROR_NON_RESIDENT_NEARBY("err-non-residence-member-nearby", "&cSomeone who isn't from your residence is nearby"),
 
+    // Lands
+    ERROR_NOT_IN_LAND("err-not-in-land", "&cYou may only use printer if you're in your own land"),
+    ERROR_NON_LAND_MEMBER_NEARBY("err-non-land-member-nearby", "&cSomeone who isn't from your land is nearby"),
+
     ERROR_BLOCK_PLACE_NOT_ALLOWED("err-block-not-allowed", "&cThis block is not allowed to be placed while printer is on"),
     ERROR_ITEM_PLACE_NOT_ALLOWED("err-item-not-allowed", "&cThis item is not allowed to be used while printer is on"),
     ERROR_BLOCK_BREAK_NOT_ALLOWED("err-block-break-not-allowed", "&cThis block is not allowed to be broken while printer is on"),

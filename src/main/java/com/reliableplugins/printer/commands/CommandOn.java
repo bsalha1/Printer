@@ -88,6 +88,23 @@ public class CommandOn extends Command
             }
         }
 
+        // Lands checks
+        if(Printer.INSTANCE.hasLandsHook())
+        {
+            // If player isn't in their own land and they aren't in wilderness
+            if(!Printer.INSTANCE.getLandsHook().isInOwnTerritory(player) &&
+                    (Printer.INSTANCE.getLandsHook().isInATerritory(player) || !Printer.INSTANCE.getMainConfig().allowInNonLand()))
+            {
+                Message.ERROR_NOT_IN_LAND.sendColoredMessage(player);
+                return;
+            }
+            else if(!Printer.INSTANCE.getMainConfig().allowNearNonLandMembers() && Printer.INSTANCE.getLandsHook().isNonTerritoryMemberNearby(player))
+            {
+                Message.ERROR_NON_LAND_MEMBER_NEARBY.sendColoredMessage(player);
+                return;
+            }
+        }
+
         if(Printer.INSTANCE.getMainConfig().requireEmptyInventory() && (!BukkitUtil.isArmorInventoryEmpty(player) || !BukkitUtil.isInventoryEmpty(player)))
         {
             Message.ERROR_NON_EMPTY_INVENTORY.sendColoredMessage(player);

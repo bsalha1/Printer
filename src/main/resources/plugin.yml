@@ -12,6 +12,7 @@ softdepend:
   - zShop
   - DynamicShop
   - Residence
+  - Lands
   - Factions
   - FactionsX
   - ASkyBlock

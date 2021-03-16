@@ -44,6 +44,10 @@ public class MainConfig extends Config
     private boolean allowInNonResidence;
     private boolean allowNearNonResidenceMembers;
 
+    private boolean useLands;
+    private boolean allowInNonLand;
+    private boolean allowNearNonLandMembers;
+
     private int scoreboardMargin;
     private String scoreboardTitle;
     private String costScoreTitle;
@@ -81,6 +85,10 @@ public class MainConfig extends Config
         useResidence = getBoolean("residence.support", false);
         allowInNonResidence = getBoolean("residence.allow-in-non-residence", false);
         allowNearNonResidenceMembers = getBoolean("residence.allow-near-non-residence-members", false);
+
+        useLands = getBoolean("lands.support", false);
+        allowInNonLand = getBoolean("lands.allow-in-non-land", false);
+        allowNearNonLandMembers = getBoolean("lands.allow-near-non-land-members", false);
 
         useSuperiorSkyBlock = getBoolean("skyblock.superior-skyblock-support", false);
         useBentoBox = getBoolean("skyblock.bento-box-support", false);
@@ -202,6 +210,16 @@ public class MainConfig extends Config
         return allowNearNonResidenceMembers;
     }
 
+    public boolean allowInNonLand()
+    {
+        return allowInNonLand;
+    }
+
+    public boolean allowNearNonLandMembers()
+    {
+        return allowNearNonLandMembers;
+    }
+
     public boolean useShopGuiPlus()
     {
         return useShopGuiPlus;
@@ -245,6 +263,11 @@ public class MainConfig extends Config
     public boolean useResidence()
     {
         return useResidence;
+    }
+
+    public boolean useLands()
+    {
+        return useLands;
     }
 
     public String getScoreboardTitle()

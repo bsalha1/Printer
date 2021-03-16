@@ -23,6 +23,8 @@ import com.reliableplugins.printer.hook.shop.DynamicShopHook;
 import com.reliableplugins.printer.hook.shop.ZShopHook;
 import com.reliableplugins.printer.hook.shop.shopgui.ShopGuiPlusHook_1_3_to_1_5;
 import com.reliableplugins.printer.hook.territory.TerritoryHook;
+import com.reliableplugins.printer.hook.territory.lands.LandsHook;
+import com.reliableplugins.printer.hook.territory.lands.LandsScanner;
 import com.reliableplugins.printer.hook.territory.residence.ResidenceHook;
 import com.reliableplugins.printer.hook.territory.residence.ResidenceScanner;
 import com.reliableplugins.printer.hook.territory.skyblock.*;
@@ -33,7 +35,6 @@ import com.reliableplugins.printer.task.InventoryScanner;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -50,16 +51,18 @@ public class Printer extends JavaPlugin
     private PacketListenerManager packetListenerManager;
 
     // Hooks
-    private TerritoryHook skyBlockHook;
-    private TerritoryHook residenceHook;
     private CitizensHook citizensHook;
     private FactionsHook factionsHook;
-    private ProtocolLibHook protocolLibHook;
-    private ShopHook shopHook;
-    private EconomyHook economyHook;
+    private TerritoryHook skyBlockHook;
+    private TerritoryHook residenceHook;
+    private TerritoryHook landsHook;
     private BukkitTask factionScanner;
     private BukkitTask skyblockScanner;
     private BukkitTask residenceScanner;
+    private BukkitTask landsScanner;
+    private ProtocolLibHook protocolLibHook;
+    private ShopHook shopHook;
+    private EconomyHook economyHook;
     private INMSHandler nmsHandler;
     private boolean hasShopHook;
     private boolean hasCitizensHook;
@@ -67,6 +70,7 @@ public class Printer extends JavaPlugin
     private boolean hasProtocolLibHook;
     private boolean hasSkyblockHook;
     private boolean hasResidenceHook;
+    private boolean hasLandsHook;
     private boolean hasSpigot;
 
     // Configs
@@ -103,6 +107,7 @@ public class Printer extends JavaPlugin
             setupFactionsHook();
             setupSkyblockHook();
             setupResidenceHook();
+            setupLandsHook();
             setupShopHook();
             setupCommands();
             setupTasks();
@@ -303,6 +308,26 @@ public class Printer extends JavaPlugin
         getLogger().log(Level.INFO, "Successfully hooked into Residence");
     }
 
+    public void setupLandsHook()
+    {
+        if(!this.mainConfig.useLands())
+        {
+            return;
+        }
+
+        if(!getServer().getPluginManager().isPluginEnabled("Lands"))
+        {
+            getLogger().log(Level.WARNING, "Lands jar not found!");
+            return;
+        }
+
+        this.landsHook = new LandsHook();
+        this.landsScanner = new LandsScanner(0L, 5L);
+        this.hasLandsHook = true;
+        getLogger().log(Level.INFO, "Successfully hooked into Lands");
+
+    }
+
     public void setupShopHook()
     {
         // ShopGUIPlus
@@ -310,20 +335,10 @@ public class Printer extends JavaPlugin
         {
             if (getServer().getPluginManager().isPluginEnabled("ShopGUIPlus"))
             {
-                Plugin shopGui = getServer().getPluginManager().getPlugin("ShopGUIPlus");
-                String[] versions = shopGui.getDescription().getVersion().split("\\.");
-                if (versions.length > 2)
-                {
-
-                    int major = Integer.parseInt(versions[0]);
-                    int minor = Integer.parseInt(versions[1]);
-                    int build = Integer.parseInt(versions[2]);
-                    this.shopHook = new ShopGuiPlusHook_1_3_to_1_5();
-                    this.hasShopHook = true;
-                    getLogger().log(Level.INFO, "Successfully hooked into ShopGUIPlus");
-                    return;
-                }
-                getLogger().log(Level.WARNING, "Failed to parse ShopGUIPlus version!");
+                this.shopHook = new ShopGuiPlusHook_1_3_to_1_5();
+                this.hasShopHook = true;
+                getLogger().log(Level.INFO, "Successfully hooked into ShopGUIPlus");
+                return;
             }
             else
             {
@@ -339,6 +354,7 @@ public class Printer extends JavaPlugin
                 this.shopHook = new ZShopHook();
                 this.hasShopHook = true;
                 getLogger().log(Level.INFO, "Successfully hooked into zShop");
+                return;
             }
             else
             {
@@ -524,6 +540,11 @@ public class Printer extends JavaPlugin
         return this.hasResidenceHook;
     }
 
+    public boolean hasLandsHook()
+    {
+        return hasLandsHook;
+    }
+
     public boolean hasSkyblockHook()
     {
         return this.hasSkyblockHook;
@@ -557,5 +578,10 @@ public class Printer extends JavaPlugin
     public TerritoryHook getResidenceHook()
     {
         return this.residenceHook;
+    }
+
+    public TerritoryHook getLandsHook()
+    {
+        return landsHook;
     }
 }
