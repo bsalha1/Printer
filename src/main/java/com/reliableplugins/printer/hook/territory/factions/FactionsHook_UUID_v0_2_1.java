@@ -7,6 +7,7 @@
 package com.reliableplugins.printer.hook.territory.factions;
 
 import com.massivecraft.factions.*;
+import com.massivecraft.factions.iface.RelationParticipator;
 import com.massivecraft.factions.struct.Relation;
 import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.entity.Player;
@@ -65,7 +66,7 @@ public class FactionsHook_UUID_v0_2_1 implements FactionsHook
             if (nearbyFPlayer == null || fPlayer == null || fPlayer.getFaction().isWilderness()) return true;
 
             try {
-                if (!fPlayer.getFaction().equals(nearbyFPlayer.getFaction()) && !fPlayer.getFaction().getRelationTo(nearbyFPlayer).equals(Relation.ALLY))
+                if (!fPlayer.getFaction().equals(nearbyFPlayer.getFaction()) && !fPlayer.getFaction().getRelationTo(nearbyFPlayer).isAlly())
                     return true;
             } catch (NoSuchMethodError error) {
                 if (!fPlayer.getFaction().equals(nearbyFPlayer.getFaction()) && !fPlayer.getFaction().getRelationTo(nearbyFPlayer).equals(com.massivecraft.factions.perms.Relation.ALLY))
