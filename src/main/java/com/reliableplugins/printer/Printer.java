@@ -39,7 +39,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
 import java.util.HashMap;
-import java.util.concurrent.Executors;
 import java.util.logging.Level;
 
 public class Printer extends JavaPlugin
@@ -388,36 +387,25 @@ public class Printer extends JavaPlugin
             return;
         }
 
-        if (getServer().getPluginManager().isPluginEnabled("FactionsX")) {
+        if (getServer().getPluginManager().isPluginEnabled("FactionsX"))
+        {
             this.factionsHook = new FactionsHook_X();
-            return;
         }
-
-        if(!getServer().getPluginManager().isPluginEnabled("Factions"))
+        else if(getServer().getPluginManager().isPluginEnabled("Factions"))
         {
-            getLogger().log(Level.WARNING, "Factions jar not found!");
-            return;
-        }
-
-        if(getServer().getPluginManager().getPlugin("Factions").getDescription().getDepend().contains("MassiveCore"))
-        {
-            this.factionsHook = new FactionsHook_MassiveCraft();
+            if(getServer().getPluginManager().getPlugin("Factions").getDescription().getDepend().contains("MassiveCore"))
+            {
+                this.factionsHook = new FactionsHook_MassiveCraft();
+            }
+            else
+            {
+                this.factionsHook = new FactionsHook_UUID();
+            }
         }
         else
         {
-            String version = getServer().getPluginManager().getPlugin("Factions").getDescription().getVersion();
-            String build = version.split("-")[1].replaceAll("U", "");
-            String[] buildData = build.split("[.]");
-            int buildVersion = Integer.parseInt(buildData[1]);
-
-//            if (buildVersion >= 5)
-//            {
-//                factionsHook = new FactionsHook_UUID_v0_5_18();
-//            }
-//            else
-//            {
-            this.factionsHook = new FactionsHook_UUID_v0_2_1();
-//            }
+            getLogger().log(Level.WARNING, "Factions jar not found!");
+            return;
         }
 
         this.factionScanner = new FactionsScanner(0L, 5L);

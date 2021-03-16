@@ -206,6 +206,20 @@ public class PrinterPlayer
         this.totalBlocks++;
 
         // Update cost on scoreboard
+        updateScoreboard();
+    }
+
+    public void decrementCost(double cost)
+    {
+        this.totalCost -= cost;
+        this.totalBlocks--;
+
+        // Update cost on scoreboard
+        updateScoreboard();
+    }
+
+    private void updateScoreboard()
+    {
         if(Printer.INSTANCE.getMainConfig().isScoreboardEnabled())
         {
             String totalCost = Double.toString(MathUtil.round(this.totalCost, 2));

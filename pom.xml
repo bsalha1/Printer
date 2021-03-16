@@ -150,6 +150,14 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- Lands -->
+        <dependency>
+            <groupId>com.github.angeschossen</groupId>
+            <artifactId>LandsAPI</artifactId>
+            <version>5.2.5</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Residence -->
         <dependency>
             <groupId>com.residence</groupId>
@@ -166,6 +174,13 @@
             <version>0.5.18</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/FactionsUUID-0.5.18.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.massivecraft</groupId>
+            <artifactId>FactionsUUID-0.2.1</artifactId>
+            <version>0.2.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/FactionsUUID-0.2.1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.massivecraft</groupId>
@@ -193,14 +208,6 @@
             <artifactId>Saber-Factions</artifactId>
             <version>2.4.0-RC</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>ReliableSpigot</artifactId>
-            <version>2.2</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/ReliableSpigot-Server-v2.2.jar</systemPath>
         </dependency>
 
         <!-- Spigot Jars -->

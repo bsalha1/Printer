@@ -8,16 +8,25 @@ import net.prosavage.factionsx.manager.PlayerManager;
 import net.prosavage.factionsx.util.Relation;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class FactionsHook_X implements FactionsHook {
 
     @Override
     public boolean isNonTerritoryMemberNearby(Player player) {
-        FPlayer mPlayer = PlayerManager.INSTANCE.getFPlayer(player.getUniqueId());
-        for(Player nearbyPlayer : BukkitUtil.getNearbyPlayers(player))
+        FPlayer fPlayer = PlayerManager.INSTANCE.getFPlayer(player.getUniqueId());
+        List<Player> nearbyPlayers = BukkitUtil.getNearbyPlayers(player);
+
+        // If there are >0 players and this player is not in a faction, there must be someone not from their faction nearby
+        if(nearbyPlayers.size() > 0 && (fPlayer == null || fPlayer.getFaction().isWilderness()))
         {
-            FPlayer nearbyMPlayer = PlayerManager.INSTANCE.getFPlayer(nearbyPlayer.getUniqueId());
-            if(nearbyMPlayer == null || mPlayer == null || mPlayer.getFaction().isWilderness() ||
-                    !mPlayer.getFaction().equals(nearbyMPlayer.getFaction()))
+            return true;
+        }
+
+        for(Player nearbyPlayer : nearbyPlayers)
+        {
+            FPlayer nearbyFPlayer = PlayerManager.INSTANCE.getFPlayer(nearbyPlayer.getUniqueId());
+            if(nearbyFPlayer == null || !fPlayer.getFaction().equals(nearbyFPlayer.getFaction()))
             {
                 return true;
             }
@@ -51,13 +60,18 @@ public class FactionsHook_X implements FactionsHook {
         }
 
         FPlayer fPlayer = PlayerManager.INSTANCE.getFPlayer(player.getUniqueId());
-        for(Player nearbyPlayer : BukkitUtil.getNearbyPlayers(player))
+        List<Player> nearbyPlayers = BukkitUtil.getNearbyPlayers(player);
+
+        // If there are >0 players and this player is not in a faction, there must be someone not from their faction nearby
+        if(nearbyPlayers.size() > 0 && (fPlayer == null || fPlayer.getFaction().isWilderness()))
+        {
+            return true;
+        }
+
+        for(Player nearbyPlayer : nearbyPlayers)
         {
             FPlayer nearbyFPlayer = PlayerManager.INSTANCE.getFPlayer(nearbyPlayer);
-            if(nearbyFPlayer == null ||
-                    fPlayer == null ||
-                    fPlayer.getFaction().isWilderness() ||
-                    (!fPlayer.getFaction().equals(nearbyFPlayer.getFaction()) && fPlayer.getFaction().getRelationTo(nearbyFPlayer.getFaction()) != Relation.ALLY))
+            if(nearbyFPlayer == null || (!fPlayer.getFaction().equals(nearbyFPlayer.getFaction()) && fPlayer.getFaction().getRelationTo(nearbyFPlayer.getFaction()) != Relation.ALLY))
             {
                 return true;
             }
