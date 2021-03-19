@@ -40,19 +40,7 @@ public enum Message
 
     // Faction
     ERROR_NOT_IN_TERRITORY("err-not-in-territory", "&cYou may only use printer if you're in your own territory"),
-    ERROR_NON_FACTION_MEMBER_NEARBY("err-non-faction-member-nearby", "&cSomeone who isn't from your faction is nearby"),
-
-    // Skyblock
-    ERROR_NOT_IN_ISLAND("err-not-in-island", "&cYou may only use printer if you're in your own island"),
-    ERROR_NON_ISLAND_MEMBER_NEARBY("err-non-island-member-nearby", "&cSomeone who isn't from your island is nearby"),
-
-    // Residence
-    ERROR_NOT_IN_RESIDENCE("err-not-in-residence", "&cYou may only use printer if you're in your own residence"),
-    ERROR_NON_RESIDENT_NEARBY("err-non-residence-member-nearby", "&cSomeone who isn't from your residence is nearby"),
-
-    // Lands
-    ERROR_NOT_IN_LAND("err-not-in-land", "&cYou may only use printer if you're in your own land"),
-    ERROR_NON_LAND_MEMBER_NEARBY("err-non-land-member-nearby", "&cSomeone who isn't from your land is nearby"),
+    ERROR_NON_TERRITORY_MEMBER_NEARBY("err-non-territory-member-nearby", "&cSomeone who isn't from your territory is nearby"),
 
     ERROR_BLOCK_PLACE_NOT_ALLOWED("err-block-not-allowed", "&cThis block is not allowed to be placed while printer is on"),
     ERROR_ITEM_PLACE_NOT_ALLOWED("err-item-not-allowed", "&cThis item is not allowed to be used while printer is on"),

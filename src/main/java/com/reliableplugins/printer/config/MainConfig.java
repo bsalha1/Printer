@@ -25,28 +25,14 @@ public class MainConfig extends Config
     private List<String> allowedCommands;
 
     private boolean useFactions;
-    private boolean allowInNonFaction;
+
+    private boolean allowInWilderness;
     private boolean allowNearAllies;
-    private boolean allowNearNonFactionMembers;
+    private boolean allowNearNonMembers;
 
     private boolean useShopGuiPlus;
     private boolean useZShop;
     private boolean useDynamicShop;
-
-    private boolean useBentoBox;
-    private boolean useSuperiorSkyBlock;
-    private boolean useIridiumSkyblock;
-    private boolean useASkyBlock;
-    private boolean allowInNonIsland;
-    private boolean allowNearNonIslandMembers;
-
-    private boolean useResidence;
-    private boolean allowInNonResidence;
-    private boolean allowNearNonResidenceMembers;
-
-    private boolean useLands;
-    private boolean allowInNonLand;
-    private boolean allowNearNonLandMembers;
 
     private int scoreboardMargin;
     private String scoreboardTitle;
@@ -56,6 +42,12 @@ public class MainConfig extends Config
     private String costFormat;
     private String blocksFormat;
     private String balanceFormat;
+    private boolean useSuperiorSkyBlock;
+    private boolean useIridiumSkyblock;
+    private boolean useResidence;
+    private boolean useLands;
+    private boolean useBentoBox;
+    private boolean useASkyBlock;
 
     public MainConfig()
     {
@@ -72,30 +64,22 @@ public class MainConfig extends Config
         unbreakables = getMaterialList("unbreakable-blocks", Arrays.asList(Material.BEDROCK, Material.BARRIER, Material.ENDER_PORTAL_FRAME, Material.DRAGON_EGG));
         unplaceables = getMaterialList("unplaceable-blocks", Arrays.asList(Material.POTION, Material.MONSTER_EGG));
         allowedCommands = getStringList("allowed-commands", Arrays.asList("f*", "printer*", "bal*", "tp*", "etp*", "msg % %"));
+        allowInWilderness = getBoolean("allow-in-wilderness", false);
+        allowNearNonMembers = getBoolean("allow-near-non-members", false);
 
         useFactions = getBoolean("factions.support", true);
-        allowInNonFaction = getBoolean("factions.allow-in-non-faction", false);
         allowNearAllies = getBoolean("factions.allow-near-allies", true);
-        allowNearNonFactionMembers = getBoolean("factions.allow-near-non-faction-members", false);
 
         useShopGuiPlus = getBoolean("shop.shopguiplus-support", true);
         useZShop = getBoolean("shop.zshop-support", false);
         useDynamicShop = getBoolean("shop.dynamicshop-support", false);
 
         useResidence = getBoolean("residence.support", false);
-        allowInNonResidence = getBoolean("residence.allow-in-non-residence", false);
-        allowNearNonResidenceMembers = getBoolean("residence.allow-near-non-residence-members", false);
-
         useLands = getBoolean("lands.support", false);
-        allowInNonLand = getBoolean("lands.allow-in-non-land", false);
-        allowNearNonLandMembers = getBoolean("lands.allow-near-non-land-members", false);
-
         useSuperiorSkyBlock = getBoolean("skyblock.superior-skyblock-support", false);
         useBentoBox = getBoolean("skyblock.bento-box-support", false);
         useIridiumSkyblock = getBoolean("skyblock.iridiumskyblock-support", false);
-        useASkyBlock = getBoolean("skyblock.askybock-support", false);
-        allowInNonIsland = getBoolean("skyblock.allow-in-non-island", false);
-        allowNearNonIslandMembers = getBoolean("skyblock.allow-near-non-island-members", false);
+        useASkyBlock = getBoolean("skyblock.askyblock-support", false);
 
         tooltipNotification = getBoolean("tooltip-notification.enabled", true);
         tooltipNotificationTime = getInt("tooltip-notification.seconds", 5);
@@ -175,9 +159,9 @@ public class MainConfig extends Config
         return false;
     }
 
-    public boolean allowInNonFaction()
+    public boolean allowInWilderness()
     {
-        return allowInNonFaction;
+        return allowInWilderness;
     }
 
     public boolean allowNearAllies()
@@ -185,39 +169,9 @@ public class MainConfig extends Config
         return allowNearAllies;
     }
 
-    public boolean allowNearNonFactionMembers()
+    public boolean allowNearNonMembers()
     {
-        return allowNearNonFactionMembers;
-    }
-
-    public boolean allowInNonIsland()
-    {
-        return allowInNonIsland;
-    }
-
-    public boolean allowNearNonIslandMembers()
-    {
-        return allowNearNonIslandMembers;
-    }
-
-    public boolean allowInNonResidence()
-    {
-        return allowInNonResidence;
-    }
-
-    public boolean allowNearNonResidentMembers()
-    {
-        return allowNearNonResidenceMembers;
-    }
-
-    public boolean allowInNonLand()
-    {
-        return allowInNonLand;
-    }
-
-    public boolean allowNearNonLandMembers()
-    {
-        return allowNearNonLandMembers;
+        return allowNearNonMembers;
     }
 
     public boolean useShopGuiPlus()

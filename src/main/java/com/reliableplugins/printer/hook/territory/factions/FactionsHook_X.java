@@ -6,11 +6,13 @@ import net.prosavage.factionsx.core.Faction;
 import net.prosavage.factionsx.manager.GridManager;
 import net.prosavage.factionsx.manager.PlayerManager;
 import net.prosavage.factionsx.util.Relation;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class FactionsHook_X implements FactionsHook {
+public class FactionsHook_X implements FactionsHook
+{
 
     @Override
     public boolean isNonTerritoryMemberNearby(Player player) {
@@ -45,6 +47,25 @@ public class FactionsHook_X implements FactionsHook {
         Faction faction = GridManager.INSTANCE.getFactionAt(player.getLocation().getChunk());
 
         if(fPlayer == null || faction == null || faction.isWilderness())
+        {
+            return false;
+        }
+
+        return faction.equals(fPlayer.getFaction());
+    }
+
+    @Override
+    public boolean canBuild(Player player, Location location, boolean allowWilderness)
+    {
+        FPlayer fPlayer = PlayerManager.INSTANCE.getFPlayer(player.getUniqueId());
+        Faction faction = GridManager.INSTANCE.getFactionAt(location.getChunk());
+
+        if(faction == null || faction.isWilderness())
+        {
+            return allowWilderness;
+        }
+
+        if(fPlayer == null || !fPlayer.hasFaction())
         {
             return false;
         }

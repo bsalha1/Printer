@@ -7,13 +7,11 @@
 package com.reliableplugins.printer;
 
 import com.reliableplugins.printer.commands.*;
-import com.reliableplugins.printer.config.FileManager;
-import com.reliableplugins.printer.config.MainConfig;
-import com.reliableplugins.printer.config.MessageConfig;
-import com.reliableplugins.printer.config.PricesConfig;
+import com.reliableplugins.printer.config.*;
 import com.reliableplugins.printer.exception.VaultException;
 import com.reliableplugins.printer.hook.citizens.CitizensHook;
 import com.reliableplugins.printer.hook.citizens.CitizensHook_v2_0_16;
+import com.reliableplugins.printer.hook.territory.TerritoryScanner;
 import com.reliableplugins.printer.hook.territory.factions.*;
 import com.reliableplugins.printer.hook.economy.EconomyHook;
 import com.reliableplugins.printer.hook.economy.VaultHook;
@@ -24,9 +22,7 @@ import com.reliableplugins.printer.hook.shop.ZShopHook;
 import com.reliableplugins.printer.hook.shop.shopgui.ShopGuiPlusHook_1_3_to_1_5;
 import com.reliableplugins.printer.hook.territory.TerritoryHook;
 import com.reliableplugins.printer.hook.territory.lands.LandsHook;
-import com.reliableplugins.printer.hook.territory.lands.LandsScanner;
 import com.reliableplugins.printer.hook.territory.residence.ResidenceHook;
-import com.reliableplugins.printer.hook.territory.residence.ResidenceScanner;
 import com.reliableplugins.printer.hook.territory.skyblock.*;
 import com.reliableplugins.printer.listeners.*;
 import com.reliableplugins.printer.nms.*;
@@ -34,11 +30,13 @@ import com.reliableplugins.printer.task.BukkitTask;
 import com.reliableplugins.printer.task.InventoryScanner;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 
@@ -52,14 +50,8 @@ public class Printer extends JavaPlugin
 
     // Hooks
     private CitizensHook citizensHook;
-    private FactionsHook factionsHook;
-    private TerritoryHook skyBlockHook;
-    private TerritoryHook residenceHook;
-    private TerritoryHook landsHook;
-    private BukkitTask factionScanner;
-    private BukkitTask skyblockScanner;
-    private BukkitTask residenceScanner;
-    private BukkitTask landsScanner;
+    private BukkitTask territoryScanner;
+    private BukkitTask inventoryScanner;
     private ProtocolLibHook protocolLibHook;
     private ShopHook shopHook;
     private EconomyHook economyHook;
@@ -72,6 +64,8 @@ public class Printer extends JavaPlugin
     private boolean hasResidenceHook;
     private boolean hasLandsHook;
     private boolean hasSpigot;
+
+    private ArrayList<TerritoryHook> territoryHooks;
 
     // Configs
     private FileManager fileManager;
@@ -102,6 +96,7 @@ public class Printer extends JavaPlugin
         {
             this.fileManager = setupConfigs();
             this.nmsHandler = setupNMS();
+            this.territoryHooks = new ArrayList<>();
             setupEconomyHook();
             setupCitizensHook();
             setupFactionsHook();
@@ -142,17 +137,13 @@ public class Printer extends JavaPlugin
         }
 
         // Shut off scanners
-        if(this.factionScanner != null)
+        if(this.territoryScanner != null)
         {
-            this.factionScanner.cancel();
+            this.territoryScanner.cancel();
         }
-        if(this.skyblockScanner != null)
+        if(this.inventoryScanner != null)
         {
-            this.skyblockScanner.cancel();
-        }
-        if(this.residenceScanner != null)
-        {
-            this.residenceScanner.cancel();
+            this.inventoryScanner.cancel();
         }
         getLogger().log(Level.INFO, this.getDescription().getName() + " v" + this.getDescription().getVersion() + " has been unloaded");
     }
@@ -226,29 +217,25 @@ public class Printer extends JavaPlugin
 
     public void setupSkyblockHook()
     {
+        TerritoryHook skyBlockHook = null;
+
         if(this.mainConfig.useSuperiorSkyBlock())
         {
             if(getServer().getPluginManager().isPluginEnabled("SuperiorSkyblock2"))
             {
-                this.skyBlockHook = new SuperiorSkyblockHook();
-                this.skyblockScanner = new SkyblockScanner(0L, 5L);
-                this.hasSkyblockHook = true;
+                skyBlockHook = new SuperiorSkyblockHook();
                 getLogger().log(Level.INFO, "Successfully hooked into SuperiorSkyblock2");
-                return;
             }
             else
             {
                 getLogger().log(Level.WARNING, "SuperiorSkyblock2 jar not found!");
             }
         }
-
-        if(this.mainConfig.useBentoBox())
+        else if(this.mainConfig.useBentoBox())
         {
             if(getServer().getPluginManager().isPluginEnabled("BentoBox"))
             {
-                this.skyBlockHook = new BentoBoxHook();
-                this.skyblockScanner = new SkyblockScanner(0L, 5L);
-                this.hasSkyblockHook = true;
+                skyBlockHook = new BentoBoxHook();
                 getLogger().log(Level.INFO, "Successfully hooked into BentoBox");
             }
             else
@@ -256,14 +243,11 @@ public class Printer extends JavaPlugin
                 getLogger().log(Level.WARNING, "BentoBox jar not found!");
             }
         }
-
-        if(this.mainConfig.useIridiumSkyblock())
+        else if(this.mainConfig.useIridiumSkyblock())
         {
             if(getServer().getPluginManager().isPluginEnabled("IridiumSkyblock"))
             {
-                this.skyBlockHook = new IridiumSkyblockHook();
-                this.skyblockScanner = new SkyblockScanner(0L, 5L);
-                this.hasSkyblockHook = true;
+                skyBlockHook = new IridiumSkyblockHook();
                 getLogger().log(Level.INFO, "Successfully hooked into IridiumSkyblock");
             }
             else
@@ -271,14 +255,11 @@ public class Printer extends JavaPlugin
                 getLogger().log(Level.WARNING, "IridiumSkyblock jar not found!");
             }
         }
-
-        if(this.mainConfig.useASkyBlock())
+        else if(this.mainConfig.useASkyBlock())
         {
             if(getServer().getPluginManager().isPluginEnabled("ASkyBlock"))
             {
-                this.skyBlockHook = new ASkyBlockHook();
-                this.skyblockScanner = new SkyblockScanner(0L, 5L);
-                this.hasSkyblockHook = true;
+                skyBlockHook = new ASkyBlockHook();
                 getLogger().log(Level.INFO, "Successfully hooked into ASkyBlock");
             }
             else
@@ -287,6 +268,11 @@ public class Printer extends JavaPlugin
             }
         }
 
+        if(skyBlockHook != null)
+        {
+            this.hasSkyblockHook = true;
+            this.territoryHooks.add(skyBlockHook);
+        }
     }
 
     public void setupResidenceHook()
@@ -302,9 +288,8 @@ public class Printer extends JavaPlugin
             return;
         }
 
-        this.residenceHook = new ResidenceHook();
-        this.residenceScanner = new ResidenceScanner(0L, 5L);
         this.hasResidenceHook = true;
+        this.territoryHooks.add(new ResidenceHook());
         getLogger().log(Level.INFO, "Successfully hooked into Residence");
     }
 
@@ -321,9 +306,8 @@ public class Printer extends JavaPlugin
             return;
         }
 
-        this.landsHook = new LandsHook();
-        this.landsScanner = new LandsScanner(0L, 5L);
         this.hasLandsHook = true;
+        this.territoryHooks.add(new LandsHook());
         getLogger().log(Level.INFO, "Successfully hooked into Lands");
 
     }
@@ -398,6 +382,8 @@ public class Printer extends JavaPlugin
 
     public void setupFactionsHook()
     {
+        FactionsHook factionsHook = null;
+
         if(!this.mainConfig.useFactions())
         {
             return;
@@ -405,17 +391,20 @@ public class Printer extends JavaPlugin
 
         if (getServer().getPluginManager().isPluginEnabled("FactionsX"))
         {
-            this.factionsHook = new FactionsHook_X();
+            factionsHook = new FactionsHook_X();
+            getLogger().log(Level.INFO, "Successfully hooked into FactionsX");
         }
         else if(getServer().getPluginManager().isPluginEnabled("Factions"))
         {
             if(getServer().getPluginManager().getPlugin("Factions").getDescription().getDepend().contains("MassiveCore"))
             {
-                this.factionsHook = new FactionsHook_MassiveCraft();
+                factionsHook = new FactionsHook_MassiveCraft();
+                getLogger().log(Level.INFO, "Successfully hooked into MassiveCraft Factions");
             }
             else
             {
-                this.factionsHook = new FactionsHook_UUID();
+                factionsHook = new FactionsHook_UUID();
+                getLogger().log(Level.INFO, "Successfully hooked into FactionsUUID");
             }
         }
         else
@@ -424,9 +413,8 @@ public class Printer extends JavaPlugin
             return;
         }
 
-        this.factionScanner = new FactionsScanner(0L, 5L);
         this.hasFactionsHook = true;
-        getLogger().log(Level.INFO, "Successfully hooked into Factions");
+        this.territoryHooks.add(factionsHook);
     }
 
     public void setupCitizensHook()
@@ -473,7 +461,8 @@ public class Printer extends JavaPlugin
 
     private void setupTasks()
     {
-        new InventoryScanner(0L, 1L);
+        this.territoryScanner = new TerritoryScanner(0, 5L);
+        this.inventoryScanner = new InventoryScanner(0L, 1L);
     }
 
     private void setupCommands()
@@ -555,19 +544,9 @@ public class Printer extends JavaPlugin
         return this.hasSpigot;
     }
 
-    public FactionsHook getFactionsHook()
-    {
-        return this.factionsHook;
-    }
-
     public CitizensHook getCitizensHook()
     {
         return this.citizensHook;
-    }
-
-    public TerritoryHook getSkyblockHook()
-    {
-        return this.skyBlockHook;
     }
 
     public EconomyHook getEconomyHook()
@@ -575,13 +554,36 @@ public class Printer extends JavaPlugin
         return this.economyHook;
     }
 
-    public TerritoryHook getResidenceHook()
+    public boolean isTerritoryRestricted(Player player, Location location)
     {
-        return this.residenceHook;
+        for(TerritoryHook hook : this.territoryHooks)
+        {
+            if(!hook.canBuild(player, location, this.mainConfig.allowInWilderness()))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public TerritoryHook getLandsHook()
+    public boolean isTerritoryRestricted(Player player)
     {
-        return landsHook;
+        for(TerritoryHook hook : this.territoryHooks)
+        {
+            // If player isn't in their own territory and they aren't in wilderness (if they're allowed)
+            if(!hook.isInOwnTerritory(player) &&
+                    (hook.isInATerritory(player) || !Printer.INSTANCE.getMainConfig().allowInWilderness()))
+            {
+                Message.ERROR_NOT_IN_TERRITORY.sendColoredMessage(player);
+                return true;
+            }
+            else if(!Printer.INSTANCE.getMainConfig().allowNearNonMembers() &&
+                    (hook instanceof FactionsHook ? ((FactionsHook) hook).isNonTerritoryMemberNearby(player, this.mainConfig.allowNearAllies()) : hook.isNonTerritoryMemberNearby(player)))
+            {
+                Message.ERROR_NON_TERRITORY_MEMBER_NEARBY.sendColoredMessage(player);
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -12,6 +12,7 @@ import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.MPlayer;
 import com.massivecraft.massivecore.ps.PS;
 import com.reliableplugins.printer.utils.BukkitUtil;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public class FactionsHook_MassiveCraft implements FactionsHook
@@ -45,6 +46,25 @@ public class FactionsHook_MassiveCraft implements FactionsHook
         Faction faction = BoardColl.get().getFactionAt(PS.valueOf(player.getLocation()));
 
         if(fPlayer == null || faction == null || faction.isNone())
+        {
+            return false;
+        }
+
+        return faction.equals(fPlayer.getFaction());
+    }
+
+    @Override
+    public boolean canBuild(Player player, Location location, boolean allowWilderness)
+    {
+        MPlayer fPlayer = MPlayer.get(player);
+        Faction faction = BoardColl.get().getFactionAt(PS.valueOf(location));
+
+        if(faction == null || faction.isNone())
+        {
+            return allowWilderness;
+        }
+
+        if(fPlayer == null || !fPlayer.hasFaction())
         {
             return false;
         }

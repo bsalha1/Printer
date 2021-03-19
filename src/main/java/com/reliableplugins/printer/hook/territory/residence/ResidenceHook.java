@@ -5,6 +5,7 @@ import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.reliableplugins.printer.hook.territory.TerritoryHook;
 import com.reliableplugins.printer.utils.BukkitUtil;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public class ResidenceHook implements TerritoryHook
@@ -48,5 +49,24 @@ public class ResidenceHook implements TerritoryHook
         }
 
         return rPlayer.getMainResidence() == null || rPlayer.getMainResidence().getResidenceName().equals(currentResidence.getResidenceName());
+    }
+
+    @Override
+    public boolean canBuild(Player player, Location location, boolean allowWilderness)
+    {
+        ResidencePlayer rPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
+        ClaimedResidence currentResidence = Residence.getInstance().getResidenceManager().getByLoc(location);
+
+        if(currentResidence == null)
+        {
+            return allowWilderness;
+        }
+
+        if(rPlayer == null)
+        {
+            return false;
+        }
+
+        return currentResidence.equals(rPlayer.getMainResidence());
     }
 }

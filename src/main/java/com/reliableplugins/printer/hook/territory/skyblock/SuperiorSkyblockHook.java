@@ -11,6 +11,7 @@ import com.bgsoftware.superiorskyblock.api.island.Island;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.reliableplugins.printer.hook.territory.TerritoryHook;
 import com.reliableplugins.printer.utils.BukkitUtil;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -57,6 +58,25 @@ public class SuperiorSkyblockHook implements TerritoryHook
         {
             return false;
         }
+        return currentIsland.equals(superiorPlayer.getIsland());
+    }
+
+    @Override
+    public boolean canBuild(Player player, Location location, boolean allowWilderness)
+    {
+        Island currentIsland = SuperiorSkyblockAPI.getIslandAt(location);
+        SuperiorPlayer superiorPlayer = SuperiorSkyblockAPI.getPlayer(player);
+
+        if(currentIsland == null)
+        {
+            return allowWilderness;
+        }
+
+        if(superiorPlayer == null)
+        {
+            return false;
+        }
+
         return currentIsland.equals(superiorPlayer.getIsland());
     }
 }

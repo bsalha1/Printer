@@ -5,6 +5,7 @@ import com.iridium.iridiumskyblock.Island;
 import com.iridium.iridiumskyblock.User;
 import com.reliableplugins.printer.hook.territory.TerritoryHook;
 import com.reliableplugins.printer.utils.BukkitUtil;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -50,6 +51,25 @@ public class IridiumSkyblockHook implements TerritoryHook
         Island currentIsland = IridiumSkyblock.getIslandManager().getIslandViaLocation(player.getLocation());
         User user = getUser(player);
         if(user == null || currentIsland == null)
+        {
+            return false;
+        }
+
+        return currentIsland.equals(user.getIsland());
+    }
+
+    @Override
+    public boolean canBuild(Player player, Location location, boolean allowWilderness)
+    {
+        Island currentIsland = IridiumSkyblock.getIslandManager().getIslandViaLocation(location);
+        User user = getUser(player);
+
+        if(currentIsland == null)
+        {
+            return allowWilderness;
+        }
+
+        if(user == null)
         {
             return false;
         }

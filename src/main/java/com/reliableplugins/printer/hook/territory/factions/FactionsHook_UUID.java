@@ -10,7 +10,7 @@ import com.massivecraft.factions.*;
 import com.massivecraft.factions.iface.RelationParticipator;
 import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.utils.BukkitUtil;
-import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
@@ -70,6 +70,25 @@ public class FactionsHook_UUID implements FactionsHook
         Faction faction = Board.getInstance().getFactionAt(new FLocation(player.getLocation()));
 
         if(fPlayer == null || faction == null || faction.isWilderness())
+        {
+            return false;
+        }
+
+        return faction.equals(fPlayer.getFaction());
+    }
+
+    @Override
+    public boolean canBuild(Player player, Location location, boolean allowWilderness)
+    {
+        FPlayer fPlayer = FPlayers.getInstance().getByPlayer(player);
+        Faction faction = Board.getInstance().getFactionAt(new FLocation(location));
+
+        if(faction == null || faction.isWilderness())
+        {
+            return allowWilderness;
+        }
+
+        if(fPlayer == null || fPlayer.hasFaction())
         {
             return false;
         }

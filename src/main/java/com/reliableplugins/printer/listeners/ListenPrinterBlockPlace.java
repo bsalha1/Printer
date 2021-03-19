@@ -11,6 +11,7 @@ import com.reliableplugins.printer.PrinterPlayer;
 import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.type.ColoredMaterial;
 import com.reliableplugins.printer.utils.BukkitUtil;
+import com.sun.org.apache.xml.internal.security.keys.content.keyvalues.ECKeyValue;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -35,6 +36,13 @@ public class ListenPrinterBlockPlace implements Listener
         {
             event.setCancelled(true);
             Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.sendColoredMessage(event.getPlayer());
+            return;
+        }
+
+        if(Printer.INSTANCE.isTerritoryRestricted(player.getPlayer(), event.getBlock().getLocation()))
+        {
+            event.setCancelled(true);
+            Message.ERROR_NOT_IN_TERRITORY.sendColoredMessage(event.getPlayer());
             return;
         }
 
@@ -107,6 +115,14 @@ public class ListenPrinterBlockPlace implements Listener
         {
             event.setCancelled(true);
             Message.ERROR_BLOCK_PLACE_NOT_ALLOWED.sendColoredMessage(player.getPlayer());
+            return;
+        }
+
+        if(Printer.INSTANCE.isTerritoryRestricted(player.getPlayer(),
+                event.getClickedBlock() != null ? event.getClickedBlock().getLocation() : player.getPlayer().getLocation()))
+        {
+            event.setCancelled(true);
+            Message.ERROR_NOT_IN_TERRITORY.sendColoredMessage(event.getPlayer());
             return;
         }
 

@@ -12,6 +12,7 @@ import com.reliableplugins.printer.utils.BukkitUtil;
 import me.angeschossen.lands.api.integration.LandsIntegration;
 import me.angeschossen.lands.api.land.Land;
 import me.angeschossen.lands.api.player.LandPlayer;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -53,8 +54,11 @@ public class LandsHook implements TerritoryHook
     public boolean isInATerritory(Player player)
     {
         Land currentLand = this.landsIntegration.getLand(player.getLocation());
-        return currentLand != null && currentLand.exists();
+        boolean ret = currentLand != null && currentLand.exists();
+        System.out.println("IsInATerritory: in " + (currentLand != null ? currentLand.getName() : "null") + ret);
+        return ret;
     }
+
 
     @Override
     public boolean isInOwnTerritory(Player player)
@@ -62,6 +66,25 @@ public class LandsHook implements TerritoryHook
         LandPlayer landPlayer = this.landsIntegration.getLandPlayer(player.getUniqueId());
         Land currentLand = this.landsIntegration.getLand(player.getLocation());
         return landPlayer != null && landPlayer.getLands().contains(currentLand);
+    }
+
+    @Override
+    public boolean canBuild(Player player, Location location, boolean allowWilderness)
+    {
+        LandPlayer landPlayer = this.landsIntegration.getLandPlayer(player.getUniqueId());
+        Land currentLand = this.landsIntegration.getLand(location);
+
+        if(currentLand == null || currentLand.exists())
+        {
+            return allowWilderness;
+        }
+
+        if(landPlayer == null)
+        {
+            return false;
+        }
+
+        return landPlayer.getLands().contains(currentLand);
     }
 
     private boolean hasCommonLand(LandPlayer landPlayer1, LandPlayer landPlayer2)
