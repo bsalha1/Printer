@@ -33,7 +33,7 @@ public class LandsHook implements TerritoryHook
         List<Player> nearbyPlayers = BukkitUtil.getNearbyPlayers(player);
 
         // If there are >0 players and this player doesn't own land, there must be a non-land member nearby
-        if(nearbyPlayers.size() > 0 && (landPlayer == null || !landPlayer.ownsLand()))
+        if(nearbyPlayers.size() > 0 && (landPlayer == null || !landPlayer.ownsLand() || landPlayer.getOwningLand() == null))
         {
             return true;
         }
@@ -41,7 +41,7 @@ public class LandsHook implements TerritoryHook
         for(Player nearbyPlayer : nearbyPlayers)
         {
             LandPlayer nearbyLandPlayer = this.landsIntegration.getLandPlayer(nearbyPlayer.getUniqueId());
-            if(nearbyLandPlayer == null || !hasCommonLand(landPlayer, nearbyLandPlayer))
+            if(nearbyLandPlayer == null || !landPlayer.getOwningLand().equals(nearbyLandPlayer.getOwningLand()))
             {
                 return true;
             }
@@ -53,10 +53,7 @@ public class LandsHook implements TerritoryHook
     @Override
     public boolean isInATerritory(Player player)
     {
-        Land currentLand = this.landsIntegration.getLand(player.getLocation());
-        boolean ret = currentLand != null && currentLand.exists();
-        System.out.println("IsInATerritory: in " + (currentLand != null ? currentLand.getName() : "null") + ret);
-        return ret;
+        return this.landsIntegration.isClaimed(player.getLocation());
     }
 
 
@@ -84,18 +81,6 @@ public class LandsHook implements TerritoryHook
             return false;
         }
 
-        return landPlayer.getLands().contains(currentLand);
-    }
-
-    private boolean hasCommonLand(LandPlayer landPlayer1, LandPlayer landPlayer2)
-    {
-        for(Land land : landPlayer1.getLands())
-        {
-            if(landPlayer2.getLands().contains(land))
-            {
-                return true;
-            }
-        }
-        return false;
+        return currentLand.equals(landPlayer.getOwningLand());
     }
 }

@@ -7,7 +7,6 @@
 package com.reliableplugins.printer.commands;
 
 import com.reliableplugins.printer.Printer;
-import com.reliableplugins.printer.annotation.CommandBuilder;
 import com.reliableplugins.printer.config.Message;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,9 +14,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 
-@CommandBuilder(label = "reload", permission = "printer.reload", description = "Reloads the printer configs")
 public class CommandReload extends Command
 {
+    public CommandReload()
+    {
+        super("reload", "printer.reload", "Reloads the printer configs", false, new String[]{"r"});
+    }
+
     @Override
     public void execute(CommandSender executor, String[] args)
     {

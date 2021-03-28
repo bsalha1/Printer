@@ -22,6 +22,7 @@ public enum Message
     HELP_PRINTER_HEADER("help-printer-header", "&7&m----------&7[ &dPrinter &r&f{PAGE}&7/&f{NUM_PAGES}&7]&m----------"),
     HELP_PRINTER_ON("help-printer-on", "&d/printer on &7Turns printer on"),
     HELP_PRINTER_OFF("help-printer-off", "&d/printer off &7Turns printer off"),
+    HELP_PRINTER_TOGGLE("help-printer-toggle", "&d/printer toggle &7Toggles current state of printer"),
     HELP_PRINTER_RELOAD("help-printer-reload", "&d/printer reload &7Reloads printer configs"),
     HELP_PRINTER_VERSION("help-printer-version", "&d/printer version &7Display printer version"),
 

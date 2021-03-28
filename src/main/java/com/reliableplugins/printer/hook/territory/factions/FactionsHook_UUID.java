@@ -88,7 +88,7 @@ public class FactionsHook_UUID implements FactionsHook
             return allowWilderness;
         }
 
-        if(fPlayer == null || fPlayer.hasFaction())
+        if(fPlayer == null || !fPlayer.hasFaction())
         {
             return false;
         }

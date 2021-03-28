@@ -7,13 +7,16 @@
 package com.reliableplugins.printer.commands;
 
 import com.reliableplugins.printer.Printer;
-import com.reliableplugins.printer.annotation.CommandBuilder;
 import com.reliableplugins.printer.config.Message;
 import org.bukkit.command.CommandSender;
 
-@CommandBuilder(label = "version", alias = "v", permission = "printer.version", playerRequired = false, description = "Get current version of Printer")
 public class CommandVersion extends Command
 {
+    public CommandVersion()
+    {
+        super("version", "printer.version", "Get current version of Printer", false, new String[]{"v"});
+    }
+
     @Override
     public void execute(CommandSender executor, String[] args)
     {

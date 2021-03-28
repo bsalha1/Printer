@@ -1,10 +1,7 @@
 package com.reliableplugins.printer.hook.economy;
 
-import com.reliableplugins.printer.Printer;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
-
-import java.util.concurrent.Executors;
 
 public class VaultHook implements EconomyHook
 {

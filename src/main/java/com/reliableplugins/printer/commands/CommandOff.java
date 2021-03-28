@@ -7,14 +7,17 @@
 package com.reliableplugins.printer.commands;
 
 import com.reliableplugins.printer.PrinterPlayer;
-import com.reliableplugins.printer.annotation.CommandBuilder;
 import com.reliableplugins.printer.config.Message;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-@CommandBuilder(label = "off", description = "Turns off printer", permission = "printer.off", playerRequired = true)
 public class CommandOff extends Command
 {
+    public CommandOff()
+    {
+        super("off", "printer.off", "Turns off printer", true, new String[0]);
+    }
+
     @Override
     public void execute(CommandSender executor, String[] args)
     {

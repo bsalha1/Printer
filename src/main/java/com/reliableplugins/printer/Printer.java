@@ -11,19 +11,25 @@ import com.reliableplugins.printer.config.*;
 import com.reliableplugins.printer.exception.VaultException;
 import com.reliableplugins.printer.hook.citizens.CitizensHook;
 import com.reliableplugins.printer.hook.citizens.CitizensHook_v2_0_16;
-import com.reliableplugins.printer.hook.territory.TerritoryScanner;
-import com.reliableplugins.printer.hook.territory.factions.*;
 import com.reliableplugins.printer.hook.economy.EconomyHook;
 import com.reliableplugins.printer.hook.economy.VaultHook;
 import com.reliableplugins.printer.hook.packets.ProtocolLibHook;
-import com.reliableplugins.printer.hook.shop.ShopHook;
 import com.reliableplugins.printer.hook.shop.DynamicShopHook;
+import com.reliableplugins.printer.hook.shop.ShopHook;
 import com.reliableplugins.printer.hook.shop.ZShopHook;
 import com.reliableplugins.printer.hook.shop.shopgui.ShopGuiPlusHook_1_3_to_1_5;
 import com.reliableplugins.printer.hook.territory.TerritoryHook;
+import com.reliableplugins.printer.hook.territory.TerritoryScanner;
+import com.reliableplugins.printer.hook.territory.factions.FactionsHook;
+import com.reliableplugins.printer.hook.territory.factions.FactionsHook_MassiveCraft;
+import com.reliableplugins.printer.hook.territory.factions.FactionsHook_UUID;
+import com.reliableplugins.printer.hook.territory.factions.FactionsHook_X;
 import com.reliableplugins.printer.hook.territory.lands.LandsHook;
 import com.reliableplugins.printer.hook.territory.residence.ResidenceHook;
-import com.reliableplugins.printer.hook.territory.skyblock.*;
+import com.reliableplugins.printer.hook.territory.skyblock.ASkyBlockHook;
+import com.reliableplugins.printer.hook.territory.skyblock.BentoBoxHook;
+import com.reliableplugins.printer.hook.territory.skyblock.IridiumSkyblockHook;
+import com.reliableplugins.printer.hook.territory.skyblock.SuperiorSkyblockHook;
 import com.reliableplugins.printer.listeners.*;
 import com.reliableplugins.printer.nms.*;
 import com.reliableplugins.printer.task.BukkitTask;
@@ -131,9 +137,12 @@ public class Printer extends JavaPlugin
             }
         }
 
-        for(Player player : Bukkit.getOnlinePlayers())
+        if(this.packetListenerManager != null)
         {
-            this.packetListenerManager.removePlayer(player);
+            for(Player player : Bukkit.getOnlinePlayers())
+            {
+                this.packetListenerManager.removePlayer(player);
+            }
         }
 
         // Shut off scanners
@@ -470,6 +479,7 @@ public class Printer extends JavaPlugin
         this.commandHandler = new CommandHandler("printer");
         this.commandHandler.addCommand(new CommandOn());
         this.commandHandler.addCommand(new CommandOff());
+        this.commandHandler.addCommand(new CommandToggle());
         this.commandHandler.addCommand(new CommandReload());
         this.commandHandler.addCommand(new CommandVersion());
     }

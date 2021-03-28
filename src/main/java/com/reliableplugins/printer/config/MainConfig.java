@@ -61,11 +61,11 @@ public class MainConfig extends Config
         onlyBreakPlaced = getBoolean("only-break-placed", true);
         requireEmptyInventory = getBoolean("require-empty-inventory", false);
         checkRadius = getInt("player-check-radius", 64);
+        allowInWilderness = getBoolean("allow-in-wilderness", false);
+        allowNearNonMembers = getBoolean("allow-near-non-members", false);
         unbreakables = getMaterialList("unbreakable-blocks", Arrays.asList(Material.BEDROCK, Material.BARRIER, Material.ENDER_PORTAL_FRAME, Material.DRAGON_EGG));
         unplaceables = getMaterialList("unplaceable-blocks", Arrays.asList(Material.POTION, Material.MONSTER_EGG));
         allowedCommands = getStringList("allowed-commands", Arrays.asList("f*", "printer*", "bal*", "tp*", "etp*", "msg % %"));
-        allowInWilderness = getBoolean("allow-in-wilderness", false);
-        allowNearNonMembers = getBoolean("allow-near-non-members", false);
 
         useFactions = getBoolean("factions.support", true);
         allowNearAllies = getBoolean("factions.allow-near-allies", true);

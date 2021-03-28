@@ -9,8 +9,6 @@ package com.reliableplugins.printer.type;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashSet;
-
 public enum ColoredMaterial
 {
     // Wool

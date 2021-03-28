@@ -8,15 +8,18 @@ package com.reliableplugins.printer.commands;
 
 import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.PrinterPlayer;
-import com.reliableplugins.printer.annotation.CommandBuilder;
 import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-@CommandBuilder(label = "on", description = "Turns on printer", permission = "printer.on", playerRequired = true)
 public class CommandOn extends Command
 {
+    public CommandOn()
+    {
+        super("on", "printer.on", "Turns on printer", true, new String[0]);
+    }
+
     @Override
     public void execute(CommandSender executor, String[] args)
     {
@@ -24,8 +27,7 @@ public class CommandOn extends Command
         PrinterPlayer printerPlayer = PrinterPlayer.fromPlayer(player);
         if(printerPlayer == null)
         {
-            PrinterPlayer.addPlayer(player);
-            printerPlayer = PrinterPlayer.fromPlayer(player);
+            printerPlayer = PrinterPlayer.addPlayer(player);
         }
         else if(printerPlayer.isPrinting())
         {

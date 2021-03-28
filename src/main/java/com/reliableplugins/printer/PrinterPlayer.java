@@ -61,11 +61,17 @@ public class PrinterPlayer
         return Printer.INSTANCE.printerPlayers.get(player);
     }
 
-    public static void addPlayer(Player player)
+    public static PrinterPlayer addPlayer(Player player)
     {
         if(!Printer.INSTANCE.printerPlayers.containsKey(player))
         {
-            Printer.INSTANCE.printerPlayers.put(player, new PrinterPlayer(player));
+            PrinterPlayer printerPlayer = new PrinterPlayer(player);
+            Printer.INSTANCE.printerPlayers.put(player, printerPlayer);
+            return printerPlayer;
+        }
+        else
+        {
+            return PrinterPlayer.fromPlayer(player);
         }
     }
 

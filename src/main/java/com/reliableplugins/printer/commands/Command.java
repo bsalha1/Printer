@@ -7,7 +7,6 @@
 package com.reliableplugins.printer.commands;
 
 import com.google.common.collect.Sets;
-import com.reliableplugins.printer.annotation.CommandBuilder;
 import org.bukkit.command.CommandSender;
 
 import java.util.Set;
@@ -20,13 +19,13 @@ public abstract class Command
     private final String description;
     private final boolean playerRequired;
 
-    public Command()
+    public Command(String label, String permission, String description, boolean playerRequired, String[] alias)
     {
-        this.label = getClass().getAnnotation(CommandBuilder.class).label();
-        this.alias = getClass().getAnnotation(CommandBuilder.class).alias();
-        this.permission = getClass().getAnnotation(CommandBuilder.class).permission();
-        this.description = getClass().getAnnotation(CommandBuilder.class).description();
-        this.playerRequired = getClass().getAnnotation(CommandBuilder.class).playerRequired();
+        this.label = label;
+        this.permission = permission;
+        this.description = description;
+        this.playerRequired = playerRequired;
+        this.alias = alias;
     }
 
     public abstract void execute(CommandSender executor, String[] args);

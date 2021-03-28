@@ -35,6 +35,10 @@ public class ListenPluginLoad implements Listener
         {
             Printer.INSTANCE.setupResidenceHook();
         }
+        else if(!Printer.INSTANCE.hasLandsHook() && name.contains("Lands"))
+        {
+            Printer.INSTANCE.setupLandsHook();
+        }
         else if(!Printer.INSTANCE.hasSkyblockHook() &&
                 (name.contains("SuperiorSkyblock") || name.contains("BentoBox") || name.contains("IridiumSkyblock") ||
                  name.contains("ASkyBlock")))

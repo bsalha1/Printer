@@ -6,18 +6,17 @@
 
 package com.reliableplugins.printer.commands;
 
-import com.reliableplugins.printer.annotation.CommandBuilder;
 import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.utils.BukkitUtil;
 import org.bukkit.command.CommandSender;
 
-@CommandBuilder(label = "help", alias = {"h"})
 public class CommandHelp extends Command
 {
     private final CommandHandler baseCommand;
 
     public CommandHelp(CommandHandler baseCommand)
     {
+        super("help", "", "The help command for Printer", false, new String[0]);
         this.baseCommand = baseCommand;
     }
 
