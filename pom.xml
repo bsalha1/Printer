@@ -166,6 +166,20 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/Residence4.9.2.1.jar</systemPath>
         </dependency>
+        
+        <!-- GriefDefender -->
+        <dependency>
+            <groupId>com.github.bloodmc</groupId>
+            <artifactId>GriefDefenderApi</artifactId>
+            <version>920a610</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+			<groupId>com.flowpowered</groupId>
+			<artifactId>flow-math</artifactId>
+			<version>1.0.3</version>
+		</dependency>
 
         <!-- Factions -->
         <dependency>

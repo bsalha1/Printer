@@ -46,6 +46,7 @@ public class MainConfig extends Config
     private boolean useIridiumSkyblock;
     private boolean useResidence;
     private boolean useLands;
+    private boolean useGriefDefender;
     private boolean useBentoBox;
     private boolean useASkyBlock;
 
@@ -76,6 +77,7 @@ public class MainConfig extends Config
 
         useResidence = getBoolean("residence.support", false);
         useLands = getBoolean("lands.support", false);
+        useGriefDefender = getBoolean("griefdefender.support", false);
         useSuperiorSkyBlock = getBoolean("skyblock.superior-skyblock-support", false);
         useBentoBox = getBoolean("skyblock.bento-box-support", false);
         useIridiumSkyblock = getBoolean("skyblock.iridiumskyblock-support", false);
@@ -222,6 +224,11 @@ public class MainConfig extends Config
     public boolean useLands()
     {
         return useLands;
+    }
+
+    public boolean useGriefDefender()
+    {
+        return useGriefDefender;
     }
 
     public String getScoreboardTitle()

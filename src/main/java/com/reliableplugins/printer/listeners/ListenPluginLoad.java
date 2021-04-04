@@ -39,6 +39,10 @@ public class ListenPluginLoad implements Listener
         {
             Printer.INSTANCE.setupLandsHook();
         }
+        else if(!Printer.INSTANCE.hasGriefDefenderHook() && name.contains("GriefDefender"))
+        {
+            Printer.INSTANCE.setupGriefDefenderHook();
+        }
         else if(!Printer.INSTANCE.hasSkyblockHook() &&
                 (name.contains("SuperiorSkyblock") || name.contains("BentoBox") || name.contains("IridiumSkyblock") ||
                  name.contains("ASkyBlock")))
