@@ -66,23 +66,23 @@ public class PricesConfig extends Config
                         continue;
                     }
 
-                    if(BukkitUtil.isItemBlock(material))
+                    if(BukkitUtil.isItemOfBlock(material))
                     {
                         itemPrices.put(material, price);
 
                         // If item has a corresponding block, add it
-                        Material itemMaterialBlock = BukkitUtil.getBlock(material);
+                        Material itemMaterialBlock = BukkitUtil.getBlockOfItem(material);
                         if(itemMaterialBlock != null)
                         {
                             blockPrices.put(itemMaterialBlock, price);
                         }
                     }
-                    else if(BukkitUtil.isBlock(material))
+                    else if(BukkitUtil.isBlockOfItem(material))
                     {
                         blockPrices.put(material, price);
 
                         // If block has a corresponding item, add it
-                        Material itemMaterial = BukkitUtil.getItem(material);
+                        Material itemMaterial = BukkitUtil.getItemOfBlock(material);
                         if(itemMaterial != null)
                         {
                             itemPrices.put(itemMaterial, price);

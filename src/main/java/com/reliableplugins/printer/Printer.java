@@ -34,10 +34,14 @@ import com.reliableplugins.printer.listeners.*;
 import com.reliableplugins.printer.nms.*;
 import com.reliableplugins.printer.task.BukkitTask;
 import com.reliableplugins.printer.task.InventoryScanner;
+import com.reliableplugins.printer.type.ColoredMaterial;
+import com.reliableplugins.printer.utils.BukkitUtil;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -391,7 +395,7 @@ public class Printer extends JavaPlugin
 
     public void setupFactionsHook()
     {
-        FactionsHook factionsHook = null;
+        FactionsHook factionsHook;
 
         if(!this.mainConfig.useFactions())
         {
@@ -482,6 +486,89 @@ public class Printer extends JavaPlugin
         this.commandHandler.addCommand(new CommandToggle());
         this.commandHandler.addCommand(new CommandReload());
         this.commandHandler.addCommand(new CommandVersion());
+    }
+
+    public Double getPrice(ItemStack itemStack)
+    {
+        Material material = itemStack.getType();
+        if(BukkitUtil.isItemOfBlock(material))
+        {
+            material = BukkitUtil.getBlockOfItem(material);
+        }
+        ColoredMaterial coloredMaterial = ColoredMaterial.fromItemstack(itemStack);
+
+        // Get Price
+        // - Prioritize colored price, then uncolored price, then shopgui price
+        //   . We want to sell the blue wool for price of blue wool not for the price of uncolored wool
+        //   . We want our prices.yml to overwrite ShopGUIPlus
+        Double price = null;
+        if(coloredMaterial != null && Printer.INSTANCE.getPricesConfig().getColoredPrices().containsKey(coloredMaterial))
+        {
+            price = Printer.INSTANCE.getPricesConfig().getColoredPrices().get(coloredMaterial);
+        }
+        else if(Printer.INSTANCE.getPricesConfig().getBlockPrices().containsKey(material))
+        {
+            price = Printer.INSTANCE.getPricesConfig().getBlockPrices().get(material);
+        }
+        else if(Printer.INSTANCE.hasShopHook())
+        {
+            ItemStack item = itemStack.clone();
+            item.setAmount(1);
+            price = Printer.INSTANCE.getShopHook().getCachedPrice(item);
+            price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
+        }
+        return price;
+    }
+
+
+    public Double getItemBlockPrice(ItemStack itemStack)
+    {
+        Double price = null;
+
+        if(Printer.INSTANCE.getPricesConfig().getItemPrices().containsKey(itemStack.getType()))
+        {
+            price = Printer.INSTANCE.getPricesConfig().getItemPrices().get(itemStack.getType());
+        }
+        else if(Printer.INSTANCE.hasShopHook())
+        {
+            ItemStack toPlaceCopy = itemStack.clone();
+            toPlaceCopy.setAmount(1);
+            price = Printer.INSTANCE.getShopHook().getCachedPrice(toPlaceCopy);
+            price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
+        }
+        return price;
+    }
+
+    public Double getItemBlockPrice(Material material)
+    {
+        ItemStack itemStack = new ItemStack(material, 1);
+        return getItemBlockPrice(itemStack);
+    }
+
+    public Double getPrice(Material material, byte data)
+    {
+        Double price = null;
+        ColoredMaterial coloredMaterial = ColoredMaterial.fromMaterial(material, data);
+
+        // Get Price
+        // - Prioritize colored price, then uncolored price, then shopgui price
+        //   . We want to sell the blue wool for price of blue wool not for the price of uncolored wool
+        //   . We want our prices.yml to overwrite ShopGUIPlus
+        if(coloredMaterial != null && Printer.INSTANCE.getPricesConfig().getColoredPrices().containsKey(coloredMaterial))
+        {
+            price = Printer.INSTANCE.getPricesConfig().getColoredPrices().get(coloredMaterial);
+        }
+        else if(Printer.INSTANCE.getPricesConfig().getBlockPrices().containsKey(material))
+        {
+            price = Printer.INSTANCE.getPricesConfig().getBlockPrices().get(material);
+        }
+        else if(Printer.INSTANCE.hasShopHook())
+        {
+            ItemStack item = new ItemStack(material, 1);
+            price = Printer.INSTANCE.getShopHook().getCachedPrice(item);
+            price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
+        }
+        return price;
     }
 
     public String getVersion()

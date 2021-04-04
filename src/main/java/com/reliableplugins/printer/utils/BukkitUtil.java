@@ -67,22 +67,22 @@ public class BukkitUtil
         return noBlockPlaceItems.contains(material);
     }
 
-    public static boolean isItemBlock(Material material)
+    public static boolean isItemOfBlock(Material material)
     {
         return itemToBlockMap.containsKey(material);
     }
 
-    public static boolean isBlock(Material material)
+    public static boolean isBlockOfItem(Material material)
     {
         return itemToBlockMap.containsValue(material);
     }
 
-    public static Material getBlock(Material item)
+    public static Material getBlockOfItem(Material item)
     {
         return itemToBlockMap.get(item);
     }
 
-    public static Material getItem(Material block)
+    public static Material getItemOfBlock(Material block)
     {
         for (Map.Entry<Material, Material> entry : itemToBlockMap.entrySet())
         {

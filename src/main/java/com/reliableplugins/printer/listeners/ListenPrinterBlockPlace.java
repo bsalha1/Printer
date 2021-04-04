@@ -9,8 +9,8 @@ package com.reliableplugins.printer.listeners;
 import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.PrinterPlayer;
 import com.reliableplugins.printer.config.Message;
-import com.reliableplugins.printer.type.ColoredMaterial;
 import com.reliableplugins.printer.utils.BukkitUtil;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -44,28 +44,7 @@ public class ListenPrinterBlockPlace implements Listener
             return;
         }
 
-        // Get Price
-        // - Prioritize colored price, then uncolored price, then shopgui price
-        //   . We want to sell the blue wool for price of blue wool not for the price of uncolored wool
-        //   . We want our prices.yml to overwrite ShopGUIPlus
-        Double price = null;
-        ItemStack toPlace = event.getItemInHand();
-        ColoredMaterial coloredMaterial = ColoredMaterial.fromItemstack(toPlace);
-        if(coloredMaterial != null && Printer.INSTANCE.getPricesConfig().getColoredPrices().containsKey(coloredMaterial))
-        {
-            price = Printer.INSTANCE.getPricesConfig().getColoredPrices().get(coloredMaterial);
-        }
-        else if(Printer.INSTANCE.getPricesConfig().getBlockPrices().containsKey(event.getBlockPlaced().getType()))
-        {
-            price = Printer.INSTANCE.getPricesConfig().getBlockPrices().get(event.getBlockPlaced().getType());
-        }
-        else if(Printer.INSTANCE.hasShopHook())
-        {
-            ItemStack toPlaceCopy = toPlace.clone();
-            toPlaceCopy.setAmount(1);
-            price = Printer.INSTANCE.getShopHook().getCachedPrice(toPlaceCopy);
-            price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
-        }
+        Double price = Printer.INSTANCE.getPrice(event.getItemInHand());
 
         // Clear inventory from inventory block before placement
         if(event.getBlock().getState() instanceof InventoryHolder)
@@ -125,19 +104,8 @@ public class ListenPrinterBlockPlace implements Listener
         }
 
         // Get Price
-        Double price = null;
         ItemStack toPlace = event.getItem();
-        if(Printer.INSTANCE.getPricesConfig().getItemPrices().containsKey(toPlace.getType()))
-        {
-            price = Printer.INSTANCE.getPricesConfig().getItemPrices().get(toPlace.getType());
-        }
-        else if(Printer.INSTANCE.hasShopHook())
-        {
-            ItemStack toPlaceCopy = toPlace.clone();
-            toPlaceCopy.setAmount(1);
-            price = Printer.INSTANCE.getShopHook().getCachedPrice(toPlaceCopy);
-            price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
-        }
+        Double price = Printer.INSTANCE.getItemBlockPrice(toPlace);
 
         // Charge Player
         if(price == null)
@@ -157,14 +125,12 @@ public class ListenPrinterBlockPlace implements Listener
                 player.incrementCost(price);
             }
         }
-        else if(BukkitUtil.isItemBlock(toPlace.getType()))
-        {
-
-        }
-        else // Bow shoot, snowball, egg, etc..
+        else if (!BukkitUtil.isItemOfBlock(toPlace.getType())) // Bow shoot, snowball, egg, etc..
         {
             event.setCancelled(true);
             Message.ERROR_ITEM_PLACE_NOT_ALLOWED.sendColoredMessage(player.getPlayer());
         }
+
+        // This then gets passed to BlockPlaceEvent above
     }
 }

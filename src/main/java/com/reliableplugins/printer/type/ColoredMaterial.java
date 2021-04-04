@@ -142,11 +142,23 @@ public enum ColoredMaterial
 
     // Log
     OAK_LOG(Material.LOG, 0),
+    OAK_LOG_SIDEWAYS_1(Material.LOG, 4),
+    OAK_LOG_SIDEWAYS_2(Material.LOG, 8),
     SPRUCE_LOG(Material.LOG, 1),
+    SPRUCE_LOG_SIDEWAYS_1(Material.LOG, 5),
+    SPRUCE_LOG_SIDEWAYS_2(Material.LOG, 9),
     BIRCH_LOG(Material.LOG, 2),
+    BIRCH_LOG_SIDEWAYS_1(Material.LOG, 6),
+    BIRCH_LOG_SIDEWAYS_2(Material.LOG, 10),
     JUNGLE_LOG(Material.LOG, 3),
+    JUNGLE_LOG_SIDEWAYS_1(Material.LOG, 7),
+    JUNGLE_LOG_SIDEWAYS_2(Material.LOG, 11),
     ACACIA_LOG(Material.LOG_2, 0),
+    ACACIA_LOG_SIDEWAYS_1(Material.LOG_2, 4),
+    ACACIA_LOG_SIDEWAYS_2(Material.LOG_2, 8),
     DARK_OAK_LOG(Material.LOG_2, 1),
+    DARK_OAK_LOG_SIDEWAYS_1(Material.LOG_2, 5),
+    DARK_OAK_LOG_SIDEWAYS_2(Material.LOG_2, 9),
 
     // Sand
     SAND(Material.SAND, 0),
@@ -233,6 +245,20 @@ public enum ColoredMaterial
         {
             if(material.equals(coloredMaterial.getMaterial())
                     && dataVal == coloredMaterial.id)
+            {
+                return coloredMaterial;
+            }
+        }
+
+        return null;
+    }
+
+    public static ColoredMaterial fromMaterial(Material material, byte data)
+    {
+        for(ColoredMaterial coloredMaterial : ColoredMaterial.values())
+        {
+            if(material.equals(coloredMaterial.getMaterial())
+                    && data == coloredMaterial.id)
             {
                 return coloredMaterial;
             }
