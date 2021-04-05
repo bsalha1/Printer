@@ -24,6 +24,7 @@ import com.reliableplugins.printer.hook.territory.factions.FactionsHook;
 import com.reliableplugins.printer.hook.territory.factions.FactionsHook_MassiveCraft;
 import com.reliableplugins.printer.hook.territory.factions.FactionsHook_UUID;
 import com.reliableplugins.printer.hook.territory.factions.FactionsHook_X;
+import com.reliableplugins.printer.hook.territory.griefdefender.GriefDefenderHook;
 import com.reliableplugins.printer.hook.territory.lands.LandsHook;
 import com.reliableplugins.printer.hook.territory.residence.ResidenceHook;
 import com.reliableplugins.printer.hook.territory.skyblock.ASkyBlockHook;
@@ -73,6 +74,7 @@ public class Printer extends JavaPlugin
     private boolean hasSkyblockHook;
     private boolean hasResidenceHook;
     private boolean hasLandsHook;
+    private boolean hasGriefDefenderHook;
     private boolean hasSpigot;
 
     private ArrayList<TerritoryHook> territoryHooks;
@@ -113,6 +115,7 @@ public class Printer extends JavaPlugin
             setupSkyblockHook();
             setupResidenceHook();
             setupLandsHook();
+            setupGriefDefenderHook();
             setupShopHook();
             setupCommands();
             setupTasks();
@@ -322,6 +325,25 @@ public class Printer extends JavaPlugin
         this.hasLandsHook = true;
         this.territoryHooks.add(new LandsHook());
         getLogger().log(Level.INFO, "Successfully hooked into Lands");
+
+    }
+
+    public void setupGriefDefenderHook()
+    {
+        if(!this.mainConfig.useGriefDefender())
+        {
+            return;
+        }
+
+        if(!getServer().getPluginManager().isPluginEnabled("GriefDefender"))
+        {
+            getLogger().log(Level.WARNING, "GriefDefender jar not found!");
+            return;
+        }
+
+        this.hasGriefDefenderHook = true;
+        this.territoryHooks.add(new GriefDefenderHook());
+        getLogger().log(Level.INFO, "Successfully hooked into GriefDefender");
 
     }
 

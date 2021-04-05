@@ -53,6 +53,11 @@
             <url>https://nexus.savagelabs.net</url>
             <layout>default</layout>
         </repository>
+
+        <repository>
+            <id>massivecraft</id>
+            <url>https://ci.ender.zone/plugin/repository/everything/</url>
+        </repository>
     </repositories>
 
 
@@ -166,14 +171,27 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/Residence4.9.2.1.jar</systemPath>
         </dependency>
+        
+        <!-- GriefDefender -->
+        <dependency>
+            <groupId>com.github.bloodmc</groupId>
+            <artifactId>GriefDefenderApi</artifactId>
+            <version>920a610</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+		    <groupId>com.flowpowered</groupId>
+		    <artifactId>flow-math</artifactId>
+		    <version>1.0.3</version>
+        </dependency>
 
         <!-- Factions -->
         <dependency>
             <groupId>com.massivecraft</groupId>
-            <artifactId>FactionsUUID-0.5.18</artifactId>
-            <version>0.5.18</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/FactionsUUID-0.5.18.jar</systemPath>
+            <artifactId>Factions</artifactId>
+            <version>1.6.9.5-U0.5.21</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.massivecraft</groupId>
