@@ -2,6 +2,7 @@ package com.reliableplugins.printer.hook.shop;
 
 import com.reliableplugins.printer.Printer;
 import fr.maxlego08.shop.api.ShopManager;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
@@ -18,7 +19,7 @@ public class ZShopHook extends ShopHook
     }
 
     @Override
-    public double getPrice(ItemStack item)
+    public double getPrice(Player player, ItemStack item)
     {
         ShopManager manager = getProvider(ShopManager.class);
         if(manager == null)

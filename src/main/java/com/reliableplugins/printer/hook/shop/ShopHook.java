@@ -6,6 +6,7 @@
 
 package com.reliableplugins.printer.hook.shop;
 
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -19,12 +20,12 @@ public abstract class ShopHook implements IShopHook
         this.priceCache = new HashMap<>();
     }
 
-    public final double getCachedPrice(ItemStack item)
+    public final double getCachedPrice(Player player, ItemStack item)
     {
         Double price = this.priceCache.get(item);
         if(price == null)
         {
-            price = this.getPrice(item);
+            price = this.getPrice(player, item);
             this.priceCache.put(item, price);
         }
         return price;

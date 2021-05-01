@@ -6,6 +6,7 @@
 
 package com.reliableplugins.printer;
 
+import com.massivecraft.factions.P;
 import com.reliableplugins.printer.commands.*;
 import com.reliableplugins.printer.config.*;
 import com.reliableplugins.printer.exception.VaultException;
@@ -17,7 +18,8 @@ import com.reliableplugins.printer.hook.packets.ProtocolLibHook;
 import com.reliableplugins.printer.hook.shop.DynamicShopHook;
 import com.reliableplugins.printer.hook.shop.ShopHook;
 import com.reliableplugins.printer.hook.shop.ZShopHook;
-import com.reliableplugins.printer.hook.shop.shopgui.ShopGuiPlusHook_1_3_to_1_5;
+import com.reliableplugins.printer.hook.shop.shopgui.ShopGuiPlusHook_1_0_1;
+import com.reliableplugins.printer.hook.shop.shopgui.ShopGuiPlusHook_1_5_0;
 import com.reliableplugins.printer.hook.territory.TerritoryHook;
 import com.reliableplugins.printer.hook.territory.TerritoryScanner;
 import com.reliableplugins.printer.hook.territory.factions.FactionsHook;
@@ -43,6 +45,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -354,7 +357,30 @@ public class Printer extends JavaPlugin
         {
             if (getServer().getPluginManager().isPluginEnabled("ShopGUIPlus"))
             {
-                this.shopHook = new ShopGuiPlusHook_1_3_to_1_5();
+                Plugin shopGui = getServer().getPluginManager().getPlugin("ShopGUIPlus");
+                String[] versions = shopGui.getDescription().getVersion().split("\\.");
+                if (versions.length == 3)
+                {
+
+                    int major = Integer.parseInt(versions[0]);
+                    int minor = Integer.parseInt(versions[1]);
+                    int build = Integer.parseInt(versions[2]);
+
+                    if (major == 1 && minor <= 28)
+                    {
+                        this.shopHook = new ShopGuiPlusHook_1_0_1();
+                    }
+                    else
+                    {
+                        this.shopHook = new ShopGuiPlusHook_1_5_0();
+                    }
+                }
+                else
+                {
+                    this.shopHook = new ShopGuiPlusHook_1_5_0();
+                    getLogger().log(Level.WARNING, "Failed to parse ShopGUIPlus version");
+                }
+
                 this.hasShopHook = true;
                 getLogger().log(Level.INFO, "Successfully hooked into ShopGUIPlus");
                 return;
@@ -510,7 +536,7 @@ public class Printer extends JavaPlugin
         this.commandHandler.addCommand(new CommandVersion());
     }
 
-    public Double getPrice(ItemStack itemStack)
+    public Double getPrice(Player player, ItemStack itemStack)
     {
         Material material = itemStack.getType();
         if(BukkitUtil.isItemOfBlock(material))
@@ -536,14 +562,14 @@ public class Printer extends JavaPlugin
         {
             ItemStack item = itemStack.clone();
             item.setAmount(1);
-            price = Printer.INSTANCE.getShopHook().getCachedPrice(item);
+            price = Printer.INSTANCE.getShopHook().getCachedPrice(player, item);
             price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
         }
         return price;
     }
 
 
-    public Double getItemBlockPrice(ItemStack itemStack)
+    public Double getItemBlockPrice(Player player, ItemStack itemStack)
     {
         Double price = null;
 
@@ -555,19 +581,19 @@ public class Printer extends JavaPlugin
         {
             ItemStack toPlaceCopy = itemStack.clone();
             toPlaceCopy.setAmount(1);
-            price = Printer.INSTANCE.getShopHook().getCachedPrice(toPlaceCopy);
+            price = Printer.INSTANCE.getShopHook().getCachedPrice(player, toPlaceCopy);
             price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
         }
         return price;
     }
 
-    public Double getItemBlockPrice(Material material)
+    public Double getItemBlockPrice(Player player, Material material)
     {
         ItemStack itemStack = new ItemStack(material, 1);
-        return getItemBlockPrice(itemStack);
+        return getItemBlockPrice(player, itemStack);
     }
 
-    public Double getPrice(Material material, byte data)
+    public Double getPrice(Player player, Material material, byte data)
     {
         Double price = null;
         ColoredMaterial coloredMaterial = ColoredMaterial.fromMaterial(material, data);
@@ -587,7 +613,7 @@ public class Printer extends JavaPlugin
         else if(Printer.INSTANCE.hasShopHook())
         {
             ItemStack item = new ItemStack(material, 1);
-            price = Printer.INSTANCE.getShopHook().getCachedPrice(item);
+            price = Printer.INSTANCE.getShopHook().getCachedPrice(player, item);
             price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
         }
         return price;
@@ -657,6 +683,12 @@ public class Printer extends JavaPlugin
     {
         return this.hasSkyblockHook;
     }
+
+    public boolean hasGriefDefenderHook()
+    {
+        return this.hasGriefDefenderHook;
+    }
+
 
     public boolean isSpigot()
     {

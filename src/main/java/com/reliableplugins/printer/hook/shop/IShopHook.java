@@ -6,9 +6,10 @@
 
 package com.reliableplugins.printer.hook.shop;
 
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public interface IShopHook
 {
-    double getPrice(ItemStack item);
+    double getPrice(Player player, ItemStack item);
 }

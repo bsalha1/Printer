@@ -44,7 +44,7 @@ public class ListenPrinterBlockPlace implements Listener
             return;
         }
 
-        Double price = Printer.INSTANCE.getPrice(event.getItemInHand());
+        Double price = Printer.INSTANCE.getPrice(event.getPlayer(), event.getItemInHand());
 
         // Clear inventory from inventory block before placement
         if(event.getBlock().getState() instanceof InventoryHolder)
@@ -105,7 +105,7 @@ public class ListenPrinterBlockPlace implements Listener
 
         // Get Price
         ItemStack toPlace = event.getItem();
-        Double price = Printer.INSTANCE.getItemBlockPrice(toPlace);
+        Double price = Printer.INSTANCE.getItemBlockPrice(event.getPlayer(), toPlace);
 
         // Charge Player
         if(price == null)

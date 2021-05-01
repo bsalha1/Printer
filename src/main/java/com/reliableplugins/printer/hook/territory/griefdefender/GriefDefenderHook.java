@@ -21,7 +21,7 @@ public class GriefDefenderHook implements TerritoryHook
 
         for(Player nearbyPlayer : BukkitUtil.getNearbyPlayers(player))
         {
-            if(!claim.getUserTrusts(TrustTypes.BUILDER).contains(nearbyPlayer.getUniqueId())
+            if(!claim.getUserTrusts(TrustTypes.BUILDER).contains(nearbyPlayer.getUniqueId()))
             {
                 return true;
             }
