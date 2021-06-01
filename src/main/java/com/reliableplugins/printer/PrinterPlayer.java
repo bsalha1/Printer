@@ -235,19 +235,19 @@ public class PrinterPlayer
         if(Printer.INSTANCE.getMainConfig().isScoreboardEnabled())
         {
             String totalCost = Double.toString(MathUtil.round(this.totalCost, 2));
-            objective.getScoreboard().resetScores(this.cost.getEntry());
-            this.cost = objective.getScore(
+            this.objective.getScoreboard().resetScores(this.cost.getEntry());
+            this.cost = this.objective.getScore(
                     Printer.INSTANCE.getMainConfig().getCostFormat().replace("{NUM}", totalCost));
             this.cost.setScore(15);
 
-            objective.getScoreboard().resetScores(this.blocks.getEntry());
-            this.blocks = objective.getScore(
+            this.objective.getScoreboard().resetScores(this.blocks.getEntry());
+            this.blocks = this.objective.getScore(
                     Printer.INSTANCE.getMainConfig().getBlocksFormat().replace("{NUM}", Integer.toString(this.totalBlocks)));
             this.blocks.setScore(12);
 
             String price = Double.toString(MathUtil.round(getRemainingBalance(), 2)); // round off
-            objective.getScoreboard().resetScores(this.balance.getEntry());
-            this.balance = objective.getScore(
+            this.objective.getScoreboard().resetScores(this.balance.getEntry());
+            this.balance = this.objective.getScore(
                     Printer.INSTANCE.getMainConfig().getBalanceFormat().replace("{NUM}", price));
             this.balance.setScore(9);
         }

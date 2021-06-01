@@ -11,6 +11,7 @@ import com.reliableplugins.printer.PrinterPlayer;
 import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.utils.BukkitUtil;
 import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+import org.bukkit.block.Chest;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -29,6 +30,12 @@ public class ListenPrinterBlockPlace implements Listener
             return;
         }
 
+        // Clear inventory from inventory block before placement
+        if(event.getBlock().getState() instanceof InventoryHolder)
+        {
+            ((InventoryHolder) event.getBlock().getState()).getInventory().clear();
+        }
+
         // Check if Unplaceable
         if(Printer.INSTANCE.getMainConfig().isUnplaceable(event.getBlockPlaced().getType()))
         {
@@ -45,13 +52,6 @@ public class ListenPrinterBlockPlace implements Listener
         }
 
         Double price = Printer.INSTANCE.getPrice(event.getPlayer(), event.getItemInHand());
-
-        // Clear inventory from inventory block before placement
-        if(event.getBlock().getState() instanceof InventoryHolder)
-        {
-            ((InventoryHolder) event.getBlock().getState()).getInventory().clear();
-        }
-
         if(price == null)
         {
             event.setCancelled(true);
