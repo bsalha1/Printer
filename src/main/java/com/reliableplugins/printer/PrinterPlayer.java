@@ -13,24 +13,30 @@ import com.reliableplugins.printer.utils.MathUtil;
 import com.reliableplugins.printer.utils.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.Executors;
+import java.util.function.Predicate;
 
 public class PrinterPlayer
 {
     private GameMode initialGamemode;
     private ItemStack[] initialInventory;
     private ItemStack[] initialArmor;
-    private HashSet<Block> placedBlocks;
+    private HashMap<Location, Material> placedBlocks;
     private HashSet<ItemStack> internalItems; // items obtained from creative inventory
 
     private final Player player;
@@ -52,7 +58,7 @@ public class PrinterPlayer
         this.initialGamemode = player.getGameMode();
         this.initialInventory = player.getInventory().getContents();
         this.initialArmor = player.getInventory().getArmorContents();
-        this.placedBlocks = new HashSet<>();
+        this.placedBlocks = new HashMap<>();
         this.internalItems = new HashSet<>();
     }
 
@@ -102,7 +108,7 @@ public class PrinterPlayer
 
         totalBlocks = 0;
         totalCost = 0;
-        placedBlocks = new HashSet<>();
+        placedBlocks = new HashMap<>();
         internalItems = new HashSet<>();
 
         // Cache initial values
@@ -247,19 +253,21 @@ public class PrinterPlayer
         }
     }
 
-    public boolean isPlacedBlock(Block block)
+    public boolean isPlacedBlock(Location location)
     {
-        return placedBlocks.contains(block);
+        return placedBlocks.containsKey(location);
     }
 
-    public void removePlacedBlock(Block block)
+    public Material popPlacedMaterial(Location location)
     {
-        placedBlocks.remove(block);
+        Material material = placedBlocks.get(location);
+        placedBlocks.remove(location);
+        return material;
     }
 
     public void addPlacedBlock(Block block)
     {
-        placedBlocks.add(block);
+        placedBlocks.put(block.getLocation(), block.getType());
     }
 
     public void addInternalItem(ItemStack itemStack)
