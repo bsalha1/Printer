@@ -1,6 +1,6 @@
 name: Printer
 main: com.reliableplugins.printer.Printer
-version: 2.9
+version: 3.0
 depend:
   - Vault
 softdepend:
@@ -17,6 +17,7 @@ softdepend:
   - FactionsX
   - ASkyBlock
   - ProtocolLib
+  - ClaimHook
 author: Reachy
 commands:
   printer:

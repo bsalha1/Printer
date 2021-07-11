@@ -9,46 +9,34 @@ package com.reliableplugins.printer.hook.territory.skyblock;
 import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
 import com.bgsoftware.superiorskyblock.api.island.Island;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
-import com.reliableplugins.printer.hook.territory.TerritoryHook;
-import com.reliableplugins.printer.utils.BukkitUtil;
+import com.reliableplugins.printer.hook.territory.ClaimHook;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
-public class SuperiorSkyblockHook implements TerritoryHook
+public class SuperiorSkyblockHook implements ClaimHook
 {
     @Override
-    public boolean isNonTerritoryMemberNearby(Player player)
+    public boolean isClaimFriend(Player owner, Player accessor)
     {
-        SuperiorPlayer sPlayer = SuperiorSkyblockAPI.getPlayer(player);
-        List<Player> nearbyPlayers = BukkitUtil.getNearbyPlayers(player);
-
-        if(nearbyPlayers.size() > 0 && (sPlayer == null || sPlayer.getIsland() == null))
+        SuperiorPlayer sPlayer = SuperiorSkyblockAPI.getPlayer(owner);
+        SuperiorPlayer nearbySPlayer = SuperiorSkyblockAPI.getPlayer(accessor);
+        if(nearbySPlayer == null || sPlayer == null || sPlayer.getIsland() == null)
         {
-            return true;
+            return false;
         }
 
-        for(Player nearbyPlayer : nearbyPlayers)
-        {
-            SuperiorPlayer nearbySPlayer = SuperiorSkyblockAPI.getPlayer(nearbyPlayer);
-            if(nearbySPlayer == null || nearbySPlayer.getIsland() == null || !nearbySPlayer.getIsland().equals(sPlayer.getIsland()))
-            {
-                return true;
-            }
-        }
-        return false;
+        return sPlayer.getIsland().equals(nearbySPlayer.getIsland());
     }
 
     @Override
-    public boolean isInATerritory(Player player)
+    public boolean isInAClaim(Player player)
     {
         Island currentIsland = SuperiorSkyblockAPI.getIslandAt(player.getLocation());
         return currentIsland != null;
     }
 
     @Override
-    public boolean isInOwnTerritory(Player player)
+    public boolean isInOwnClaim(Player player)
     {
         Island currentIsland = SuperiorSkyblockAPI.getIslandAt(player.getLocation());
         SuperiorPlayer superiorPlayer = SuperiorSkyblockAPI.getPlayer(player);

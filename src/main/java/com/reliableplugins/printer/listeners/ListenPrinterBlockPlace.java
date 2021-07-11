@@ -10,8 +10,6 @@ import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.PrinterPlayer;
 import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.utils.BukkitUtil;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
-import org.bukkit.block.Chest;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -30,13 +28,13 @@ public class ListenPrinterBlockPlace implements Listener
             return;
         }
 
-        // Clear inventory from inventory block before placement
+        // Clear inventory from container block before placement
         if(event.getBlock().getState() instanceof InventoryHolder)
         {
             ((InventoryHolder) event.getBlock().getState()).getInventory().clear();
         }
 
-        // Check if Unplaceable
+        // Check if unplaceable
         if(Printer.INSTANCE.getMainConfig().isUnplaceable(event.getBlockPlaced().getType()))
         {
             event.setCancelled(true);
@@ -44,14 +42,16 @@ public class ListenPrinterBlockPlace implements Listener
             return;
         }
 
-        if(Printer.INSTANCE.isTerritoryRestricted(player.getPlayer(), event.getBlock().getLocation()))
+        // Check if player can build here
+        if(Printer.INSTANCE.getClaimHookManager().isTerritoryRestricted(player.getPlayer(), event.getBlock().getLocation()))
         {
             event.setCancelled(true);
             Message.ERROR_NOT_IN_TERRITORY.sendColoredMessage(event.getPlayer());
             return;
         }
 
-        Double price = Printer.INSTANCE.getPrice(event.getPlayer(), event.getItemInHand());
+        // Get price of block to place
+        Double price = Printer.INSTANCE.getBlockPrice(event.getPlayer(), event.getItemInHand());
         if(price == null)
         {
             event.setCancelled(true);
@@ -87,7 +87,7 @@ public class ListenPrinterBlockPlace implements Listener
             return;
         }
 
-        // Check if Unplaceable
+        // Check if unplaceable
         if(Printer.INSTANCE.getMainConfig().isUnplaceable(event.getItem().getType()))
         {
             event.setCancelled(true);
@@ -95,7 +95,8 @@ public class ListenPrinterBlockPlace implements Listener
             return;
         }
 
-        if(Printer.INSTANCE.isTerritoryRestricted(player.getPlayer(),
+        // Check if player can build here
+        if(Printer.INSTANCE.getClaimHookManager().isTerritoryRestricted(player.getPlayer(),
                 event.getClickedBlock() != null ? event.getClickedBlock().getLocation() : player.getPlayer().getLocation()))
         {
             event.setCancelled(true);
@@ -103,11 +104,11 @@ public class ListenPrinterBlockPlace implements Listener
             return;
         }
 
-        // Get Price
+        // Get price
         ItemStack toPlace = event.getItem();
         Double price = Printer.INSTANCE.getItemBlockPrice(event.getPlayer(), toPlace);
 
-        // Charge Player
+        // Charge player
         if(price == null)
         {
             event.setCancelled(true);

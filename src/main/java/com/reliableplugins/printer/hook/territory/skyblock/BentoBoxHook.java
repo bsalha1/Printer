@@ -1,7 +1,6 @@
 package com.reliableplugins.printer.hook.territory.skyblock;
 
-import com.reliableplugins.printer.hook.territory.TerritoryHook;
-import com.reliableplugins.printer.utils.BukkitUtil;
+import com.reliableplugins.printer.hook.territory.ClaimHook;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import world.bentobox.bentobox.BentoBox;
@@ -9,32 +8,29 @@ import world.bentobox.bentobox.database.objects.Island;
 
 import java.util.Optional;
 
-public class BentoBoxHook implements TerritoryHook
+public class BentoBoxHook implements ClaimHook
 {
     @Override
-    public boolean isNonTerritoryMemberNearby(Player player)
+    public boolean isClaimFriend(Player owner, Player accessor)
     {
-        Island playerIsland = BentoBox.getInstance().getIslands().getIsland(player.getWorld(), player.getUniqueId());
-
-        for(Player nearbyPlayer : BukkitUtil.getNearbyPlayers(player))
+        Island playerIsland = BentoBox.getInstance().getIslands().getIsland(owner.getWorld(), owner.getUniqueId());
+        Island nearbyPlayerIsland = BentoBox.getInstance().getIslands().getIsland(accessor.getWorld(), accessor.getUniqueId());
+        if(playerIsland == null)
         {
-            Island nearbyPlayerIsland = BentoBox.getInstance().getIslands().getIsland(nearbyPlayer.getWorld(), nearbyPlayer.getUniqueId());
-            if(playerIsland == null || nearbyPlayerIsland == null || !playerIsland.equals(nearbyPlayerIsland))
-            {
-                return false;
-            }
+            return false;
         }
-        return true;
+
+        return playerIsland.equals(nearbyPlayerIsland);
     }
 
     @Override
-    public boolean isInATerritory(Player player)
+    public boolean isInAClaim(Player player)
     {
         return BentoBox.getInstance().getIslands().getIslandAt(player.getLocation()).isPresent();
     }
 
     @Override
-    public boolean isInOwnTerritory(Player player)
+    public boolean isInOwnClaim(Player player)
     {
         Island playerIsland = BentoBox.getInstance().getIslands().getIsland(player.getWorld(), player.getUniqueId());
         Optional<Island> currentIsland = BentoBox.getInstance().getIslands().getIslandAt(player.getLocation());

@@ -12,9 +12,9 @@ import com.reliableplugins.printer.task.BukkitTask;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class TerritoryScanner extends BukkitTask
+public class ClaimScanner extends BukkitTask
 {
-    public TerritoryScanner(long delay, long period)
+    public ClaimScanner(long delay, long period)
     {
         super(delay, period);
     }
@@ -30,7 +30,7 @@ public class TerritoryScanner extends BukkitTask
                 continue;
             }
 
-            if(Printer.INSTANCE.isTerritoryRestricted(player))
+            if(Printer.INSTANCE.getClaimHookManager().isTerritoryRestricted(player))
             {
                 printerPlayer.printerOff();
             }

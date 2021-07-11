@@ -11,36 +11,44 @@ import com.massivecraft.factions.entity.BoardColl;
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.MPlayer;
 import com.massivecraft.massivecore.ps.PS;
-import com.reliableplugins.printer.utils.BukkitUtil;
+import com.reliableplugins.printer.Printer;
+import com.reliableplugins.printer.hook.territory.ClaimHook;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-public class FactionsHook_MassiveCraft implements FactionsHook
+public class FactionsHook_MassiveCraft implements ClaimHook
 {
+
     @Override
-    public boolean isNonTerritoryMemberNearby(Player player)
+    public boolean isClaimFriend(Player owner, Player accessor)
     {
-        MPlayer mPlayer = MPlayer.get(player);
-        for(Player nearbyPlayer : BukkitUtil.getNearbyPlayers(player))
+        MPlayer mPlayer = MPlayer.get(owner);
+        MPlayer nearbyMPlayer = MPlayer.get(accessor);
+
+        // Either of the players aren't registered or the owner is not in a faction
+        if(nearbyMPlayer == null || mPlayer == null || mPlayer.getFaction().isNone())
         {
-            MPlayer nearbyMPlayer = MPlayer.get(nearbyPlayer);
-            if(nearbyMPlayer == null || mPlayer == null || mPlayer.getFaction().isNone() ||
-                !mPlayer.getFaction().equals(nearbyMPlayer.getFaction()))
-            {
-                return true;
-            }
+            return false;
         }
-        return false;
+
+        // Owner is in the same faction as the nearby player
+        if(mPlayer.getFaction().equals(nearbyMPlayer.getFaction()))
+        {
+            return true;
+        }
+
+        // If printer allowed near allies, and nearby player is an ally
+        return Printer.INSTANCE.getMainConfig().allowNearAllies() && mPlayer.getFaction().getRelationTo(nearbyMPlayer).equals(Rel.ALLY);
     }
 
     @Override
-    public boolean isInATerritory(Player player)
+    public boolean isInAClaim(Player player)
     {
         return !BoardColl.get().getFactionAt(PS.valueOf(player.getLocation())).isNone();
     }
 
     @Override
-    public boolean isInOwnTerritory(Player player)
+    public boolean isInOwnClaim(Player player)
     {
         MPlayer fPlayer = MPlayer.get(player);
         Faction faction = BoardColl.get().getFactionAt(PS.valueOf(player.getLocation()));
@@ -70,29 +78,5 @@ public class FactionsHook_MassiveCraft implements FactionsHook
         }
 
         return faction.equals(fPlayer.getFaction());
-    }
-
-    @Override
-    public boolean isNonTerritoryMemberNearby(Player player, boolean allowAllies)
-    {
-        if(!allowAllies)
-        {
-            return isNonTerritoryMemberNearby(player);
-        }
-
-        // If all nearby players are either in same faction or in an ally faction
-        MPlayer mPlayer = MPlayer.get(player);
-        for(Player nearbyPlayer : BukkitUtil.getNearbyPlayers(player))
-        {
-            MPlayer nearbyMPlayer = MPlayer.get(nearbyPlayer);
-            if(nearbyMPlayer == null ||
-                    mPlayer == null ||
-                    mPlayer.getFaction().isNone() ||
-                    (!mPlayer.getFaction().equals(nearbyMPlayer.getFaction()) && !mPlayer.getFaction().getRelationTo(nearbyMPlayer).equals(Rel.ALLY)))
-            {
-                return true;
-            }
-        }
-        return false;
     }
 }

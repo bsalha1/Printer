@@ -179,6 +179,15 @@
 		    <version>1.0.3</version>
         </dependency>
 
+        <!-- ClaimChunk -->
+        <dependency>
+            <groupId>com.cjburkey</groupId>
+            <artifactId>ClaimChunk</artifactId>
+            <version>0.0.22</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/claimchunk-0.0.22.jar</systemPath>
+        </dependency>
+
         <!-- Factions -->
         <dependency>
             <groupId>com.massivecraft</groupId>

@@ -114,6 +114,15 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.ow2.asm:asm-debug-all:6.0_BETA" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: net.kyori:text-api:3.0.2" level="project" />
     <orderEntry type="library" name="Maven: com.flowpowered:flow-math:1.0.3" level="project" />
+    <orderEntry type="module-library">
+      <library name="Maven: com.cjburkey:ClaimChunk:0.0.22">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/claimchunk-0.0.22.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.massivecraft:Factions:1.6.9.5-U0.5.21" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.massivecraft:Factions-Legacy:1.6.9.5-U0.5.21" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: io.papermc:paperlib:1.0.4" level="project" />

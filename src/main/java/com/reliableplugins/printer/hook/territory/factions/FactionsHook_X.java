@@ -1,6 +1,7 @@
 package com.reliableplugins.printer.hook.territory.factions;
 
-import com.reliableplugins.printer.utils.BukkitUtil;
+import com.reliableplugins.printer.Printer;
+import com.reliableplugins.printer.hook.territory.ClaimHook;
 import net.prosavage.factionsx.core.FPlayer;
 import net.prosavage.factionsx.core.Faction;
 import net.prosavage.factionsx.manager.GridManager;
@@ -9,40 +10,37 @@ import net.prosavage.factionsx.util.Relation;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
-public class FactionsHook_X implements FactionsHook
+public class FactionsHook_X implements ClaimHook
 {
-
     @Override
-    public boolean isNonTerritoryMemberNearby(Player player) {
-        FPlayer fPlayer = PlayerManager.INSTANCE.getFPlayer(player.getUniqueId());
-        List<Player> nearbyPlayers = BukkitUtil.getNearbyPlayers(player);
+    public boolean isClaimFriend(Player owner, Player accessor)
+    {
+        FPlayer fPlayer = PlayerManager.INSTANCE.getFPlayer(owner.getUniqueId());
+        FPlayer nearbyFPlayer = PlayerManager.INSTANCE.getFPlayer(accessor);
 
-        // If there are >0 players and this player is not in a faction, there must be someone not from their faction nearby
-        if(nearbyPlayers.size() > 0 && (fPlayer == null || fPlayer.getFaction().isWilderness()))
+        // Either of the players aren't registered
+        if(nearbyFPlayer == null || fPlayer == null)
+        {
+            return false;
+        }
+
+        // Owner is in the same faction as the nearby player
+        if(fPlayer.getFaction().equals(nearbyFPlayer.getFaction()))
         {
             return true;
         }
 
-        for(Player nearbyPlayer : nearbyPlayers)
-        {
-            FPlayer nearbyFPlayer = PlayerManager.INSTANCE.getFPlayer(nearbyPlayer.getUniqueId());
-            if(nearbyFPlayer == null || !fPlayer.getFaction().equals(nearbyFPlayer.getFaction()))
-            {
-                return true;
-            }
-        }
-        return false;
+        // If printer allowed near allies, and nearby player is an ally or truce
+        return Printer.INSTANCE.getMainConfig().allowNearAllies() && fPlayer.getFaction().getRelationTo(nearbyFPlayer.getFaction()) == Relation.ALLY;
     }
 
     @Override
-    public boolean isInATerritory(Player player) {
+    public boolean isInAClaim(Player player) {
         return !GridManager.INSTANCE.getFactionAt(player.getLocation().getChunk()).isWilderness();
     }
 
     @Override
-    public boolean isInOwnTerritory(Player player) {
+    public boolean isInOwnClaim(Player player) {
         FPlayer fPlayer = PlayerManager.INSTANCE.getFPlayer(player.getUniqueId());
         Faction faction = GridManager.INSTANCE.getFactionAt(player.getLocation().getChunk());
 
@@ -71,32 +69,5 @@ public class FactionsHook_X implements FactionsHook
         }
 
         return faction.equals(fPlayer.getFaction());
-    }
-
-    @Override
-    public boolean isNonTerritoryMemberNearby(Player player, boolean allowAllies) {
-        if(!allowAllies)
-        {
-            return isNonTerritoryMemberNearby(player);
-        }
-
-        FPlayer fPlayer = PlayerManager.INSTANCE.getFPlayer(player.getUniqueId());
-        List<Player> nearbyPlayers = BukkitUtil.getNearbyPlayers(player);
-
-        // If there are >0 players and this player is not in a faction, there must be someone not from their faction nearby
-        if(nearbyPlayers.size() > 0 && (fPlayer == null || fPlayer.getFaction().isWilderness()))
-        {
-            return true;
-        }
-
-        for(Player nearbyPlayer : nearbyPlayers)
-        {
-            FPlayer nearbyFPlayer = PlayerManager.INSTANCE.getFPlayer(nearbyPlayer);
-            if(nearbyFPlayer == null || (!fPlayer.getFaction().equals(nearbyFPlayer.getFaction()) && fPlayer.getFaction().getRelationTo(nearbyFPlayer.getFaction()) != Relation.ALLY))
-            {
-                return true;
-            }
-        }
-        return false;
     }
 }

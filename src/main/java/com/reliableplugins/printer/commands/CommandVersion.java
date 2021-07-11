@@ -20,7 +20,7 @@ public class CommandVersion extends Command
     @Override
     public void execute(CommandSender executor, String[] args)
     {
-        executor.sendMessage(Message.VERSION_MESSAGE.getColoredMessage().replace("{NUM}", Printer.INSTANCE.getVersion()));
+        executor.sendMessage(Message.VERSION_MESSAGE.getColoredMessage().replace("{NUM}", Printer.INSTANCE.getDescription().getVersion()));
     }
 
     @Override

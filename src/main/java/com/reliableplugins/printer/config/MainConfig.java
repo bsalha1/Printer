@@ -49,6 +49,7 @@ public class MainConfig extends Config
     private boolean useGriefDefender;
     private boolean useBentoBox;
     private boolean useASkyBlock;
+    private boolean useClaimChunk;
 
     public MainConfig()
     {
@@ -82,6 +83,7 @@ public class MainConfig extends Config
         useBentoBox = getBoolean("skyblock.bento-box-support", false);
         useIridiumSkyblock = getBoolean("skyblock.iridiumskyblock-support", false);
         useASkyBlock = getBoolean("skyblock.askyblock-support", false);
+        useClaimChunk = getBoolean("claimchunk.support", false);
 
         tooltipNotification = getBoolean("tooltip-notification.enabled", true);
         tooltipNotificationTime = getInt("tooltip-notification.seconds", 5);
@@ -229,6 +231,11 @@ public class MainConfig extends Config
     public boolean useGriefDefender()
     {
         return useGriefDefender;
+    }
+
+    public boolean useClaimChunk()
+    {
+        return useClaimChunk;
     }
 
     public String getScoreboardTitle()

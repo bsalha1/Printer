@@ -3,14 +3,11 @@ package com.reliableplugins.printer.hook.territory.skyblock;
 import com.iridium.iridiumskyblock.IridiumSkyblock;
 import com.iridium.iridiumskyblock.Island;
 import com.iridium.iridiumskyblock.User;
-import com.reliableplugins.printer.hook.territory.TerritoryHook;
-import com.reliableplugins.printer.utils.BukkitUtil;
+import com.reliableplugins.printer.hook.territory.ClaimHook;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
-public class IridiumSkyblockHook implements TerritoryHook
+public class IridiumSkyblockHook implements ClaimHook
 {
     private static User getUser(Player player)
     {
@@ -18,35 +15,26 @@ public class IridiumSkyblockHook implements TerritoryHook
     }
 
     @Override
-    public boolean isNonTerritoryMemberNearby(Player player)
+    public boolean isClaimFriend(Player owner, Player accessor)
     {
-        User user = getUser(player);
-
-        List<Player> nearbyPlayers = BukkitUtil.getNearbyPlayers(player);
-        if(nearbyPlayers.size() > 0 && (user == null || user.getIsland() == null))
+        User user = getUser(owner);
+        User nearbyUser = getUser(accessor);
+        if(nearbyUser == null || user == null || user.getIsland() == null)
         {
-            return true;
+            return false;
         }
 
-        for(Player nearbyPlayer : nearbyPlayers)
-        {
-            User nearbyUser = getUser(nearbyPlayer);
-            if(nearbyUser == null || nearbyUser.getIsland() == null || !nearbyUser.getIsland().equals(user.getIsland()))
-            {
-                return true;
-            }
-        }
-        return false;
+        return user.getIsland().equals(nearbyUser.getIsland());
     }
 
     @Override
-    public boolean isInATerritory(Player player)
+    public boolean isInAClaim(Player player)
     {
         return IridiumSkyblock.getIslandManager().getIslandViaLocation(player.getLocation()) != null;
     }
 
     @Override
-    public boolean isInOwnTerritory(Player player)
+    public boolean isInOwnClaim(Player player)
     {
         Island currentIsland = IridiumSkyblock.getIslandManager().getIslandViaLocation(player.getLocation());
         User user = getUser(player);

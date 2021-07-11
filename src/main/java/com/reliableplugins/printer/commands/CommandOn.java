@@ -35,7 +35,7 @@ public class CommandOn extends Command
             return;
         }
 
-        if(Printer.INSTANCE.isTerritoryRestricted(player))
+        if(Printer.INSTANCE.getClaimHookManager().isTerritoryRestricted(player))
         {
             return;
         }

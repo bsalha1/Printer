@@ -43,6 +43,10 @@ public class ListenPluginLoad implements Listener
         {
             Printer.INSTANCE.setupGriefDefenderHook();
         }
+        else if(!Printer.INSTANCE.hasClaimChunkHook() && name.contains("ClaimHook"))
+        {
+            Printer.INSTANCE.setupClaimChunkHook();
+        }
         else if(!Printer.INSTANCE.hasSkyblockHook() &&
                 (name.contains("SuperiorSkyblock") || name.contains("BentoBox") || name.contains("IridiumSkyblock") ||
                  name.contains("ASkyBlock")))

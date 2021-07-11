@@ -4,33 +4,28 @@ import com.flowpowered.math.vector.Vector3i;
 import com.griefdefender.api.GriefDefender;
 import com.griefdefender.api.claim.Claim;
 import com.griefdefender.api.claim.TrustTypes;
-import com.reliableplugins.printer.hook.territory.TerritoryHook;
-import com.reliableplugins.printer.utils.BukkitUtil;
+import com.reliableplugins.printer.hook.territory.ClaimHook;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-public class GriefDefenderHook implements TerritoryHook
+public class GriefDefenderHook implements ClaimHook
 {
-
     @Override
-    public boolean isNonTerritoryMemberNearby(Player player)
+    public boolean isClaimFriend(Player owner, Player accessor)
     {
-        Location loc = player.getLocation();
+        Location loc = owner.getLocation();
         Vector3i vector = Vector3i.from(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
         Claim claim = GriefDefender.getCore().getClaimManager(loc.getWorld().getUID()).getClaimAt(vector);
-
-        for(Player nearbyPlayer : BukkitUtil.getNearbyPlayers(player))
+        if(claim == null)
         {
-            if(!claim.getUserTrusts(TrustTypes.BUILDER).contains(nearbyPlayer.getUniqueId()))
-            {
-                return true;
-            }
+            return false;
         }
-        return false;
+
+        return claim.getUserTrusts(TrustTypes.BUILDER).contains(accessor.getUniqueId());
     }
 
     @Override
-    public boolean isInATerritory(Player player)
+    public boolean isInAClaim(Player player)
     {
         Location loc = player.getLocation();
         Vector3i vector = Vector3i.from(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
@@ -40,7 +35,7 @@ public class GriefDefenderHook implements TerritoryHook
     }
 
     @Override
-    public boolean isInOwnTerritory(Player player)
+    public boolean isInOwnClaim(Player player)
     {
         Location loc = player.getLocation();
         Vector3i vector = Vector3i.from(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());

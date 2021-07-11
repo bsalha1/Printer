@@ -1,48 +1,39 @@
 package com.reliableplugins.printer.hook.territory.skyblock;
 
-import com.reliableplugins.printer.hook.territory.TerritoryHook;
-import com.reliableplugins.printer.utils.BukkitUtil;
-import com.wasteofplastic.askyblock.ASkyBlock;
+import com.reliableplugins.printer.hook.territory.ClaimHook;
 import com.wasteofplastic.askyblock.ASkyBlockAPI;
 import com.wasteofplastic.askyblock.Island;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-public class ASkyBlockHook implements TerritoryHook
+public class ASkyBlockHook implements ClaimHook
 {
-    private Location getIslandLocation(Player player)
-    {
-        return ASkyBlock.getPlugin().getPlayers().getIslandLocation(player.getUniqueId());
-    }
-
     private Island getIsland(Player player)
     {
         return ASkyBlockAPI.getInstance().getIslandOwnedBy(player.getUniqueId());
     }
 
     @Override
-    public boolean isNonTerritoryMemberNearby(Player player)
+    public boolean isClaimFriend(Player owner, Player accessor)
     {
-        Island playerIsland = getIsland(player);
-        for(Player nearbyPlayer : BukkitUtil.getNearbyPlayers(player))
+        Island playerIsland = getIsland(owner);
+        Island nearbyPlayerIsland = getIsland(accessor);
+        if(playerIsland == null)
         {
-            Island nearbyPlayerIsland = getIsland(nearbyPlayer);
-            if(playerIsland == null || !playerIsland.equals(nearbyPlayerIsland))
-            {
-                return false;
-            }
+            return false;
         }
-        return false;
+
+        return playerIsland.equals(nearbyPlayerIsland);
     }
 
     @Override
-    public boolean isInATerritory(Player player)
+    public boolean isInAClaim(Player player)
     {
         return ASkyBlockAPI.getInstance().getIslandAt(player.getLocation()) != null;
     }
 
     @Override
-    public boolean isInOwnTerritory(Player player)
+    public boolean isInOwnClaim(Player player)
     {
         return ASkyBlockAPI.getInstance().playerIsOnIsland(player);
     }

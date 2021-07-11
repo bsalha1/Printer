@@ -3,41 +3,35 @@ package com.reliableplugins.printer.hook.territory.residence;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.ResidencePlayer;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.reliableplugins.printer.hook.territory.TerritoryHook;
-import com.reliableplugins.printer.utils.BukkitUtil;
+import com.reliableplugins.printer.hook.territory.ClaimHook;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-public class ResidenceHook implements TerritoryHook
+public class ResidenceHook implements ClaimHook
 {
-
     @Override
-    public boolean isNonTerritoryMemberNearby(Player player)
+    public boolean isClaimFriend(Player owner, Player accessor)
     {
-        ResidencePlayer rPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
-        for(Player nearbyPlayer : BukkitUtil.getNearbyPlayers(player))
-        {
-            ResidencePlayer nearbyRPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(nearbyPlayer);
+        ResidencePlayer rPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(owner);
+        ResidencePlayer nearbyRPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(accessor);
 
-            // If nearby player isn't from residence
-            if(rPlayer.getMainResidence() == null || nearbyRPlayer.getMainResidence() == null ||
-                    !rPlayer.getMainResidence().equals(nearbyRPlayer.getMainResidence()))
-            {
-                return true;
-            }
+        if(rPlayer.getMainResidence() == null)
+        {
+            return false;
         }
-        return false;
+
+        return rPlayer.getMainResidence().equals(nearbyRPlayer.getMainResidence());
     }
 
     @Override
-    public boolean isInATerritory(Player player)
+    public boolean isInAClaim(Player player)
     {
         ClaimedResidence currentResidence = Residence.getInstance().getResidenceManager().getByLoc(player);
         return currentResidence != null;
     }
 
     @Override
-    public boolean isInOwnTerritory(Player player)
+    public boolean isInOwnClaim(Player player)
     {
         ResidencePlayer rPlayer = Residence.getInstance().getPlayerManager().getResidencePlayer(player);
         ClaimedResidence currentResidence = Residence.getInstance().getResidenceManager().getByLoc(player);

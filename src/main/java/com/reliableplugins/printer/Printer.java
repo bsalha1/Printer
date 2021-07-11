@@ -6,9 +6,11 @@
 
 package com.reliableplugins.printer;
 
-import com.massivecraft.factions.P;
 import com.reliableplugins.printer.commands.*;
-import com.reliableplugins.printer.config.*;
+import com.reliableplugins.printer.config.FileManager;
+import com.reliableplugins.printer.config.MainConfig;
+import com.reliableplugins.printer.config.MessageConfig;
+import com.reliableplugins.printer.config.PricesConfig;
 import com.reliableplugins.printer.exception.VaultException;
 import com.reliableplugins.printer.hook.citizens.CitizensHook;
 import com.reliableplugins.printer.hook.citizens.CitizensHook_v2_0_16;
@@ -20,9 +22,10 @@ import com.reliableplugins.printer.hook.shop.ShopHook;
 import com.reliableplugins.printer.hook.shop.ZShopHook;
 import com.reliableplugins.printer.hook.shop.shopgui.ShopGuiPlusHook_1_0_1;
 import com.reliableplugins.printer.hook.shop.shopgui.ShopGuiPlusHook_1_5_0;
-import com.reliableplugins.printer.hook.territory.TerritoryHook;
-import com.reliableplugins.printer.hook.territory.TerritoryScanner;
-import com.reliableplugins.printer.hook.territory.factions.FactionsHook;
+import com.reliableplugins.printer.hook.territory.ClaimHook;
+import com.reliableplugins.printer.hook.territory.ClaimHookManager;
+import com.reliableplugins.printer.hook.territory.ClaimScanner;
+import com.reliableplugins.printer.hook.territory.claimchunk.ClaimChunkHook;
 import com.reliableplugins.printer.hook.territory.factions.FactionsHook_MassiveCraft;
 import com.reliableplugins.printer.hook.territory.factions.FactionsHook_UUID;
 import com.reliableplugins.printer.hook.territory.factions.FactionsHook_X;
@@ -41,7 +44,6 @@ import com.reliableplugins.printer.type.ColoredMaterial;
 import com.reliableplugins.printer.utils.BukkitUtil;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -50,19 +52,18 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 
 public class Printer extends JavaPlugin
 {
     public static Printer INSTANCE;
-    private String version;
 
     private CommandHandler commandHandler;
     private PacketListenerManager packetListenerManager;
 
     // Hooks
+    private ClaimHookManager claimHookManager;
     private CitizensHook citizensHook;
     private BukkitTask territoryScanner;
     private BukkitTask inventoryScanner;
@@ -78,9 +79,9 @@ public class Printer extends JavaPlugin
     private boolean hasResidenceHook;
     private boolean hasLandsHook;
     private boolean hasGriefDefenderHook;
+    private boolean hasClaimChunkHook;
     private boolean hasSpigot;
 
-    private ArrayList<TerritoryHook> territoryHooks;
 
     // Configs
     private FileManager fileManager;
@@ -95,7 +96,6 @@ public class Printer extends JavaPlugin
     public void onEnable()
     {
         Printer.INSTANCE = this;
-        this.version = getDescription().getVersion();
 
         this.hasSpigot = true;
         try
@@ -111,19 +111,15 @@ public class Printer extends JavaPlugin
         {
             this.fileManager = setupConfigs();
             this.nmsHandler = setupNMS();
-            this.territoryHooks = new ArrayList<>();
-            setupEconomyHook();
-            setupCitizensHook();
-            setupFactionsHook();
-            setupSkyblockHook();
-            setupResidenceHook();
-            setupLandsHook();
-            setupGriefDefenderHook();
-            setupShopHook();
-            setupCommands();
-            setupTasks();
-            setupListeners();
-            setupPacketListeners();
+            this.claimHookManager = new ClaimHookManager();
+            this.setupEconomyHook();
+            this.setupCitizensHook();
+            this.setupTerritoryHooks();
+            this.setupShopHook();
+            this.setupCommands();
+            this.setupTasks();
+            this.setupListeners();
+            this.setupPacketListeners();
         }
         catch (Exception e)
         {
@@ -132,7 +128,7 @@ public class Printer extends JavaPlugin
             return;
         }
 
-        getLogger().log(Level.INFO, this.getDescription().getName() + " v" + this.version + " has been loaded");
+        getLogger().log(Level.INFO, this.getDescription().getName() + " v" + this.getDescription().getVersion() + " has been loaded");
     }
 
     @Override
@@ -234,9 +230,19 @@ public class Printer extends JavaPlugin
         }
     }
 
+    public void setupTerritoryHooks()
+    {
+        this.setupFactionsHook();
+        this.setupSkyblockHook();
+        this.setupResidenceHook();
+        this.setupLandsHook();
+        this.setupGriefDefenderHook();
+        this.setupClaimChunkHook();
+    }
+
     public void setupSkyblockHook()
     {
-        TerritoryHook skyBlockHook = null;
+        ClaimHook skyBlockHook = null;
 
         if(this.mainConfig.useSuperiorSkyBlock())
         {
@@ -290,7 +296,7 @@ public class Printer extends JavaPlugin
         if(skyBlockHook != null)
         {
             this.hasSkyblockHook = true;
-            this.territoryHooks.add(skyBlockHook);
+            this.claimHookManager.registerClaimHook(skyBlockHook);
         }
     }
 
@@ -308,7 +314,7 @@ public class Printer extends JavaPlugin
         }
 
         this.hasResidenceHook = true;
-        this.territoryHooks.add(new ResidenceHook());
+        this.claimHookManager.registerClaimHook(new ResidenceHook());
         getLogger().log(Level.INFO, "Successfully hooked into Residence");
     }
 
@@ -326,7 +332,7 @@ public class Printer extends JavaPlugin
         }
 
         this.hasLandsHook = true;
-        this.territoryHooks.add(new LandsHook());
+        this.claimHookManager.registerClaimHook(new LandsHook());
         getLogger().log(Level.INFO, "Successfully hooked into Lands");
 
     }
@@ -345,9 +351,26 @@ public class Printer extends JavaPlugin
         }
 
         this.hasGriefDefenderHook = true;
-        this.territoryHooks.add(new GriefDefenderHook());
+        this.claimHookManager.registerClaimHook(new GriefDefenderHook());
         getLogger().log(Level.INFO, "Successfully hooked into GriefDefender");
+    }
 
+    public void setupClaimChunkHook()
+    {
+        if(!this.mainConfig.useClaimChunk())
+        {
+            return;
+        }
+
+        if(!getServer().getPluginManager().isPluginEnabled("ClaimChunk"))
+        {
+            getLogger().log(Level.WARNING, "ClaimChunk jar not found!");
+            return;
+        }
+
+        this.hasClaimChunkHook = true;
+        this.claimHookManager.registerClaimHook(new ClaimChunkHook());
+        getLogger().log(Level.INFO, "Successfully hooked into ClaimChunk");
     }
 
     public void setupShopHook()
@@ -443,7 +466,7 @@ public class Printer extends JavaPlugin
 
     public void setupFactionsHook()
     {
-        FactionsHook factionsHook;
+        ClaimHook factionsHook;
 
         if(!this.mainConfig.useFactions())
         {
@@ -475,7 +498,7 @@ public class Printer extends JavaPlugin
         }
 
         this.hasFactionsHook = true;
-        this.territoryHooks.add(factionsHook);
+        this.claimHookManager.registerClaimHook(factionsHook);
     }
 
     public void setupCitizensHook()
@@ -522,7 +545,7 @@ public class Printer extends JavaPlugin
 
     private void setupTasks()
     {
-        this.territoryScanner = new TerritoryScanner(0, 5L);
+        this.territoryScanner = new ClaimScanner(0, 5L);
         this.inventoryScanner = new InventoryScanner(0L, 1L);
     }
 
@@ -536,7 +559,88 @@ public class Printer extends JavaPlugin
         this.commandHandler.addCommand(new CommandVersion());
     }
 
-    public Double getPrice(Player player, ItemStack itemStack)
+    /**
+     * Gets price of block from its item form (ex: REDSTONE_WIRE is the block name for REDSTONE (the dust))
+     * @param player player placing the item/block
+     * @param itemStack item corresponding to the block
+     * @return price of block/item
+     */
+    public Double getItemBlockPrice(Player player, ItemStack itemStack)
+    {
+        Double price = null;
+
+        if(Printer.INSTANCE.getPricesConfig().getItemPrices().containsKey(itemStack.getType()))
+        {
+            price = Printer.INSTANCE.getPricesConfig().getItemPrices().get(itemStack.getType());
+        }
+        else if(Printer.INSTANCE.hasShopHook())
+        {
+            ItemStack toPlaceCopy = itemStack.clone();
+            toPlaceCopy.setAmount(1);
+            price = Printer.INSTANCE.getShopHook().getCachedPrice(player, toPlaceCopy);
+            price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
+        }
+        return price;
+    }
+
+
+
+    /**
+     * Gets price of block from its item form (ex: REDSTONE_WIRE is the block name for REDSTONE (the dust))
+     * @param player player placing the item/block
+     * @param material material of item
+     * @return price of block/item
+     */
+    public Double getItemBlockPrice(Player player, Material material)
+    {
+        ItemStack itemStack = new ItemStack(material, 1);
+        return this.getItemBlockPrice(player, itemStack);
+    }
+
+
+
+    /**
+     * Gets price of a block to place prioritizing the colored price > uncolored price > shop hook price
+     * @param player player placing the block
+     * @param material material of block to place
+     * @param data data of block to place
+     * @return price of the block
+     */
+    public Double getBlockPrice(Player player, Material material, byte data)
+    {
+        Double price = null;
+        ColoredMaterial coloredMaterial = ColoredMaterial.fromMaterial(material, data);
+
+        // Get Price
+        // - Prioritize colored price, then uncolored price, then shopgui price
+        //   . We want to sell the blue wool for price of blue wool not for the price of uncolored wool
+        //   . We want our prices.yml to overwrite ShopGUIPlus
+        if(coloredMaterial != null && Printer.INSTANCE.getPricesConfig().getColoredPrices().containsKey(coloredMaterial))
+        {
+            price = Printer.INSTANCE.getPricesConfig().getColoredPrices().get(coloredMaterial);
+        }
+        else if(Printer.INSTANCE.getPricesConfig().getBlockPrices().containsKey(material))
+        {
+            price = Printer.INSTANCE.getPricesConfig().getBlockPrices().get(material);
+        }
+        else if(Printer.INSTANCE.hasShopHook())
+        {
+            ItemStack item = new ItemStack(material, 1);
+            price = Printer.INSTANCE.getShopHook().getCachedPrice(player, item);
+            price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
+        }
+        return price;
+    }
+
+
+
+    /**
+     * Gets price of a block to place prioritizing the colored price > uncolored price > shop hook price
+     * @param player player placing the block
+     * @param itemStack ItemStack representation of block to place
+     * @return price of block
+     */
+    public Double getBlockPrice(Player player, ItemStack itemStack)
     {
         Material material = itemStack.getType();
         if(BukkitUtil.isItemOfBlock(material))
@@ -566,62 +670,6 @@ public class Printer extends JavaPlugin
             price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
         }
         return price;
-    }
-
-
-    public Double getItemBlockPrice(Player player, ItemStack itemStack)
-    {
-        Double price = null;
-
-        if(Printer.INSTANCE.getPricesConfig().getItemPrices().containsKey(itemStack.getType()))
-        {
-            price = Printer.INSTANCE.getPricesConfig().getItemPrices().get(itemStack.getType());
-        }
-        else if(Printer.INSTANCE.hasShopHook())
-        {
-            ItemStack toPlaceCopy = itemStack.clone();
-            toPlaceCopy.setAmount(1);
-            price = Printer.INSTANCE.getShopHook().getCachedPrice(player, toPlaceCopy);
-            price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
-        }
-        return price;
-    }
-
-    public Double getItemBlockPrice(Player player, Material material)
-    {
-        ItemStack itemStack = new ItemStack(material, 1);
-        return getItemBlockPrice(player, itemStack);
-    }
-
-    public Double getPrice(Player player, Material material, byte data)
-    {
-        Double price = null;
-        ColoredMaterial coloredMaterial = ColoredMaterial.fromMaterial(material, data);
-
-        // Get Price
-        // - Prioritize colored price, then uncolored price, then shopgui price
-        //   . We want to sell the blue wool for price of blue wool not for the price of uncolored wool
-        //   . We want our prices.yml to overwrite ShopGUIPlus
-        if(coloredMaterial != null && Printer.INSTANCE.getPricesConfig().getColoredPrices().containsKey(coloredMaterial))
-        {
-            price = Printer.INSTANCE.getPricesConfig().getColoredPrices().get(coloredMaterial);
-        }
-        else if(Printer.INSTANCE.getPricesConfig().getBlockPrices().containsKey(material))
-        {
-            price = Printer.INSTANCE.getPricesConfig().getBlockPrices().get(material);
-        }
-        else if(Printer.INSTANCE.hasShopHook())
-        {
-            ItemStack item = new ItemStack(material, 1);
-            price = Printer.INSTANCE.getShopHook().getCachedPrice(player, item);
-            price = price < 0 ? null : price; // ShopGui returns -1 on invalid price... that would be bad if we put -1
-        }
-        return price;
-    }
-
-    public String getVersion()
-    {
-        return this.version;
     }
 
     public void reloadConfigs()
@@ -689,6 +737,10 @@ public class Printer extends JavaPlugin
         return this.hasGriefDefenderHook;
     }
 
+    public boolean hasClaimChunkHook()
+    {
+        return this.hasClaimChunkHook;
+    }
 
     public boolean isSpigot()
     {
@@ -705,36 +757,8 @@ public class Printer extends JavaPlugin
         return this.economyHook;
     }
 
-    public boolean isTerritoryRestricted(Player player, Location location)
+    public ClaimHookManager getClaimHookManager()
     {
-        for(TerritoryHook hook : this.territoryHooks)
-        {
-            if(!hook.canBuild(player, location, this.mainConfig.allowInWilderness()))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean isTerritoryRestricted(Player player)
-    {
-        for(TerritoryHook hook : this.territoryHooks)
-        {
-            // If player isn't in their own territory and they aren't in wilderness (if they're allowed)
-            if(!hook.isInOwnTerritory(player) &&
-                    (hook.isInATerritory(player) || !Printer.INSTANCE.getMainConfig().allowInWilderness()))
-            {
-                Message.ERROR_NOT_IN_TERRITORY.sendColoredMessage(player);
-                return true;
-            }
-            else if(!Printer.INSTANCE.getMainConfig().allowNearNonMembers() &&
-                    (hook instanceof FactionsHook ? ((FactionsHook) hook).isNonTerritoryMemberNearby(player, this.mainConfig.allowNearAllies()) : hook.isNonTerritoryMemberNearby(player)))
-            {
-                Message.ERROR_NON_TERRITORY_MEMBER_NEARBY.sendColoredMessage(player);
-                return true;
-            }
-        }
-        return false;
+        return claimHookManager;
     }
 }
