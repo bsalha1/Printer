@@ -37,7 +37,7 @@ public class ClaimChunkHook implements ClaimHook
             return false;
         }
 
-        return ClaimChunk.getInstance().getPlayerHandler().hasAccess(currentChunkOwner, player.getUniqueId());
+        return player.getUniqueId().equals(currentChunkOwner) || ClaimChunk.getInstance().getPlayerHandler().hasAccess(currentChunkOwner, player.getUniqueId());
     }
 
     @Override
@@ -49,7 +49,6 @@ public class ClaimChunkHook implements ClaimHook
         }
 
         UUID owner = ClaimChunk.getInstance().getChunkHandler().getOwner(location.getChunk());
-
-        return ClaimChunk.getInstance().getPlayerHandler().hasAccess(player.getUniqueId(), owner);
+        return player.getUniqueId().equals(owner) || ClaimChunk.getInstance().getPlayerHandler().hasAccess(player.getUniqueId(), owner);
     }
 }

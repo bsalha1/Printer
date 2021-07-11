@@ -38,6 +38,8 @@ public enum Message
     ERROR_PICKUP_EXPLOIT("err-pickup-exploit", "&cPicking up items is not allowed while printer is on"),
     ERROR_DISPENSE_ARMOR_EXPLOIT("err-dispense-armor-exploit", "&cDispensed armor activity is not allowed while printer is on"),
     ERROR_TELEPORT_EXPLOIT("err-teleport-exploit", "&cTeleported - printer has been turned off"),
+    ERROR_FLY_DEACTIVATE("err-fly-deactivate", "&cEnemy nearby - fly has been deactivated"),
+    FLY_REACTIVATE("fly-reactivate", "&7Enemy has left - fly has been reactivated"),
 
     // Faction
     ERROR_NOT_IN_TERRITORY("err-not-in-territory", "&cYou may only use printer if you're in your own territory"),

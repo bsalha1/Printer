@@ -6,6 +6,7 @@ This is a plugin for Minecraft that aids in building, as it gives the player cre
 - /printer off: printer.off
 - /printer toggle: printer.toggle
 - /printer reload: printer.reload
+- printer.hide: allows admins to not deactivate nearby players' printers when monitoring them
 
 ## API
 - **Events**:

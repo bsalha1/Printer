@@ -17,6 +17,7 @@ public class MainConfig extends Config
     private boolean tooltipNotification;
     private int tooltipNotificationTime;
     private boolean onlyBreakPlaced;
+    private boolean onlyDisableFly;
     private boolean requireEmptyInventory;
     private int noFallDamageSeconds;
     private int checkRadius;
@@ -61,6 +62,7 @@ public class MainConfig extends Config
     {
         noFallDamageSeconds = getInt("no-fall-damage-seconds", 5);
         onlyBreakPlaced = getBoolean("only-break-placed", true);
+        onlyDisableFly = getBoolean("only-disable-fly", false);
         requireEmptyInventory = getBoolean("require-empty-inventory", false);
         checkRadius = getInt("player-check-radius", 64);
         allowInWilderness = getBoolean("allow-in-wilderness", false);
@@ -283,6 +285,10 @@ public class MainConfig extends Config
         return onlyBreakPlaced;
     }
 
+    public boolean onlyDisableFly()
+    {
+        return onlyDisableFly;
+    }
 
     public boolean requireEmptyInventory()
     {

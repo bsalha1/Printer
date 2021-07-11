@@ -43,7 +43,7 @@ public class ListenPrinterBlockPlace implements Listener
         }
 
         // Check if player can build here
-        if(Printer.INSTANCE.getClaimHookManager().isTerritoryRestricted(player.getPlayer(), event.getBlock().getLocation()))
+        if(Printer.INSTANCE.getClaimHookManager().canBuild(player.getPlayer(), event.getBlock().getLocation()))
         {
             event.setCancelled(true);
             Message.ERROR_NOT_IN_TERRITORY.sendColoredMessage(event.getPlayer());
@@ -96,7 +96,7 @@ public class ListenPrinterBlockPlace implements Listener
         }
 
         // Check if player can build here
-        if(Printer.INSTANCE.getClaimHookManager().isTerritoryRestricted(player.getPlayer(),
+        if(Printer.INSTANCE.getClaimHookManager().canBuild(player.getPlayer(),
                 event.getClickedBlock() != null ? event.getClickedBlock().getLocation() : player.getPlayer().getLocation()))
         {
             event.setCancelled(true);

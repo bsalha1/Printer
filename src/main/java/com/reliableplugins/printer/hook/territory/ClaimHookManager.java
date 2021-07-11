@@ -17,13 +17,16 @@ import java.util.ArrayList;
 public class ClaimHookManager
 {
     public static String PRINTER_HIDE_PERMISSION_NODE = "printer.hide";
-
     private final ArrayList<ClaimHook> claimHooks;
+
+
 
     public ClaimHookManager()
     {
         this.claimHooks = new ArrayList<>();
     }
+
+
 
     public void registerClaimHook(ClaimHook claimHook)
     {
@@ -46,7 +49,7 @@ public class ClaimHookManager
                 continue;
             }
 
-            for(ClaimHook claimHook : claimHooks)
+            for(ClaimHook claimHook : this.claimHooks)
             {
                 if(!claimHook.isClaimFriend(player, nearbyPlayer))
                 {
@@ -60,12 +63,12 @@ public class ClaimHookManager
 
 
     /**
-     * Determines if player is restricted from placing a block
+     * Determines if player is restricted from placing a block at a location
      * @param player player placing the block
      * @param location location to place the block
      * @return true if they cannot place it, else false
      */
-    public boolean isTerritoryRestricted(Player player, Location location)
+    public boolean canBuild(Player player, Location location)
     {
         for(ClaimHook hook : this.claimHooks)
         {
@@ -82,9 +85,9 @@ public class ClaimHookManager
     /**
      * Determines if player is restricted from using printer in their location
      * @param player player to use printer
-     * @return true if they cannot be in that location with printer on, false otherwise
+     * @return NOT_IN_OWN_TERRITORY, NON_TERRITORY_MEMBER_NEARBY or NONE if there's no restriction
      */
-    public boolean isTerritoryRestricted(Player player)
+    public ClaimRestriction canUsePrinter(Player player)
     {
         for(ClaimHook hook : this.claimHooks)
         {
@@ -92,15 +95,13 @@ public class ClaimHookManager
             if(!hook.isInOwnClaim(player) &&
                     (hook.isInAClaim(player) || !Printer.INSTANCE.getMainConfig().allowInWilderness()))
             {
-                Message.ERROR_NOT_IN_TERRITORY.sendColoredMessage(player);
-                return true;
+                return ClaimRestriction.NOT_IN_OWN_TERRITORY;
             }
             else if(!Printer.INSTANCE.getMainConfig().allowNearNonMembers() && this.isNonClaimMemberNearby(player))
             {
-                Message.ERROR_NON_TERRITORY_MEMBER_NEARBY.sendColoredMessage(player);
-                return true;
+                return ClaimRestriction.NON_TERRITORY_MEMBER_NEARBY;
             }
         }
-        return false;
+        return ClaimRestriction.NONE;
     }
 }

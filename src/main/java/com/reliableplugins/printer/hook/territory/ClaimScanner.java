@@ -8,6 +8,7 @@ package com.reliableplugins.printer.hook.territory;
 
 import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.PrinterPlayer;
+import com.reliableplugins.printer.config.Message;
 import com.reliableplugins.printer.task.BukkitTask;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -30,9 +31,39 @@ public class ClaimScanner extends BukkitTask
                 continue;
             }
 
-            if(Printer.INSTANCE.getClaimHookManager().isTerritoryRestricted(player))
+            ClaimRestriction restriction = Printer.INSTANCE.getClaimHookManager().canUsePrinter(player);
+            switch (restriction)
             {
-                printerPlayer.printerOff();
+                case NOT_IN_OWN_TERRITORY:
+                    printerPlayer.printerOff();
+                    Message.ERROR_NOT_IN_TERRITORY.sendColoredMessage(player);
+                    break;
+
+                case NON_TERRITORY_MEMBER_NEARBY:
+                    if(Printer.INSTANCE.getMainConfig().onlyDisableFly())
+                    {
+                        if(printerPlayer.getPlayer().getAllowFlight())
+                        {
+                            printerPlayer.getPlayer().setAllowFlight(false);
+                            printerPlayer.getPlayer().setFlying(false);
+                            Message.ERROR_FLY_DEACTIVATE.sendColoredMessage(player);
+                        }
+                    }
+                    else
+                    {
+                        printerPlayer.printerOff();
+                        Message.ERROR_NON_TERRITORY_MEMBER_NEARBY.sendColoredMessage(player);
+                    }
+                    break;
+
+                    // If player still has fly deactivated, and no restrictions apply, then their flight must be reactivated
+                case NONE:
+                    if(!printerPlayer.getPlayer().getAllowFlight())
+                    {
+                        printerPlayer.getPlayer().setAllowFlight(true);
+                        Message.FLY_REACTIVATE.sendColoredMessage(player);
+                    }
+
             }
         }
     }
