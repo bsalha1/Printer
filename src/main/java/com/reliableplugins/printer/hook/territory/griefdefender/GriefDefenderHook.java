@@ -19,7 +19,7 @@ public class GriefDefenderHook implements ClaimHook
         final Vector3i vector = Vector3i.from(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
         final Claim claim = GriefDefender.getCore().getClaimManager(loc.getWorld().getUID()).getClaimAt(vector);
 
-        return claim.getUserTrusts().contains(accessor.getUniqueId());
+        return claim.isUserTrusted(accessor.getUniqueId(), TrustTypes.ACCESSOR);
     }
 
     @Override
