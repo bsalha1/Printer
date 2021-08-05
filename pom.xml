@@ -19,6 +19,27 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.flowpowered</pattern>
+                                    <shadedPattern>com.griefdefender.lib.flowpowered</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -169,14 +190,8 @@
         <dependency>
             <groupId>com.github.bloodmc</groupId>
             <artifactId>GriefDefenderApi</artifactId>
-            <version>920a610</version>
+            <version>master</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-		    <groupId>com.flowpowered</groupId>
-		    <artifactId>flow-math</artifactId>
-		    <version>1.0.3</version>
         </dependency>
 
         <!-- ClaimChunk -->
