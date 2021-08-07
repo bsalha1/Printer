@@ -225,8 +225,10 @@ public class Printer extends JavaPlugin
             case "v1_16_R2":
                 return new Version_1_16_R2();
             case "v1_16_R3":
-            default:
                 return new Version_1_16_R3();
+            case "v1_17_R1":
+            default:
+                return new Version_1_17_R1();
         }
     }
 
