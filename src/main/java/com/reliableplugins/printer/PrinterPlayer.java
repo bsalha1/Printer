@@ -153,6 +153,7 @@ public class PrinterPlayer
         }
 
         // Set gamemode and inventory back to initials
+        player.closeInventory(); // prevents held item from staying while exitting print mode, inside inventory
         player.setGameMode(initialGamemode);
         player.getInventory().setContents(initialInventory);
         player.getInventory().setArmorContents(initialArmor);
