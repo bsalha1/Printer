@@ -43,7 +43,6 @@ public class Version_1_17_R1 implements INMSHandler
 
     public Player processPacket(Player player, Object packet)
     {
-
         final Player[] attackedPlayer = {null};
 
         if(packet instanceof PacketPlayInUseEntity)
