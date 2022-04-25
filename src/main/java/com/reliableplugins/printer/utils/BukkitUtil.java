@@ -177,7 +177,7 @@ public class BukkitUtil
         ItemStack[] armors = player.getInventory().getArmorContents();
         for(ItemStack armor : armors)
         {
-            if(!armor.getType().equals(Material.AIR))
+            if(armor != null && !armor.getType().equals(Material.AIR))
             {
                 return false;
             }

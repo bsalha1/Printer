@@ -29,7 +29,6 @@ import com.reliableplugins.printer.hook.territory.claimchunk.ClaimChunkHook;
 import com.reliableplugins.printer.hook.territory.factions.FactionsHook_MassiveCraft;
 import com.reliableplugins.printer.hook.territory.factions.FactionsHook_UUID;
 import com.reliableplugins.printer.hook.territory.factions.FactionsHook_X;
-import com.reliableplugins.printer.hook.territory.griefdefender.GriefDefenderHook;
 import com.reliableplugins.printer.hook.territory.lands.LandsHook;
 import com.reliableplugins.printer.hook.territory.residence.ResidenceHook;
 import com.reliableplugins.printer.hook.territory.skyblock.ASkyBlockHook;
@@ -193,9 +192,11 @@ public class Printer extends JavaPlugin
         return fileManager;
     }
 
-    private INMSHandler setupNMS()
+    private INMSHandler setupNMS() throws Exception
     {
+
         String nmsVersion = getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+        getLogger().log(Level.INFO, "Found NMS Version: " + nmsVersion);
         switch(nmsVersion)
         {
             case "v1_8_R2":
@@ -227,8 +228,13 @@ public class Printer extends JavaPlugin
             case "v1_16_R3":
                 return new Version_1_16_R3();
             case "v1_17_R1":
-            default:
                 return new Version_1_17_R1();
+            case "v1_18_R1":
+                return new Version_1_18_R1();
+            case "v1_18_R2":
+                return new Version_1_18_R2();
+            default:
+                throw new Exception("NMS Version " + nmsVersion + " is not supported!");
         }
     }
 
@@ -238,7 +244,6 @@ public class Printer extends JavaPlugin
         this.setupSkyblockHook();
         this.setupResidenceHook();
         this.setupLandsHook();
-        this.setupGriefDefenderHook();
         this.setupClaimChunkHook();
     }
 
@@ -337,24 +342,6 @@ public class Printer extends JavaPlugin
         this.claimHookManager.registerClaimHook(new LandsHook());
         getLogger().log(Level.INFO, "Successfully hooked into Lands");
 
-    }
-
-    public void setupGriefDefenderHook()
-    {
-        if(!this.mainConfig.useGriefDefender())
-        {
-            return;
-        }
-
-        if(!getServer().getPluginManager().isPluginEnabled("GriefDefender"))
-        {
-            getLogger().log(Level.WARNING, "GriefDefender jar not found!");
-            return;
-        }
-
-        this.hasGriefDefenderHook = true;
-        this.claimHookManager.registerClaimHook(new GriefDefenderHook());
-        getLogger().log(Level.INFO, "Successfully hooked into GriefDefender");
     }
 
     public void setupClaimChunkHook()

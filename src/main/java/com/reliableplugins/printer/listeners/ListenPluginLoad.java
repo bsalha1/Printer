@@ -39,10 +39,6 @@ public class ListenPluginLoad implements Listener
         {
             Printer.INSTANCE.setupLandsHook();
         }
-        else if(!Printer.INSTANCE.hasGriefDefenderHook() && name.contains("GriefDefender"))
-        {
-            Printer.INSTANCE.setupGriefDefenderHook();
-        }
         else if(!Printer.INSTANCE.hasClaimChunkHook() && name.contains("ClaimHook"))
         {
             Printer.INSTANCE.setupClaimChunkHook();

@@ -27,24 +27,25 @@ public class PacketListener extends ChannelDuplexHandler
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object packet) throws Exception
     {
-        // Catch when player attacks someone who is printing
-        Player damagedPlayer = Printer.INSTANCE.getNmsHandler().processPacket(player, packet);
-        if(damagedPlayer != null)
-        {
-            PrinterPlayer printerPlayer = PrinterPlayer.fromPlayer(damagedPlayer);
-            if(printerPlayer != null && printerPlayer.isPrinting())
+        // Execute on main thread to prevent async getEntities call exception from processPacket()
+        new BukkitTask(0){
+
+            @Override
+            public void run()
             {
-                new BukkitTask(0)
+                // Catch when player attacks someone who is printing
+                Player damagedPlayer = Printer.INSTANCE.getNmsHandler().processPacket(player, packet);
+                if(damagedPlayer != null)
                 {
-                    @Override
-                    public void run()
+                    PrinterPlayer printerPlayer = PrinterPlayer.fromPlayer(damagedPlayer);
+                    if(printerPlayer != null && printerPlayer.isPrinting())
                     {
                         printerPlayer.printerOff();
                         Message.PRINTER_OFF.sendColoredMessage(printerPlayer.getPlayer());
                     }
-                };
+                }
             }
-        }
+        };
         super.channelRead(ctx, packet);
     }
 

@@ -6,6 +6,7 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.reflect.FieldAccessException;
 import com.reliableplugins.printer.Printer;
 import com.reliableplugins.printer.PrinterPlayer;
 import com.reliableplugins.printer.config.Message;
@@ -34,7 +35,17 @@ public class ProtocolLibHook
                         return;
                     }
 
-                    Entity entity = event.getPacket().getEntityModifier(event.getPlayer().getWorld()).read(0);
+                    Entity entity;
+
+                    // Fixes spamming an exception from ProtocolLib
+                    try 
+                    {
+                        entity = event.getPacket().getEntityModifier(event.getPlayer().getWorld()).read(0);
+                    }
+                    catch(FieldAccessException e) {
+                        return;
+                    }
+
                     if(!(entity instanceof Player))
                     {
                         return;

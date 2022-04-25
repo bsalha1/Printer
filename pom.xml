@@ -6,7 +6,7 @@
 
     <groupId>com.reliableplugins</groupId>
     <artifactId>Printer</artifactId>
-    <version>3.1</version>
+    <version>3.2</version>
 
     <build>
         <plugins>
@@ -94,12 +94,6 @@
 
 
     <dependencies>
-
-        <dependency>
-            <groupId>net.kyori</groupId>
-            <artifactId>event-api</artifactId>
-            <version>3.0.0</version>
-        </dependency>
 
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
@@ -201,13 +195,6 @@
             <version>4.9.2.1</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/Residence4.9.2.1.jar</systemPath>
-        </dependency>
-        
-        <!-- GriefDefender -->
-        <dependency>
-            <groupId>com.griefdefender</groupId>
-            <artifactId>api</artifactId>
-            <version>2.0.0-20210614.204736-1</version>
         </dependency>
 
         <!-- ClaimChunk -->
@@ -373,6 +360,20 @@
             <version>1.17.1</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/spigot1_17_R1.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot1_18_R1</artifactId>
+            <version>1.18</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/spigot1_18_R1.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot1_18_R2</artifactId>
+            <version>1.18.2</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/spigot1_18_R2.jar</systemPath>
         </dependency>
         <!-- End Spigot Jars -->
 
