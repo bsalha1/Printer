@@ -42,7 +42,7 @@ public class ProtocolLibHook
                     {
                         entity = event.getPacket().getEntityModifier(event.getPlayer().getWorld()).read(0);
                     }
-                    catch(FieldAccessException e) {
+                    catch(Exception e) {
                         return;
                     }
 
