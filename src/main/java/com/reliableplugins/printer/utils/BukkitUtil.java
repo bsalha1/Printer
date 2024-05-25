@@ -23,6 +23,7 @@ import java.util.*;
 public class BukkitUtil
 {
     private static final HashMap<Material, Material> itemToBlockMap = new HashMap<>();
+    private static final HashMap<Material, Material> blockToItemMap = new HashMap<>();
     private static final ArrayList<Material> noBlockPlaceItems = new ArrayList<>();
 
     static
@@ -31,6 +32,9 @@ public class BukkitUtil
         noBlockPlaceItems.add(Material.LAVA_BUCKET);
         noBlockPlaceItems.add(Material.POTION);
 
+        /*
+         * Create a mapping from item in hand to the block to be placed.
+         */
         itemToBlockMap.put(Material.POTION,              null);
         itemToBlockMap.put(Material.WATER_BUCKET,        Material.WATER);
         itemToBlockMap.put(Material.LAVA_BUCKET,         Material.LAVA);
@@ -38,14 +42,12 @@ public class BukkitUtil
         itemToBlockMap.put(Material.DIODE,               Material.DIODE_BLOCK_OFF);
         itemToBlockMap.put(Material.REDSTONE_COMPARATOR, Material.REDSTONE_COMPARATOR_OFF);
         itemToBlockMap.put(Material.STRING,              Material.TRIPWIRE);
-
         itemToBlockMap.put(Material.SEEDS,               Material.CROPS);
         itemToBlockMap.put(Material.MELON_SEEDS,         Material.MELON_STEM);
         itemToBlockMap.put(Material.PUMPKIN_SEEDS,       Material.PUMPKIN_STEM);
         itemToBlockMap.put(Material.CARROT_ITEM,         Material.CARROT);
         itemToBlockMap.put(Material.NETHER_STALK,        Material.NETHER_WARTS);
         itemToBlockMap.put(Material.SUGAR_CANE,          Material.SUGAR_CANE_BLOCK);
-
         itemToBlockMap.put(Material.WOOD_DOOR,           Material.WOODEN_DOOR);
         itemToBlockMap.put(Material.ACACIA_DOOR_ITEM,    Material.ACACIA_DOOR);
         itemToBlockMap.put(Material.BIRCH_DOOR_ITEM,     Material.BIRCH_DOOR);
@@ -53,13 +55,25 @@ public class BukkitUtil
         itemToBlockMap.put(Material.JUNGLE_DOOR_ITEM,    Material.JUNGLE_DOOR);
         itemToBlockMap.put(Material.SPRUCE_DOOR_ITEM,    Material.SPRUCE_DOOR);
         itemToBlockMap.put(Material.IRON_DOOR,           Material.IRON_DOOR_BLOCK);
-
         itemToBlockMap.put(Material.BED,                 Material.BED_BLOCK);
         itemToBlockMap.put(Material.BREWING_STAND_ITEM,  Material.BREWING_STAND);
         itemToBlockMap.put(Material.SKULL_ITEM,          Material.SKULL);
         itemToBlockMap.put(Material.FLOWER_POT_ITEM,     Material.FLOWER_POT);
         itemToBlockMap.put(Material.CAULDRON_ITEM,       Material.CAULDRON);
         itemToBlockMap.put(Material.CAKE,                Material.CAKE_BLOCK);
+        itemToBlockMap.put(Material.SIGN,                Material.SIGN_POST);
+
+        /*
+         * Create a mapping from block to item. This is mostly a reverse mapping
+         * of itemToBlockMap with the exception of some items which map to different
+         * types of block i.e. SIGN item can map to SIGN_POST or WALL_SIGN.
+         */
+        for(Map.Entry<Material, Material> entry : itemToBlockMap.entrySet())
+        {
+            blockToItemMap.put(entry.getValue(), entry.getKey());
+        }
+
+        blockToItemMap.put(Material.WALL_SIGN,           Material.SIGN);
     }
 
     public static boolean isNoBlockPlaceItem(Material material)
@@ -74,7 +88,7 @@ public class BukkitUtil
 
     public static boolean isBlockOfItem(Material material)
     {
-        return itemToBlockMap.containsValue(material);
+        return blockToItemMap.containsKey(material);
     }
 
     public static Material getBlockOfItem(Material item)
@@ -84,14 +98,7 @@ public class BukkitUtil
 
     public static Material getItemOfBlock(Material block)
     {
-        for (Map.Entry<Material, Material> entry : itemToBlockMap.entrySet())
-        {
-            if (entry.getValue() != null && entry.getValue().equals(block))
-            {
-                return entry.getKey();
-            }
-        }
-        return null;
+        return blockToItemMap.get(block);
     }
 
     public static List<Player> getNearbyPlayers(Player player)
