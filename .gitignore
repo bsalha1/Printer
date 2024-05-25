@@ -3,3 +3,5 @@
 out/*
 target/*
 *.iml
+.m2/repo/com/reliableplugins/Printer
+dependency-reduced-pom.xml
