@@ -1,6 +1,9 @@
 # Printer
 This is a plugin for Minecraft that aids in building, as it gives the player creative mode and charges them for each block they place. All exploits are patched as well.
 
+## Building
+To build Printer, execute `mvn -Dmaven.repo.local=./.m2/repo clean install`. We specify a local repository since remote repositories may break and in that case we still want to be able to build Printer.
+
 ## Permissions
 - /printer on: printer.on
 - /printer off: printer.off
